@@ -16,7 +16,7 @@ flask-sqlalchemy = "^2.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.0"
-pytest-flask="^0.10.0"
+pytest-flask="^0.14.0"
 pymysql="^0.9.3"
 
 [build-system]

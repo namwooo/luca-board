@@ -200,12 +200,12 @@ description = "A set of py.test fixtures to test Flask applications."
 name = "pytest-flask"
 optional = false
 python-versions = "*"
-version = "0.10.0"
+version = "0.14.0"
 
 [package.dependencies]
 Flask = "*"
 Werkzeug = ">=0.7"
-pytest = ">=2.4"
+pytest = [">=3.6", "*", ">=3.6", "*"]
 
 [[package]]
 category = "main"
@@ -251,7 +251,7 @@ python-versions = "*"
 version = "0.14.1"
 
 [metadata]
-content-hash = "1d4cb499fe3f3eb999c32fdea9a05ef6dbd9751ff8b65b7ac2462842350b939d"
+content-hash = "c0030bd18e9eb0fedee6363ac99b94e0e125e9606aaecce19a94a2f0bfbf17cc"
 python-versions = "^3.7"
 
 [metadata.hashes]
@@ -274,7 +274,7 @@ pluggy = ["8ddc32f03971bfdf900a81961a48ccf2fb677cf7715108f85295c67405798616", "9
 py = ["bf92637198836372b520efcba9e020c330123be8ce527e535d185ed4b6f45694", "e76826342cefe3c3d5f7e8ee4316b80d1dd8a300781612ddbc765c17ba25a6c6"]
 pymysql = ["3943fbbbc1e902f41daf7f9165519f140c4451c179380677e6a848587042561a", "d8c059dcd81dedb85a9f034d5e22dcb4442c0b201908bede99e306d65ea7c8e7"]
 pytest = ["3f193df1cfe1d1609d4c583838bea3d532b18d6160fd3f55c9447fdca30848ec", "e246cf173c01169b9617fc07264b7b1316e78d7a650055235d6d897bc80d9660"]
-pytest-flask = ["2c5a36f9033ef8b6f85ddbefaebdd4f89197fc283f94b20dfe1a1beba4b77f03", "657c7de386215ab0230bee4d76ace0339ae82fcbb34e134e17a29f65032eef03"]
+pytest-flask = ["df69f2b552098227d7b7a8a48d6df2742a4d865d0807eac4916fb622c2d47e1a", "e9b120d23f73e0495d8fa1bc3b580b18cc9f98b8d6808bc45fdbcbab7d718242"]
 python-dateutil = ["063df5763652e21de43de7d9e00ccf239f953a832941e37be541614732cdfc93", "88f9287c0174266bb0d8cedd395cfba9c58e87e5ad86b2ce58859bc11be3cf02"]
 python-editor = ["a3c066acee22a1c94f63938341d4fb374e3fdd69366ed6603d7b24bed1efc565"]
 six = ["3350809f0555b11f552448330d0b52d5f24c91a322ea4a15ef22629740f3761c", "d16a0141ec1a18405cd4ce8b4613101da75da0e9a7aec5bdd4fa804d0e0eba73"]
