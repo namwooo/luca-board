@@ -12,13 +12,8 @@ app.config.from_mapping(
 
 db = SQLAlchemy(app)
 
-from . import models
-
-models.db.create_all()
-
 
 # a simple page that says hello
 @app.route('/')
 def hello():
     return 'Hello, World!'
-
