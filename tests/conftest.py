@@ -21,7 +21,7 @@ def app():
 
 
 @pytest.fixture(scope='session')
-def client(app):
+def client(_app):
     client = app.test_client()
 
     return client

@@ -21,4 +21,20 @@ def test_user_model(db):
     assert user.email == 'test@test.com'
     assert user.first_name == 'luca'
     assert user.last_name == 'kim'
-    print(user.created_at)
+
+
+def test_user_model2(db):
+    new_user = User(username='test',
+                    password='test123',
+                    email='test@test.com',
+                    first_name='luca',
+                    last_name='kim')
+    db.session.add(new_user)
+    db.session.commit()
+
+    user = User.query.filter_by(username='test').first()
+    assert user.username == 'test'
+    assert user.password == 'test123'
+    assert user.email == 'test@test.com'
+    assert user.first_name == 'luca'
+    assert user.last_name == 'kim'
