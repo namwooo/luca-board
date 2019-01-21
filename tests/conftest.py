@@ -1,5 +1,5 @@
-from app import create_app
 import pytest
+from app import create_app
 from app import db as _db
 
 TEST_DATABASE_URI = 'mysql+pymysql://root:Demian!89@localhost/test_specup'

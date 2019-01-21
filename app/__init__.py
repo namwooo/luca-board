@@ -18,15 +18,11 @@ def create_app(test_config=None):
     else:
         app.config.from_mapping(test_config)
 
+    # initialize db
     db.init_app(app)
 
-    from .views import IndexView
-
+    # register views
+    from .users.views import IndexView
     IndexView.register(app)
 
-    @app.route('/')
-    def hello():
-        return 'Hello, World!'
-
     return app
-
