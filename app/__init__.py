@@ -20,6 +20,10 @@ def create_app(test_config=None):
 
     db.init_app(app)
 
+    from .views import IndexView
+
+    IndexView.register(app)
+
     @app.route('/')
     def hello():
         return 'Hello, World!'
