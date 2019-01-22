@@ -11,17 +11,17 @@ def app():
         'TESTING': True,
         'SQLALCHEMY_DATABASE_URI': TEST_DATABASE_URI,
     }
-    _app = create_app(settings_override)
-    ctx = _app.app_context()
+    app = create_app(settings_override)
+    ctx = app.app_context()
     ctx.push()
 
-    yield _app
+    yield app
 
     ctx.pop()
 
 
 @pytest.fixture(scope='session')
-def client(_app):
+def client(app):
     client = app.test_client()
 
     return client
@@ -43,12 +43,12 @@ def session(db):
     transaction = connection.begin()
 
     options = dict(bind=connection, binds={})
-    session_ = db.create_scoped_session(options=options)
+    _session = db.create_scoped_session(options=options)
 
-    db.session = session_
+    db.session = _session
 
-    yield session_
+    yield _session
 
     transaction.rollback()
     connection.close()
-    session_.remove()
+    _session.remove()

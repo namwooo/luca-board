@@ -1,8 +1,6 @@
-from flask_marshmallow import Marshmallow
-
-__version__ = '0.1.0'
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_marshmallow import Marshmallow
 
 db = SQLAlchemy()
 ma = Marshmallow()
@@ -26,7 +24,7 @@ def create_app(test_config=None):
     ma.init_app(app)
 
     # register views
-    from .users.views import UserView
-    UserView.register(app)
+    from .users.views import UsersView
+    UsersView.register(app)
 
     return app
