@@ -1,4 +1,4 @@
-from app.posts.models import Board
+from app.posts.models import Board, Post
 from app.users.models import User
 
 
@@ -44,8 +44,6 @@ def test_post_model(db):
     db.session.commit()
 
     post = Post.query.filter_by(id=1).first()
-    assert post.writer_id == 1
-    assert post.board_id == 1
     assert post.title == 'recruit bluewhale'
     assert post.body == 'wanted ios developer'
     assert post.is_published is True
