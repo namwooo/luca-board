@@ -30,7 +30,9 @@ def create_app(test_config=None):
     lm.init_app(app)
 
     # register views
-    from .users.views import UsersView
-    UsersView.register(app)
+    from .users.views import UserView
+    from .posts.views import BoardView
+    UserView.register(app)
+    BoardView.register(app)
 
     return app

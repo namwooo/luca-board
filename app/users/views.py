@@ -13,7 +13,7 @@ def load_user(user_id):
     return User.query.get(user_id)
 
 
-class UsersView(FlaskView):
+class UserView(FlaskView):
 
     @route("/signup/", methods=["POST"])
     def signup(self):
