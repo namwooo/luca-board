@@ -6,7 +6,10 @@ from app.users.models import User
 
 class UserSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'username', 'email', 'first_name', 'last_name')
+        fields = ('id', 'username',
+                  'email', 'first_name',
+                  'last_name', 'is_admin',
+                  'created_at', 'updated_at')
 
     @post_load
     def make_user(self, data):
