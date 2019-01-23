@@ -1,15 +1,38 @@
-from flask_classful import FlaskView
+from flask import request
+from flask_classful import FlaskView, route
+from flask_login import login_required, current_user
 
+from app import db
 from app.posts.models import Board
-from app.posts.schema import boards_schema
+from app.posts.schema import boards_schema, board_schema
 
 
 class BoardView(FlaskView):
 
     def index(self):
+        """List all boards ordered by created date"""
         boards = Board.query.order_by(Board.created_at).all()
 
-        return boards_schema.jsonify(boards)
+        return boards_schema.jsonify(boards), 200
+
+    @route("/create/", methods=['POST'])
+    def create(self):
+        """Create a board"""
+        data = request.get_json()
+
+        result = board_schema.load(data)
+        new_board = result.data
+        new_board.writer_id = current_user.id
+
+        db.session.add(new_board)
+        db.session.commit()
+
+        board = Board.query.get(new_board.id)
+        return board_schema.jsonify(board), 201
+
+
+
+
 
 
 

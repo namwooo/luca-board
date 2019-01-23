@@ -30,7 +30,7 @@ class UserView(FlaskView):
         db.session.commit()
 
         user = User.query.get(new_user.id)
-        return user_schema.jsonify(user)
+        return user_schema.jsonify(user), 201
 
     @route("/login/", methods=["POST"])
     def login(self):
@@ -47,9 +47,9 @@ class UserView(FlaskView):
 
         login_user(user)
 
-        return user_schema.jsonify(user)
+        return user_schema.jsonify(user), 200
 
     @login_required
     def logout(self):
         logout_user()
-        return 'Logout success'
+        return 'Logout success', 200

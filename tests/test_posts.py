@@ -1,7 +1,6 @@
-from pprint import pprint
-
 from app.posts.models import Board, Post
 from app.users.models import User
+from tests.test_users import login
 
 
 def test_board_model(db):
@@ -82,3 +81,25 @@ def test_board_list(client, db):
     assert response.status_code == 200
     assert data[0]['title'] == 'Recruit'
     assert data[1]['title'] == 'Company life'
+
+
+def test_board_creation(client, db):
+    new_user = User(username='luca',
+                    email='luca@luca.com',
+                    first_name='luca',
+                    last_name='kim')
+    new_user.set_password('qwer1234')
+    db.session.add(new_user)
+    db.session.commit()
+
+    login(client, 'luca', 'qwer1234')
+
+    response = client.post('/board/create/', json={
+        'title': 'Recruit',
+    })
+    data = response.get_json()
+
+    assert response.status == '201 CREATED'
+    assert response.status_code == 201
+    assert data['title'] == 'Recruit'
+

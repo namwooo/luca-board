@@ -38,8 +38,8 @@ def test_signup_user(client):
     })
     data = response.get_json()
 
-    assert response.status == '200 OK'
-    assert response.status_code == 200
+    assert response.status == '201 CREATED'
+    assert response.status_code == 201
     assert data['username'] == 'luca'
     assert data['first_name'] == 'luca'
     assert data['last_name'] == 'kim'
