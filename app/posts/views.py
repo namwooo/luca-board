@@ -1,6 +1,7 @@
 from flask import request
 from flask_classful import FlaskView, route
 from flask_login import login_required, current_user
+from werkzeug.exceptions import NotFound
 
 from app import db
 from app.posts.models import Board
@@ -16,6 +17,7 @@ class BoardView(FlaskView):
         return boards_schema.jsonify(boards), 200
 
     @route("/create/", methods=['POST'])
+    @login_required
     def create(self):
         """Create a board"""
         data = request.get_json()
@@ -29,6 +31,20 @@ class BoardView(FlaskView):
 
         board = Board.query.get(new_board.id)
         return board_schema.jsonify(board), 201
+
+    @route("/delete/<id>/", methods=['DELETE'])
+    @login_required
+    def delete(self, id):
+        """Delete a board"""
+        board = Board.query.filter_by(id=id).first_or_404()
+
+        db.session.delete(board)
+        db.session.commit()
+
+        return 'Delete success', 200
+
+
+
 
 
 
