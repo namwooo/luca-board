@@ -3,7 +3,7 @@ import pytest
 from app.users.models import User
 
 
-def test_create_user_model(db):
+def test_user_model(db):
     new_user = User(username='luca',
                     email='luca@luca.com',
                     first_name='luca',
@@ -25,7 +25,6 @@ def test_create_user_model(db):
     assert user.is_authenticated is True
     assert user.is_active is True
     assert user.is_anonymous is False
-    assert user.get_id() == '1'
 
 
 def test_signup_user(client):

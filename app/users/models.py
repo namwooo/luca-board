@@ -18,6 +18,7 @@ class User(db.Model, UserMixin):
     updated_at = db.Column(db.DateTime, nullable=False,
                            server_default=func.now(),
                            server_onupdate=func.now())
+    board = db.relationship('Board', backref='writer', lazy=True)
 
     def __str__(self):
         return '{}'.format(self.username)

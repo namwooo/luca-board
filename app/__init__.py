@@ -21,6 +21,9 @@ def create_app(test_config=None):
     else:
         app.config.from_mapping(test_config)
 
+    from .users import models
+    from .posts import models
+
     # initialize db, schema, login manager
     db.init_app(app)
     ma.init_app(app)
