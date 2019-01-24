@@ -1,20 +1,17 @@
 from app.posts.models import Board, Post
 from app.users.models import User
-from tests.test_users import login
+from .factories import UserFactory, BoardFactory, PostFactory
+from .test_users import login
 
 
 def test_board_model(db):
-    new_user = User(username='luca',
-                    email='luca@luca.com',
-                    first_name='luca',
-                    last_name='kim')
-    new_user.set_password('qwer1234')
-    db.session.add(new_user)
+    user = UserFactory()
+    user.set_password('qwer1234')
+    db.session.add(user)
     db.session.commit()
 
-    new_board = Board(writer_id=new_user.id,
-                      title='Recruit')
-    db.session.add(new_board)
+    board = BoardFactory(writer_id=user.id)
+    db.session.add(board)
     db.session.commit()
 
     board = Board.query.filter_by(id=1).first()
@@ -25,24 +22,18 @@ def test_board_model(db):
 
 
 def test_post_model(db):
-    new_user = User(username='luca',
-                    email='luca@luca.com',
-                    first_name='luca',
-                    last_name='kim')
-    new_user.set_password('qwer1234')
-    db.session.add(new_user)
+    user = UserFactory()
+    user.set_password('qwer1234')
+    db.session.add(user)
     db.session.commit()
 
-    new_board = Board(writer_id=new_user.id,
-                      title='Recruit')
-    db.session.add(new_board)
+    board = BoardFactory(writer_id=user.id)
+    db.session.add(board)
     db.session.commit()
 
-    new_post = Post(writer_id=new_user.id,
-                    board_id=new_board.id,
-                    title='recruit bluewhale',
-                    body='wanted ios developer')
-    db.session.add(new_post)
+    post = PostFactory(writer_id=user.id,
+                       board_id=board.id)
+    db.session.add(post)
     db.session.commit()
 
     post = Post.query.filter_by(id=1).first()
@@ -56,22 +47,17 @@ def test_post_model(db):
 
 
 def test_board_list(client, db):
-    new_user = User(username='luca',
-                    email='luca@luca.com',
-                    first_name='luca',
-                    last_name='kim')
-    new_user.set_password('qwer1234')
-    db.session.add(new_user)
+    user = UserFactory()
+    user.set_password('qwer1234')
+    db.session.add(user)
     db.session.commit()
 
-    new_board = Board(writer_id=new_user.id,
-                      title='Recruit')
-    db.session.add(new_board)
+    board = BoardFactory(writer_id=user.id)
+    db.session.add(board)
     db.session.commit()
 
-    new_board = Board(writer_id=new_user.id,
-                      title='Company life')
-    db.session.add(new_board)
+    board = BoardFactory(writer_id=user.id, title='Company life')
+    db.session.add(board)
     db.session.commit()
 
     response = client.get('/board/')
@@ -84,12 +70,9 @@ def test_board_list(client, db):
 
 
 def test_board_creation(client, db):
-    new_user = User(username='luca',
-                    email='luca@luca.com',
-                    first_name='luca',
-                    last_name='kim')
-    new_user.set_password('qwer1234')
-    db.session.add(new_user)
+    user = UserFactory()
+    user.set_password('qwer1234')
+    db.session.add(user)
     db.session.commit()
 
     login(client, 'luca', 'qwer1234')
@@ -105,23 +88,17 @@ def test_board_creation(client, db):
 
 
 def test_board_deletion(client, db):
-    new_user = User(username='luca',
-                    email='luca@luca.com',
-                    first_name='luca',
-                    last_name='kim')
-    new_user.set_password('qwer1234')
-
-    db.session.add(new_user)
+    user = UserFactory()
+    user.set_password('qwer1234')
+    db.session.add(user)
     db.session.commit()
 
     login(client, 'luca', 'qwer1234')
 
     user = User.query.filter_by(username='luca').first()
 
-    new_board = Board(writer_id=user.id,
-                      title='Recruit')
-
-    db.session.add(new_board)
+    board = BoardFactory(writer_id=user.id)
+    db.session.add(board)
     db.session.commit()
 
     board = Board.query.filter_by(title='Recruit').first()
@@ -138,23 +115,17 @@ def test_board_deletion(client, db):
 
 
 def test_board_update(client, db):
-    new_user = User(username='luca',
-                    email='luca@luca.com',
-                    first_name='luca',
-                    last_name='kim')
-    new_user.set_password('qwer1234')
-
-    db.session.add(new_user)
+    user = UserFactory()
+    user.set_password('qwer1234')
+    db.session.add(user)
     db.session.commit()
 
     login(client, 'luca', 'qwer1234')
 
     user = User.query.filter_by(username='luca').first()
 
-    new_board = Board(writer_id=user.id,
-                      title='Recruit')
-
-    db.session.add(new_board)
+    board = BoardFactory(writer_id=user.id)
+    db.session.add(board)
     db.session.commit()
 
     board = Board.query.filter_by(title='Recruit').first()

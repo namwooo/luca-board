@@ -1,21 +1,17 @@
-import pytest
-
 from app.users.models import User
+from tests.factories import UserFactory
 
 
 def test_user_model(db):
-    new_user = User(username='luca',
-                    email='luca@luca.com',
-                    first_name='luca',
-                    last_name='kim')
-    new_user.set_password('qwer1234')
-    db.session.add(new_user)
+    user = UserFactory()
+    user.set_password('qwer1234')
+    db.session.add(user)
     db.session.commit()
 
     user = User.query.filter_by(username='luca').first()
     assert user.username == 'luca'
     assert user.check_password('qwer1234') is True
-    assert user.email == 'luca@luca.com'
+    assert user.email == 'luca@test.com'
     assert user.first_name == 'luca'
     assert user.last_name == 'kim'
     assert user.__repr__() == '<User luca>'
@@ -58,12 +54,9 @@ def logout(client):
 
 
 def test_login_logout(client, db):
-    new_user = User(username='luca',
-                    email='luca@luca.com',
-                    first_name='luca',
-                    last_name='kim')
-    new_user.set_password('qwer1234')
-    db.session.add(new_user)
+    user = UserFactory()
+    user.set_password('qwer1234')
+    db.session.add(user)
     db.session.commit()
 
     response = login(client, 'luca', 'qwer1234')
@@ -73,4 +66,3 @@ def test_login_logout(client, db):
     response = logout(client)
     assert response.status == '200 OK'
     assert response.status_code == 200
-
