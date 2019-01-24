@@ -1,3 +1,5 @@
+from urllib.error import HTTPError
+
 from flask import request
 from flask_classful import FlaskView, route
 from flask_login import login_required, current_user
@@ -38,6 +40,11 @@ class BoardView(FlaskView):
     def delete(self, id):
         """Delete a board"""
         board = Board.query.filter_by(id=id).first_or_404()
+
+        # test code 를 작성하면서 테스트로 추가된 로직입니다.
+        # 보다 구체적으로 수정이 필요할 것 같습니다.
+        if board.writer_id != current_user.id:
+            return 'wrong!', 403
 
         db.session.delete(board)
         db.session.commit()

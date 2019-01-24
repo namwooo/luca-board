@@ -18,8 +18,6 @@ class User(db.Model, UserMixin):
     updated_at = db.Column(db.DateTime, nullable=False,
                            server_default=func.now(),
                            server_onupdate=func.now())
-    board = db.relationship('Board', backref='writer', lazy=True)
-    post = db.relationship('Post', backref='writer', lazy=True)
 
     def __init__(self, username, email, first_name, last_name):
         self.username = username

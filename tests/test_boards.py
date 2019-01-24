@@ -3,26 +3,6 @@ from app.users.models import User
 from tests.test_users import login
 
 
-def test_board_model(db):
-    new_user = User(username='luca',
-                    email='luca@luca.com',
-                    first_name='luca',
-                    last_name='kim')
-    new_user.set_password('qwer1234')
-    db.session.add(new_user)
-    db.session.commit()
-
-    new_board = Board(writer_id=new_user.id, title='Recruit')
-    db.session.add(new_board)
-    db.session.commit()
-
-    board = Board.query.filter_by(id=1).first()
-    assert board.writer_id == 1
-    assert board.title == 'Recruit'
-    assert board.__str__() == 'Recruit'
-    assert board.__repr__() == '<Board Recruit>'
-
-
 def test_board_list(client, db):
     new_user = User(username='luca',
                     email='luca@luca.com',

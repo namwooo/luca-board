@@ -43,7 +43,7 @@ def session(db):
     connection = db.engine.connect()
     transaction = connection.begin()
 
-    options = dict(bind=connection, binds={})
+    options = dict(bind=connection, binds={}, expire_on_commit=False)
     _session = db.create_scoped_session(options=options)
 
     db.session = _session
