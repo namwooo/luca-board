@@ -43,37 +43,31 @@ class Describe_BoardView:
             assert 'Test Board2' == data[1]['title']
 
     class Describe_create:
-        def test_board를_생성한다(self, client, new_user):
+        @pytest.fixture
+        def subject(self, client):
             login(client, 'luca', 'qwer1234')
 
             response = client.post('/boards/create/', json={
                 'title': 'Recruit',
             })
-            data = response.get_json()
+
+            return response
+
+        def test_board를_생성한다(self, subject, new_user):
+            data = subject.get_json()
 
             board = Board.query.filter_by(title=data['title']).first()
             assert board is not None
 
-        def test_201을_반환한다(self, client, new_user):
-            login(client, 'luca', 'qwer1234')
-
-            response = client.post('/boards/create/', json={
-                'title': 'Recruit',
-            })
-            assert 201 == response.status_code
+        def test_201을_반환한다(self, subject, new_user):
+            assert 201 == subject.status_code
 
         class Context_로그인이_안됐을_때:
-            def test_401을_반환한다(self, client, new_user):
-                response = client.post('/boards/create/', json={
-                    'title': 'Recruit',
-                })
+            def test_401을_반환한다(self, subject, new_user):
                 # Expected 가 앞에 오게 된다.
-                assert 401 == response.status_code
+                assert 401 == subject.status_code
 
-            def test_board가_생성되지_않는다(self, client, new_user):
-                client.post('/boards/create/', json={
-                    'title': 'Recruit',
-                })
+            def test_board가_생성되지_않는다(self, subject, new_user):
                 assert 0 == Board.query.count()
 
     class Describe_delete:
@@ -106,7 +100,6 @@ class Describe_BoardView:
 
             def test_board를_삭제할_수_없다(self, client, new_board, other_user):
                 login(client, 'luca2', 'qwer12345')
-                print(other_user.id)
                 url = '/boards/delete/{}/'.format(new_board.id)
 
                 response = client.delete(url)
