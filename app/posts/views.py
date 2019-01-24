@@ -1,7 +1,8 @@
 from flask import request
 from flask_classful import FlaskView, route
 from flask_login import login_required, current_user
-from werkzeug.exceptions import NotFound
+from sqlalchemy import exc
+from werkzeug import exceptions
 
 from app import db
 from app.posts.models import Board
@@ -42,6 +43,26 @@ class BoardView(FlaskView):
         db.session.commit()
 
         return 'Delete success', 200
+
+    @route("/update/<id>/", methods=['PUT'])
+    @login_required
+    def update(self, id):
+        """Update a board title"""
+        data = request.get_json()
+
+        title = data['title']
+
+        board = Board.query.filter_by(id=id).first()
+        board.title = title
+
+        try:
+            db.session.commit()
+            return board_schema.jsonify(board), 200
+        except exc.SQLAlchemyError:
+            return 'internal server error', 500
+
+
+
 
 
 
