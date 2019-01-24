@@ -28,7 +28,7 @@ def test_user_model(db):
 
 
 def test_signup_user(client):
-    response = client.post('/user/signup/', json={
+    response = client.post('/users/signup/', json={
         'username': 'luca',
         'password1': 'qwer1234',
         'password2': 'qwer1234',
@@ -47,14 +47,14 @@ def test_signup_user(client):
 
 
 def login(client, username, password):
-    return client.post('/user/login/', json={
+    return client.post('/users/login/', json={
         'username': username,
         'password': password
     })
 
 
 def logout(client):
-    return client.get('/user/logout/')
+    return client.get('/users/logout/')
 
 
 def test_login_logout(client, db):

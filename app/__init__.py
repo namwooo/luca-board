@@ -3,6 +3,7 @@ from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 
+
 db = SQLAlchemy()
 ma = Marshmallow()
 lm = LoginManager()
@@ -12,7 +13,7 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='dev',
-        SQLALCHEMY_DATABASE_URI="mysql+pymysql://root:Demian!89@localhost/specup",
+        SQLALCHEMY_DATABASE_URI="mysql+pymysql://parker:parker@localhost/specup",
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
         SQLALCHEMY_ECHO=False
     )
@@ -31,8 +32,9 @@ def create_app(test_config=None):
 
     # register views
     from .users.views import UserView
-    from .posts.views import BoardView
-    UserView.register(app)
-    BoardView.register(app)
+    from .boards.views import BoardView
+
+    UserView.register(app, route_base='/users')
+    BoardView.register(app, route_base='/boards')
 
     return app
