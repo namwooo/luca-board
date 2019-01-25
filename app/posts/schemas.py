@@ -1,4 +1,4 @@
-from marshmallow import post_load, post_dump
+from marshmallow import post_load
 
 from app import ma
 from app.posts.models import Board

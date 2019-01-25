@@ -5,7 +5,7 @@ from werkzeug.exceptions import BadRequest, NotFound, Unauthorized
 
 from app import db, lm
 from .models import User
-from .schema import user_schema
+from .schemas import user_schema
 
 
 @lm.user_loader

@@ -31,7 +31,7 @@ def create_app(test_config=None):
 
     # register views
     from .users.views import UserView
-    from .posts.views import BoardView
+    from .boards.views import BoardView
     UserView.register(app)
     BoardView.register(app)
 
