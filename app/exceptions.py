@@ -15,8 +15,8 @@ class BaseException(Exception):
 
 
 class PasswordDoesNotMatch(BaseException):
-    status_code = 400
+    status_code = 422
 
 
 class UserDoesNotExist(BaseException):
-    status_code = 400
+    status_code = 404
