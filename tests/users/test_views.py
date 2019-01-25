@@ -65,12 +65,16 @@ class Describe_UsersView:
                     'username': user.username,
                     'password': '5j5f29re23'
                 })
+                data = response.get_json()
                 assert 400 == response.status_code
+                assert 'password does not match' == data['message']
 
         class Context_유저가_존재하지_않을_경우:
-            def test_404을_반환한다(self, client, password):
+            def test_400을_반환한다(self, client, password):
                 response = client.post('/users/login/', json={
                     'username': 'NotExistUser',
                     'password': password
                 })
-                assert 404 == response.status_code
+                data = response.get_json()
+                assert 400 == response.status_code
+                assert 'User does not exist' == data['message']

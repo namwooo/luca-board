@@ -2,9 +2,6 @@ from flask import Flask, jsonify
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
-from flask import Response
-
-from app.exceptions import PasswordDoesNotMatch, UserDoesNotExist
 
 db = SQLAlchemy()
 ma = Marshmallow()
@@ -24,8 +21,10 @@ def create_app(test_config=None):
     else:
         app.config.from_mapping(test_config)
 
+    # import models
     from .users import models
     from .posts import models
+    from .boards import models
 
     # initialize db, schema, login manager
     db.init_app(app)
@@ -38,14 +37,8 @@ def create_app(test_config=None):
     UsersView.register(app)
     BoardsView.register(app)
 
-    @app.errorhandler(PasswordDoesNotMatch)
-    def handle_password_does_not_match(error):
-        response = jsonify(error.to_dict())
-        response.status_code = error.status_code
-        return response
-
-    @app.errorhandler(UserDoesNotExist)
-    def handle_password_does_not_match(error):
+    @app.errorhandler(Exception)
+    def handle_error(error):
         response = jsonify(error.to_dict())
         response.status_code = error.status_code
         return response

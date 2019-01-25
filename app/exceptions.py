@@ -19,4 +19,4 @@ class PasswordDoesNotMatch(BaseException):
 
 
 class UserDoesNotExist(BaseException):
-    status_code = 404
+    status_code = 400
