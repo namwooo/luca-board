@@ -1,7 +1,10 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from flask import Response
+
+from app.exceptions import PasswordDoesNotMatch, UserDoesNotExist
 
 db = SQLAlchemy()
 ma = Marshmallow()
@@ -30,9 +33,21 @@ def create_app(test_config=None):
     lm.init_app(app)
 
     # register views
-    from .users.views import UserView
-    from .boards.views import BoardView
-    UserView.register(app)
-    BoardView.register(app)
+    from .users.views import UsersView
+    from .boards.views import BoardsView
+    UsersView.register(app)
+    BoardsView.register(app)
+
+    @app.errorhandler(PasswordDoesNotMatch)
+    def handle_password_does_not_match(error):
+        response = jsonify(error.to_dict())
+        response.status_code = error.status_code
+        return response
+
+    @app.errorhandler(UserDoesNotExist)
+    def handle_password_does_not_match(error):
+        response = jsonify(error.to_dict())
+        response.status_code = error.status_code
+        return response
 
     return app

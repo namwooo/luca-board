@@ -5,15 +5,15 @@ from tests.users.factories import UserFactory
 class Describe_User:
     @pytest.fixture
     def user(self):
-        user = UserFactory.create()
+        user = UserFactory.build()
 
         return user
 
     @pytest.fixture
     def password(self):
-        return 'vi8c4i9vho'
+        return '5j5f29re23'
 
-    class Describe_set_check_password:
+    class Describe_set_and_check_password:
         def test_해쉬된_비밀번호를_설정_및_체크한다(self, user, password):
             user.set_password(password)
             assert 'pbkdf2:sha256' in user.password

@@ -2,14 +2,13 @@ from flask import request
 from flask_classful import FlaskView, route
 from flask_login import login_user, login_required, logout_user, current_user
 from sqlalchemy import exc
-from werkzeug.exceptions import BadRequest, NotFound, Unauthorized
 
 from app import db
 from .models import Board
 from .schemas import board_schema, boards_schema
 
 
-class BoardView(FlaskView):
+class BoardsView(FlaskView):
 
     def index(self):
         """List all boards ordered by created date"""
