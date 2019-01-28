@@ -22,9 +22,9 @@ def create_app(test_config=None):
         app.config.from_mapping(test_config)
 
     # import models
-    from .users import models
-    from .posts import models
-    from .boards import models
+    from .users.models import User
+    from .boards.models import Board
+    from .posts.models import Post
 
     # initialize db, schema, login manager
     db.init_app(app)
@@ -34,8 +34,11 @@ def create_app(test_config=None):
     # register views
     from .users.views import UsersView
     from .boards.views import BoardsView
+    from .posts.views import PostsView
+
     UsersView.register(app)
     BoardsView.register(app)
+    PostsView.register(app)
 
     @app.errorhandler(Exception)
     def handle_error(error):
