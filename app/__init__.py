@@ -1,5 +1,5 @@
-from flask import Flask, jsonify
-from flask_login import LoginManager
+from flask import Flask, jsonify, g
+from flask_login import LoginManager, current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 
@@ -41,6 +41,12 @@ def create_app(test_config=None):
     def handle_error(error):
         response = jsonify(error.to_dict())
         response.status_code = error.status_code
+        return response
+
+    @app.errorhandler(401)
+    def handle_error(error):
+        response = jsonify({'message': error.description})
+        response.status_code = 401
         return response
 
     return app

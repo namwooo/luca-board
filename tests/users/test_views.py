@@ -37,7 +37,7 @@ class Describe_UsersView:
         class Context_password1과_password2가_불일치_할_때:
             @pytest.fixture
             def user_param(self, user_param):
-                user_param['password2'] = '5j5f29re23'
+                user_param['password2'] = '5j5f29re23'  # wrong password
 
                 return user_param
 

@@ -1,6 +1,7 @@
 import pytest
 from app import create_app
 from app import db as _db
+from tests.users.factories import UserFactory
 
 TEST_DATABASE_URI = 'mysql+pymysql://root:Demian!89@localhost/test_specup'
 

@@ -4,6 +4,7 @@ from flask_login import login_required, current_user
 from sqlalchemy import exc
 
 from app import db
+from app.exceptions import WriterOnly
 from .models import Board
 from .schemas import board_schema, boards_schema
 
@@ -31,13 +32,16 @@ class BoardsView(FlaskView):
         db.session.commit()
 
         board = Board.query.get(new_board.id)
-        return board_schema.jsonify(board), 201
+        return board_schema.jsonify(board), 200
 
     @route("/delete/<id>/", methods=['DELETE'])
     @login_required
     def delete(self, id):
         """Delete a board"""
         board = Board.query.filter_by(id=id).first_or_404()
+
+        if not current_user.id == board.writer_id:
+            raise WriterOnly('Only writer for the board is able to delete')
 
         db.session.delete(board)
         db.session.commit()
@@ -51,6 +55,10 @@ class BoardsView(FlaskView):
         data = request.get_json()
 
         title = data['title']
+        board = Board.query.filter_by(id=id).first()
+        
+        if not current_user.id == board.writer_id:
+            raise WriterOnly('Only writer for the board is able to delete')
 
         board = Board.query.filter_by(id=id).first()
         board.title = title

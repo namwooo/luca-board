@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, abort
 from flask_classful import FlaskView, route
 from flask_login import login_user, login_required, logout_user
 

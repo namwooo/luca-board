@@ -20,3 +20,7 @@ class PasswordDoesNotMatch(BaseException):
 
 class UserDoesNotExist(BaseException):
     status_code = 404
+
+
+class WriterOnly(BaseException):
+    status_code = 403
