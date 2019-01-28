@@ -22,6 +22,7 @@ fileConfig(config.config_file_name)
 from app import db
 from app.users import models
 from app.posts import models
+from app.boards import models
 target_metadata = db.Model.metadata
 
 # other values from the config, defined by the needs of env.py,

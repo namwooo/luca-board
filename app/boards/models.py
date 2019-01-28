@@ -13,6 +13,7 @@ class Board(db.Model):
     updated_at = db.Column(db.DateTime, nullable=False,
                            server_default=func.now(),
                            server_onupdate=func.now())
+    post = db.relationship('Post', backref='board', lazy=True)
 
     def __str__(self):
         return '{}'.format(self.title)
