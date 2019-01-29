@@ -4,7 +4,7 @@ from app import ma
 from .models import Board
 
 
-class BoardSchema(ma.Schema):
+class BoardsSchema(ma.Schema):
     class Meta:
         fields = ('id', 'writer_id',
                   'title', 'created_at',
@@ -15,5 +15,5 @@ class BoardSchema(ma.Schema):
         return Board(**data)
 
 
-board_schema = BoardSchema()
-boards_schema = BoardSchema(many=True)
+board_schema = BoardsSchema()
+boards_schema = BoardsSchema(many=True)

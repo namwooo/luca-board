@@ -1,19 +1,19 @@
-from marshmallow import post_load
-
 from app import ma
-from app.posts.models import Post
 
 
-class PostSchema(ma.Schema):
+class PostsListSchema(ma.Schema):
     class Meta:
         fields = ('id', 'writer_id', 'board_id',
-                  'title', 'body', 'is_published',
-                  'created_at', 'updated_at')
-
-    @post_load
-    def make_board(self, data):
-        return Post(**data)
+                  'title', 'like_count', 'view_count',
+                  'is_published', 'created_at', 'updated_at',)
 
 
-post_schema = PostSchema()
-posts_schema = PostSchema(many=True)
+class PostsDetailSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'writer_id', 'board_id',
+                  'title', 'body', 'like_count', 'view_count',
+                  'is_published', 'created_at', 'updated_at',)
+
+
+posts_list_schema = PostsListSchema(many=True)
+posts_detail_schema = PostsDetailSchema()

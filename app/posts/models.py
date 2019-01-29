@@ -4,7 +4,7 @@ from app import db
 
 
 class Post(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     writer_id = db.Column(db.Integer, db.ForeignKey('user.id'),
                           nullable=False)
     board_id = db.Column(db.Integer, db.ForeignKey('board.id'),

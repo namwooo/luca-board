@@ -11,7 +11,7 @@ from .schemas import board_schema, boards_schema
 
 class BoardsView(FlaskView):
 
-    @route("/", methods=['GET', 'POST'])
+    @route("/", methods=['GET'])
     def list(self):
         """List all boards ordered by created date"""
         boards = Board.query.order_by(Board.created_at).all()
