@@ -30,4 +30,13 @@ class PostsView(FlaskView):
 
         return posts_detail_schema.jsonify(post), 200
 
-    # def rank(self):
+    @route("/rank/", methods=['GET'])
+    def rank(self):
+        """List ranked posts by its like counts"""
+        posts = Post.query.filter_by(is_published=True)\
+            .order_by(Post.like_count.desc()).limit(10)
+
+        if posts is None:
+            abort(404)
+
+        return posts_list_schema.jsonify(posts), 200

@@ -65,9 +65,28 @@ class Describe_PostsView:
             assert 1 == data['view_count']  #
             assert 0 == data['like_count']
 
-    # class Describe_rank:
-    #     def test_게시글_랭킹_목록을_가져온다(self, client):
-    #         response = client.get('/posts/rank/')
+    class Describe_rank:
+        @pytest.fixture
+        def posts(self):
+            posts = []
+            # create 11 number of posts
+            for i in range(11):
+                post = PostFactory.build(is_published=True, like_count=i+1)
+                posts.append(post)
+
+                db.session.add(post)
+            db.session.commit()
+
+            return posts
+
+        def test_10개의_게시글_랭킹_목록을_가져온다(self, client, posts):
+            response = client.get('/posts/rank/')
+            data = response.get_json()
+
+            assert 200 == response.status_code
+            assert 10 == len(data)
+            assert posts[10].like_count == data[0]['like_count']  # most
+            assert posts[1].like_count == data[9]['like_count']  # least
 
     # class Describe_create:
     # class Describe_update:
