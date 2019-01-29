@@ -92,3 +92,33 @@ class Describe_UsersView:
                 data = subject.get_json()
                 assert 422 == subject.status_code
                 assert 'user does not exist' == data['_schema'][0]
+
+    class Describe_logout:
+        @pytest.fixture
+        def user(self):
+            user = UserFactory.build()
+
+            db.session.add(user)
+            db.session.commit()
+
+            return user
+
+        @pytest.fixture
+        def password(self):
+            return 'vi8c4i9vho'
+
+        @pytest.fixture
+        def login_user(self, client, user, password):
+            response = client.post('/users/login/', json={
+                'username': user.username,
+                'password': password
+            })
+
+            return user
+
+        def test_로그아웃_한다(self, client, login_user):
+            response = client.get('/users/logout/')
+            data = response.get_json()
+
+            assert 200 == response.status_code
+            assert 'logout success' == data['message']
