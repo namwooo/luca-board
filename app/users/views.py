@@ -1,11 +1,11 @@
-from flask import request, abort
+from flask import request, jsonify
 from flask_classful import FlaskView, route
 from flask_login import login_user, login_required, logout_user
+from marshmallow import ValidationError
 
 from app import db, lm
-from app.exceptions import PasswordDoesNotMatch, UserDoesNotExist
 from .models import User
-from .schemas import user_schema
+from .schemas import UserSchema, LoginSchema
 
 
 @lm.user_loader
@@ -18,34 +18,34 @@ class UsersView(FlaskView):
     @route("/signup/", methods=["POST"])
     def signup(self):
         data = request.get_json()
-        if not data['password1'] == data['password2']:
-            raise PasswordDoesNotMatch('password1 and password2 must match')
+        user_schema = UserSchema()
 
-        result = user_schema.load(data)
+        try:
+            result = user_schema.load(data)
+        except ValidationError as e:
+            return jsonify(e.messages), 422
+
         new_user = result.data
-
-        new_user.set_password(data['password1'])
 
         db.session.add(new_user)
         db.session.commit()
 
         user = User.query.get(new_user.id)
-        return user_schema.jsonify(user), 201
+        return user_schema.jsonify(user), 200
 
     @route("/login/", methods=["POST"])
     def login(self):
         data = request.get_json()
-        username = data['username']
-        password = data['password']
 
-        user = User.query.filter_by(username=username).first()
+        login_schema = LoginSchema()
+        user_schema = UserSchema()
 
-        if user is None:
-            raise UserDoesNotExist('User does not exist')
+        try:
+            result = login_schema.load(data)
+        except ValidationError as e:
+            return jsonify(e.messages), 422
 
-        if not user.check_password(password):
-            raise PasswordDoesNotMatch('password does not match')
-
+        user = result.data
         login_user(user)
 
         return user_schema.jsonify(user), 200
