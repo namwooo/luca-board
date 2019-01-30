@@ -64,17 +64,21 @@ def session(db):
 
 @pytest.fixture
 def password(size=10):
+    """Return combination of random characters and digits"""
     return ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(size))
 
 
 @pytest.fixture
 def logged_in_user(client, password):
     user = UserFactory.build()
+
+    # It has to be executed before commit
     user.set_password(password)
 
     _db.session.add(user)
     _db.session.commit()
 
+    # Access load attribute after commit
     data = {
         'username': user.username,
         'password': password
@@ -82,5 +86,18 @@ def logged_in_user(client, password):
 
     response = client.post('/users/login', json=data)
     assert 200 == response.status_code
+
+    return user
+
+
+@pytest.fixture
+def not_logged_in_user(client, password):
+    user = UserFactory.build()
+
+    # It has to be executed before commit
+    user.set_password(password)
+
+    _db.session.add(user)
+    _db.session.commit()
 
     return user
