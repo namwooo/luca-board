@@ -1,4 +1,10 @@
+import random
+import string
+
 import pytest
+from flask import jsonify
+from sqlalchemy import inspect
+
 from app import create_app
 from app import db as _db
 from tests.users.factories import UserFactory
@@ -45,12 +51,36 @@ def session(db):
     transaction = connection.begin()
 
     options = dict(bind=connection, binds={})
-    _session = db.create_scoped_session(options=options)
+    session_ = db.create_scoped_session(options=options)
 
-    db.session = _session
+    db.session = session_
 
-    yield _session
+    yield session_
 
+    session_.remove()
     transaction.rollback()
     connection.close()
-    _session.remove()
+
+
+@pytest.fixture
+def password(size=10):
+    return ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(size))
+
+
+@pytest.fixture
+def logged_in_user(client, password):
+    user = UserFactory.build()
+    user.set_password(password)
+
+    _db.session.add(user)
+    _db.session.commit()
+
+    data = {
+        'username': user.username,
+        'password': password
+    }
+
+    response = client.post('/users/login', json=data)
+    assert 200 == response.status_code
+
+    return user

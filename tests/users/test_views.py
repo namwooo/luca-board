@@ -63,7 +63,7 @@ class Describe_UsersView:
 
         @pytest.fixture
         def subject(self, client, user, password):
-            response = client.post('/users/login/', json={
+            response = client.post('/users/login', json={
                 'username': user.username,
                 'password': password
             })
@@ -109,7 +109,7 @@ class Describe_UsersView:
 
         @pytest.fixture
         def login_user(self, client, user, password):
-            response = client.post('/users/login/', json={
+            response = client.post('/users/login', json={
                 'username': user.username,
                 'password': password
             })
