@@ -16,3 +16,5 @@ class PostFactory(factory.alchemy.SQLAlchemyModelFactory):
     board = factory.SubFactory(BoardFactory)
     title = factory.Faker('sentence')
     body = factory.Faker('paragraph')
+    is_published = True
+

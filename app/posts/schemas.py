@@ -1,4 +1,7 @@
+from marshmallow import fields, validate, post_load
+
 from app import ma
+from app.posts.models import Post
 
 
 class PostsListSchema(ma.Schema):
@@ -13,6 +16,33 @@ class PostsDetailSchema(ma.Schema):
         fields = ('id', 'writer_id', 'board_id',
                   'title', 'body', 'like_count', 'view_count',
                   'is_published', 'created_at', 'updated_at',)
+
+
+class PostsSchema(ma.Schema):
+    class Meta:
+        strict = True
+
+    id = fields.Integer(dump_only=True)
+    writer_id = fields.Integer(required=True)
+    board_id = fields.Integer(required=True)
+    title = fields.String(required=True, validate=[
+        validate.Length(max=120)
+    ])
+    body = fields.String()
+    is_published = fields.Boolean(required=True)
+    like_count = fields.Integer(dump_only=True)
+    view_count = fields.Integer(dump_only=True)
+    created_at = fields.DateTime(dump_only=True)
+    updated_at = fields.DateTime(dump_only=True)
+
+    @post_load
+    def make_post(self, data):
+        post = Post(writer_id=data['writer_id'],
+                    board_id=data['board_id'],
+                    title=data['title'],
+                    body=data['body'],
+                    is_published=data['is_published'])
+        return post
 
 
 posts_list_schema = PostsListSchema(many=True)
