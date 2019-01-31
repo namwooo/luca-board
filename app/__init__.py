@@ -1,9 +1,11 @@
-from flask import Flask, jsonify, g
-from flask_login import LoginManager, current_user
+from flask import Flask, jsonify
+from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 
-db = SQLAlchemy()
+from app.queries import CustomBaseQuery
+
+db = SQLAlchemy(query_class=CustomBaseQuery)
 ma = Marshmallow()
 lm = LoginManager()
 
@@ -40,11 +42,12 @@ def create_app(test_config=None):
     BoardsView.register(app)
     PostsView.register(app)
 
-    @app.errorhandler(Exception)
-    def handle_error(error):
-        response = jsonify(error.to_dict())
-        response.status_code = error.status_code
-        return response
+    # @app.errorhandler(Exception)
+    # def handle_error(error):
+    #     response = jsonify(error.to_dict())
+    #     response.status_code = error.status_code
+    #     return response
+    #
 
     @app.errorhandler(401)
     def handle_error(error):
