@@ -1,12 +1,11 @@
-from flask import jsonify, request
+from flask import jsonify, request, abort
 from flask_classful import FlaskView, route
 from flask_login import current_user, login_required
 from marshmallow import ValidationError
-from werkzeug.exceptions import abort
 
 from app import db
 from app.boards.models import Board
-from app.posts.schemas import posts_list_schema, posts_detail_schema, PostsSchema
+from app.posts.schemas import posts_list_schema, posts_detail_schema, PostsSchema, PostsUpdateSchema
 from .models import Post
 
 
@@ -33,15 +32,11 @@ class PostsView(FlaskView):
     @route("/boards/<board_id>/posts", methods=['POST'])
     @login_required
     def create(self, board_id):
-
-        board = Board.query.get(board_id)
-        if not board:
-            return jsonify({'message': 'The board does not exist'}), 404
-
         data = request.get_json()
-        data['board_id'] = board_id
-        data['writer_id'] = current_user.id
-        post_schema = PostsSchema()
+        post_schema = PostsSchema(context={'board_id': board_id,
+                                           'writer_id': current_user.id})
+
+        board = Board.query.get_or_404(board_id)
 
         try:
             result = post_schema.load(data)
@@ -54,6 +49,26 @@ class PostsView(FlaskView):
         db.session.commit()
 
         return post_schema.jsonify(new_post), 200
+
+    @route("/posts/<post_id>", methods=['PATCH'])
+    @login_required
+    def update(self, post_id):
+        data = request.get_json()
+        post = Post.query.get_or_404(post_id)
+        posts_update_schema = PostsUpdateSchema(context={'post_id': post_id,
+                                                         'writer_id': current_user.id,
+                                                         'instance': post})
+        try:
+            result = posts_update_schema.load(data)
+        except ValidationError as e:
+            return jsonify(e.messages), 422
+
+        updated_post = result.data
+
+        db.session.add(updated_post)
+        db.session.commit()
+
+        return posts_update_schema.jsonify(updated_post), 200
 
     @route("/posts/<id>", methods=['GET'])
     def detail(self, id):
@@ -72,7 +87,7 @@ class PostsView(FlaskView):
     def rank(self):
         """List ranked posts by its like counts"""
         posts = Post.query.filter(Post.is_published == True) \
-            .order_by(Post.like_count.desc())\
+            .order_by(Post.like_count.desc()) \
             .limit(10).all()
 
         if not posts:
