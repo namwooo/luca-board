@@ -2,10 +2,11 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app import db
-from sqlalchemy import func
+
+from app.mixins import TimestampMixin
 
 
-class User(db.Model, UserMixin):
+class User(db.Model, UserMixin, TimestampMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
@@ -13,11 +14,7 @@ class User(db.Model, UserMixin):
     first_name = db.Column(db.String(35), nullable=False)
     last_name = db.Column(db.String(35), nullable=False)
     is_admin = db.Column(db.Boolean, nullable=False, default=False)
-    created_at = db.Column(db.DateTime, nullable=False,
-                           server_default=func.now())
-    updated_at = db.Column(db.DateTime, nullable=False,
-                           server_default=func.now(),
-                           server_onupdate=func.now())
+
     board = db.relationship('Board', backref='writer', lazy=True)
     post = db.relationship('Post', backref='writer', lazy=True)
 

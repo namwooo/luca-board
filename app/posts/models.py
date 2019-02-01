@@ -1,24 +1,20 @@
 from sqlalchemy import func
 
 from app import db
+from app.mixins import TimestampMixin
 
 
-class Post(db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+class Post(db.Model, TimestampMixin):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)  # autoincrement default true
     writer_id = db.Column(db.Integer, db.ForeignKey('user.id'),
                           nullable=False)
     board_id = db.Column(db.Integer, db.ForeignKey('board.id'),
                          nullable=False)
     title = db.Column(db.String(120), nullable=False)
-    body = db.Column(db.Text)
+    body = db.Column(db.Text)  # text limitation
     is_published = db.Column(db.Boolean, nullable=False, default=True)
     like_count = db.Column(db.Integer, nullable=False, default=0)
     view_count = db.Column(db.Integer, nullable=False, default=0)
-    created_at = db.Column(db.DateTime, nullable=False,
-                           server_default=func.now())
-    updated_at = db.Column(db.DateTime, nullable=False,
-                           server_default=func.now(),
-                           server_onupdate=func.now())
     image = db.relationship('PostImage', backref='image', lazy=True)
 
     def __str__(self):

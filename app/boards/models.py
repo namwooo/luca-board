@@ -1,18 +1,12 @@
-from sqlalchemy import func
-
 from app import db
+from app.mixins import TimestampMixin
 
 
-class Board(db.Model):
+class Board(db.Model, TimestampMixin):
     id = db.Column(db.Integer, primary_key=True)
     writer_id = db.Column(db.Integer, db.ForeignKey('user.id'),
                           nullable=False)
-    title = db.Column(db.Text)
-    created_at = db.Column(db.DateTime, nullable=False,
-                           server_default=func.now())
-    updated_at = db.Column(db.DateTime, nullable=False,
-                           server_default=func.now(),
-                           server_onupdate=func.now())
+    title = db.Column(db.Text)  # string
     post = db.relationship('Post', backref='board', lazy=True)
 
     def __str__(self):
