@@ -6,7 +6,7 @@ class Board(db.Model, TimestampMixin):
     id = db.Column(db.Integer, primary_key=True)
     writer_id = db.Column(db.Integer, db.ForeignKey('user.id'),
                           nullable=False)
-    title = db.Column(db.Text)  # string
+    title = db.Column(db.String(240))
     post = db.relationship('Post', backref='board', lazy=True)
 
     def __str__(self):
