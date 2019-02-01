@@ -211,10 +211,21 @@ class Describe_PostsView:
 
             return response
 
-        def test_게시글을_삭제한다(self, logged_in_user, subject):
+        def test_200을_반환한다(self, logged_in_user, subject):
             assert 200 == subject.status_code
 
+        def test_게시글을_삭제한다(self, logged_in_user, subject):
+            post = Post.query.all()
+
+            assert [] == post
+
         class Context_게시글이_없는_경우:
+            @pytest.fixture
+            def post(self):
+                post = PostFactory.build()
+
+                return post
+
             def test_404를_반환한다(self, logged_in_user, subject):
                 assert 404 == subject.status_code
 
@@ -226,20 +237,26 @@ class Describe_PostsView:
 
         @pytest.fixture
         def subject(self, client, post):
-            response = client.get(f'/posts/{post.id}/like')
+            response = client.patch(f'/posts/{post.id}/like')
 
             return response
 
         def test_200을_반환한다(self, logged_in_user, subject):
             assert 200 == subject.status_code
 
-        def test_게시글_좋아요_카운트가_1_증가한다(self, logged_in_user, json_data):
-            post_id = json_data['id']
+        def test_게시글_좋아요_카운트가_1_증가한다(self, logged_in_user, response_data):
+            post_id = response_data['id']
             post = Post.query.get(post_id)
 
             assert 1 == post.like_count
 
         class Context_게시글이_없는_경우:
+            @pytest.fixture
+            def post(self):
+                post = PostFactory.build()
+
+                return post
+
             def test_404를_반환한다(self, logged_in_user, subject):
                 assert 404 == subject.status_code
 
@@ -260,20 +277,42 @@ class Describe_PostsView:
 
         @pytest.fixture
         def subject(self, client, post):
-            response = client.get(f'/posts/{post.id}/unlike')
+            response = client.patch(f'/posts/{post.id}/unlike')
 
             return response
 
         def test_200을_반환한다(self, logged_in_user, subject):
             assert 200 == subject.status_code
 
-        def test_게시글_좋아요_카운트가_1_감소한다(self, logged_in_user, json_data):
-            post_id = json_data['id']
+        def test_게시글_좋아요_카운트가_1_감소한다(self, logged_in_user, response_data):
+            post_id = response_data['id']
             post = Post.query.get(post_id)
 
             assert 99 == post.like_count
 
+        class Context_좋아요_카운트가_0인_경우:
+            @pytest.fixture
+            def post(self):
+                post = PostFactory.build(like_count=0)
+
+                db.session.add(post)
+                db.session.commit()
+
+                return post
+
+            def test_게시글_좋아요_카운트는_그대로_0이다(self, logged_in_user, response_data):
+                post_id = response_data['id']
+                post = Post.query.get(post_id)
+
+                assert 0 == post.like_count
+
         class Context_게시글이_없는_경우:
+            @pytest.fixture
+            def post(self):
+                post = PostFactory.build()
+
+                return post
+
             def test_404를_반환한다(self, logged_in_user, subject):
                 assert 404 == subject.status_code
 
