@@ -15,6 +15,7 @@ sqlalchemy = "^1.2"
 alembic = "^1.0"
 flask-sqlalchemy = "^2.3"
 flask-login = "^0.4.1"
+sqlalchemy-utils = "^0.33.9"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.0"
