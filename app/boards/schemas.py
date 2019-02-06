@@ -21,5 +21,16 @@ class BoardsSchema(ma.Schema):
         return Board(**data)
 
 
+class BoardsUpdateSchema(BoardsSchema):
+    writer_id = fields.Integer(dump_only=True, required=True)
+
+    @post_load
+    def update_board(self, data):
+        board = self.context['instance']
+        board.title = data.title
+
+        return board
+
+
 board_schema = BoardsSchema()
 boards_schema = BoardsSchema(many=True)

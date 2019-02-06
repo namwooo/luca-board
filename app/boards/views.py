@@ -2,12 +2,11 @@ from flask import request, jsonify
 from flask_classful import FlaskView, route
 from flask_login import login_required, current_user
 from marshmallow import ValidationError
-from sqlalchemy import exc
 
 from app import db
 from app.exceptions import WriterOnly
 from .models import Board
-from .schemas import BoardsSchema
+from .schemas import BoardsSchema, BoardsUpdateSchema
 
 
 class BoardsView(FlaskView):
@@ -54,23 +53,22 @@ class BoardsView(FlaskView):
 
         return '', 200
 
-    @route("/update/<id>/", methods=['PUT'])
+    @route("/<id>", methods=['PUT'])
     @login_required
     def update(self, id):
         """Update a board title"""
         data = request.get_json()
+        board = Board.query.get_or_404(id)
 
-        title = data['title']
-        board = Board.query.filter_by(id=id).first()
+        if not board.is_writer(current_user):
+            raise WriterOnly('Writer Only: permission denied')
 
-        if not current_user.id == board.writer_id:
-            raise WriterOnly('Only writer for the board is able to delete')
-
-        board = Board.query.filter_by(id=id).first()
-        board.title = title
+        boards_update_schema = BoardsUpdateSchema(context={'instance': board})
 
         try:
-            db.session.commit()
-            return board_schema.jsonify(board), 200
-        except exc.SQLAlchemyError:
-            return 'internal server error', 500
+            result = boards_update_schema.load(data)
+        except ValidationError as e:
+            return jsonify(e.messages), 422
+
+        db.session.commit()
+        return boards_update_schema.jsonify(board), 200

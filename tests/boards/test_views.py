@@ -143,34 +143,55 @@ class Describe_BoardsView:
 
     class Describe_update:
         @pytest.fixture
-        def subject(self, client, board):
-            url = f'/boards/update/{board.id}/'
-            response = client.put(url, json={
-                'title': 'Recruit'
-            })
+        def board_data(self):
+            board_data = {
+                'title': 'Company life'
+            }
+
+            return board_data
+
+        @pytest.fixture
+        def subject(self, client, board, board_data):
+            url = f'/boards/{board.id}'
+            response = client.put(url, json=board_data)
 
             return response
 
         class Context_로그인한_유저가_작성자인_경우:
             @pytest.fixture
-            def board(self, login_user):
-                board = BoardFactory.build(writer=login_user)
+            def board(self, logged_in_user):
+                board = BoardFactory.build(writer=logged_in_user)
 
                 db.session.add(board)
                 db.session.commit()
 
                 return board
 
-            def test_게시판을_수정한다(self, subject):
-                assert 200 == subject.status_code
+            def test_200을_반환한다(self, subject):
+                assert subject.status_code == 200
+
+            def test_게시판을_수정한다(self, response_data):
+                board = Board.query.all()[0]
+
+                assert response_data['title'] == board.title
+
+        class Context_게시판이_없는_경우:
+            @pytest.fixture
+            def board(self, logged_in_user):
+                board = BoardFactory.build(writer=logged_in_user)
+
+                return board
+
+            def test_404를_반환한다(self, subject):
+                assert subject.status_code == 404
 
         class Context_비로그인_유저인_경우:
             def test_401을_반환한다(self, subject):
-                assert 401 == subject.status_code
+                assert subject.status_code == 401
 
         class Context_작성자가_아닌_경우:
             @pytest.fixture
-            def board(self, login_user):
+            def board(self):
                 board = BoardFactory.build()
 
                 db.session.add(board)
@@ -178,5 +199,9 @@ class Describe_BoardsView:
 
                 return board
 
-            def test_403을_반환한다(self, subject):
-                assert 403 == subject.status_code
+            def test_403을_반환한다(self, logged_in_user, subject):
+                assert subject.status_code == 403
+
+            def test_WriterOnly_메세지를_반환한다(self, logged_in_user, response_data):
+                assert response_data['writer'] == \
+                       'Writer Only: permission denied'
