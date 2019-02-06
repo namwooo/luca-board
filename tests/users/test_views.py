@@ -1,56 +1,113 @@
 import pytest
+from flask_login import current_user
 
 from app import db
+from app.users.models import User
 from tests.users.factories import UserFactory
 
 
 class Describe_UsersView:
+    @pytest.fixture
+    def response_data(self, subject):
+        json_data = subject.get_json()
+
+        return json_data
+
     class Describe_signup:
         @pytest.fixture
-        def user_param(self):
-            user_param = {
-                'username': 'luca',
-                'password1': 'vi8c4i9vho',
-                'password2': 'vi8c4i9vho',
+        def user_data(self):
+            user_data = {
+                'email': 'luca@test.com',
+                'password': 'vi8c4i9vho',
                 'first_name': 'luca',
                 'last_name': 'kim',
-                'email': 'luca@test.com'
             }
 
-            return user_param
+            return user_data
 
         @pytest.fixture
-        def subject(self, client, user_param):
-            response = client.post('/users/signup/', json=user_param)
+        def subject(self, client, user_data):
+            response = client.post('/users/signup', json=user_data)
 
             return response
 
-        def test_회원가입을_한다(self, subject):
-            data = subject.get_json()
+        def test_201을_반환한다(self, subject):
+            assert subject.status_code == 201
 
-            assert 200 == subject.status_code
-            assert 'luca' == data['username']
-            assert 'luca' == data['first_name']
-            assert 'kim' == data['last_name']
-            assert 'luca@test.com' == data['email']
+        def test_회원가입을_한다(self, response_data, user_data):
+            user_id = response_data['id']
 
-        class Context_password1과_password2가_불일치_할_때:
+            user = User.query.get_or_404(user_id)
+            assert user.email == user_data['email']
+            assert user.first_name == user_data['first_name']
+            assert user.last_name == user_data['last_name']
+            assert user.password == user_data['password']
+
+        class Context_email이_중복된_경우:
             @pytest.fixture
-            def user_param(self, user_param):
-                user_param['password2'] = '5j5f29re23'  # wrong password
+            def user(self):
+                user = UserFactory.build(email='luca@test.com')
 
-                return user_param
+                db.session.add(user)
+                db.session.commit()
+
+                return user
+
+            def test_422을_반환한다(self, user, subject):
+                assert subject.status_code == 422
+
+            def test_이메일_중복_메세지를_반환한다(self, user, response_data):
+                assert response_data['email'][0] == \
+                       'email is duplicated'
+
+        class Context_email을_입력하지_않았을_경우:
+            @pytest.fixture
+            def user_data(self, user_data):
+                user_data.pop('email')
+
+                return user_data
 
             def test_422을_반환한다(self, subject):
-                data = subject.get_json()
+                assert subject.status_code == 422
 
-                assert 422 == subject.status_code
-                assert 'password1 and password2 must match' == data['_schema'][0]
+        class Context_password를_입력하지_않았을_경우:
+            @pytest.fixture
+            def user_data(self, user_data):
+                user_data.pop('password')
+
+                return user_data
+
+            def test_422을_반환한다(self, subject):
+                assert subject.status_code == 422
+
+        class Context_first_name을_입력하지_않았을_경우:
+            @pytest.fixture
+            def user_data(self, user_data):
+                user_data.pop('first_name')
+
+                return user_data
+
+            def test_422을_반환한다(self, subject):
+                assert subject.status_code == 422
+
+        class Context_last_name을_입력하지_않았을_경우:
+            @pytest.fixture
+            def user_data(self, user_data):
+                user_data.pop('last_name')
+
+                return user_data
+
+            def test_422을_반환한다(self, subject):
+                assert subject.status_code == 422
 
     class Describe_login:
         @pytest.fixture
-        def user(self):
-            user = UserFactory.build()
+        def password(self):
+            return 'vi8c4i9vho'
+
+        @pytest.fixture
+        def user(self, password):
+            user = UserFactory.build(password='vi8c4i9vho')
 
             db.session.add(user)
             db.session.commit()
@@ -58,19 +115,22 @@ class Describe_UsersView:
             return user
 
         @pytest.fixture
-        def password(self):
-            return 'vi8c4i9vho'
+        def login_data(self, user, password):
+            login_data = {
+                'email': user.email,
+                'password': password
+            }
+
+            return login_data
 
         @pytest.fixture
-        def subject(self, client, user, password):
-            response = client.post('/users/login', json={
-                'username': user.username,
-                'password': password
-            })
+        def subject(self, client, login_data):
+            response = client.post('/users/login', json=login_data)
+
             return response
 
-        def test_로그인_한다(self, subject):
-            assert 200 == subject.status_code
+        def test_200을_반환한다(self, subject):
+            assert subject.status_code == 200
 
         class Context_비밀번호가_틀린_경우:
             @pytest.fixture
@@ -78,9 +138,10 @@ class Describe_UsersView:
                 return '5j5f29re23'
 
             def test_422을_반환한다(self, subject):
-                data = subject.get_json()
-                assert 422 == subject.status_code
-                assert 'password does not match' == data['_schema'][0]
+                assert subject.status_code == 422
+
+            def test_비밀번호_불일치_메시지를_반환한다(self, response_data):
+                assert response_data['_schema'][0] == 'password does not match'
 
         class Context_유저가_존재하지_않을_경우:
             @pytest.fixture
@@ -89,36 +150,17 @@ class Describe_UsersView:
                 return user
 
             def test_422을_반환한다(self, subject):
-                data = subject.get_json()
-                assert 422 == subject.status_code
-                assert 'user does not exist' == data['_schema'][0]
+                assert subject.status_code == 422
+
+            def test_유저_없음_메시지를_반환한다(self, response_data):
+                assert response_data['_schema'][0] == 'user does not exist'
 
     class Describe_logout:
         @pytest.fixture
-        def user(self):
-            user = UserFactory.build()
+        def subject(self, client):
+            response = client.get('/users/logout')
 
-            db.session.add(user)
-            db.session.commit()
+            return response
 
-            return user
-
-        @pytest.fixture
-        def password(self):
-            return 'vi8c4i9vho'
-
-        @pytest.fixture
-        def login_user(self, client, user, password):
-            response = client.post('/users/login', json={
-                'username': user.username,
-                'password': password
-            })
-
-            return user
-
-        def test_로그아웃_한다(self, client, login_user):
-            response = client.get('/users/logout/')
-            data = response.get_json()
-
-            assert 200 == response.status_code
-            assert 'logout success' == data['message']
+        def test_200을_반환한다(self, logged_in_user, subject):
+            assert subject.status_code == 200

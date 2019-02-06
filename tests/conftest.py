@@ -1,10 +1,6 @@
 import random
 import string
-
 import pytest
-from flask import jsonify
-from sqlalchemy import inspect
-
 from app import create_app
 from app import db as _db
 from tests.users.factories import UserFactory
@@ -57,9 +53,9 @@ def session(db):
 
     yield session_
 
-    session_.remove()
     transaction.rollback()
     connection.close()
+    session_.remove()
 
 
 @pytest.fixture
@@ -70,22 +66,19 @@ def password(size=10):
 
 @pytest.fixture
 def logged_in_user(client, password):
-    user = UserFactory.build()
-
-    # It has to be executed before commit
-    user.set_password(password)
+    user = UserFactory.build(password=password)
 
     _db.session.add(user)
     _db.session.commit()
 
     # Access load attribute after commit
-    data = {
-        'username': user.username,
+    login_data = {
+        'email': user.email,
         'password': password
     }
 
-    response = client.post('/users/login', json=data)
-    assert 200 == response.status_code
+    response = client.post('/users/login', json=login_data)
+    assert response.status_code == 200
 
     return user
 

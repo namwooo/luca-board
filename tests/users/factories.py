@@ -19,7 +19,6 @@ class UserFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     first_name = factory.Faker('first_name')
     last_name = factory.Faker('last_name')
-    username = factory.lazy_attribute(lambda obj: f'{obj.first_name}{obj.last_name}')
     email = factory.lazy_attribute(lambda obj: f'{obj.first_name}{obj.last_name}@test.com')
-    password = factory.PostGenerationMethodCall('set_password',
-                                                'vi8c4i9vho')
+    password = factory.Faker('password')
+    is_active = True

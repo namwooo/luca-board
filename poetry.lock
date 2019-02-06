@@ -208,6 +208,14 @@ version = "5.0.0"
 six = ">=1.0.0,<2.0.0"
 
 [[package]]
+category = "main"
+description = "comprehensive password hashing framework supporting over 30 schemes"
+name = "passlib"
+optional = false
+python-versions = "*"
+version = "1.7.1"
+
+[[package]]
 category = "dev"
 description = "plugin and hook calling mechanisms for python"
 name = "pluggy"
@@ -291,7 +299,7 @@ description = "Programmatically open an editor, capture the result."
 name = "python-editor"
 optional = false
 python-versions = "*"
-version = "1.0.3"
+version = "1.0.4"
 
 [[package]]
 category = "main"
@@ -338,7 +346,7 @@ python-versions = "*"
 version = "0.14.1"
 
 [metadata]
-content-hash = "02c9daa8a1ff508365423d7d34bccfc19688f7463b337e953b12c3f6b99c6f0c"
+content-hash = "8d1a98d233a5f78624291a90271a78c39d462eae4e7072cc77351bf696f4eacd"
 python-versions = "^3.7"
 
 [metadata.hashes]
@@ -362,6 +370,7 @@ markupsafe = ["048ef924c1623740e70204aa7143ec592504045ae4429b59c30054cb31e3c432"
 marshmallow = ["958e6640bec9a04ca15701e3d99b12c4269d0f43be596f00eeca1f2baf530abc", "d072db26baf2b0de886ad58f12360610d7bdea439e975a0179d1da82340c4f72"]
 marshmallow-sqlalchemy = ["1a4813bbcd2a34f10b1fcad5f4ed85355739f39edb223e6cf68a95bd75807885", "5fc53b6fac10c3e0d0c3e1ba19312860b54534ffc56bc5d9615bf680f35a18de"]
 more-itertools = ["38a936c0a6d98a38bcc2d03fdaaedaba9f412879461dd2ceff8d37564d6522e4", "c0a5785b1109a6bd7fac76d6837fd1feca158e54e521ccd2ae8bfe393cc9d4fc", "fe7a7cae1ccb57d33952113ff4fa1bc5f879963600ed74918f1236e212ee50b9"]
+passlib = ["3d948f64138c25633613f303bcc471126eae67c04d5e3f6b7b8ce6242f8653e0", "43526aea08fa32c6b6dbbbe9963c4c767285b78147b7437597f992812f69d280"]
 pluggy = ["8ddc32f03971bfdf900a81961a48ccf2fb677cf7715108f85295c67405798616", "980710797ff6a041e9a73a5787804f848996ecaa6f8a1b1e08224a5894f2074a"]
 py = ["bf92637198836372b520efcba9e020c330123be8ce527e535d185ed4b6f45694", "e76826342cefe3c3d5f7e8ee4316b80d1dd8a300781612ddbc765c17ba25a6c6"]
 pymysql = ["3943fbbbc1e902f41daf7f9165519f140c4451c179380677e6a848587042561a", "d8c059dcd81dedb85a9f034d5e22dcb4442c0b201908bede99e306d65ea7c8e7"]
@@ -369,7 +378,7 @@ pytest = ["3f193df1cfe1d1609d4c583838bea3d532b18d6160fd3f55c9447fdca30848ec", "e
 pytest-cov = ["0ab664b25c6aa9716cbf203b17ddb301932383046082c081b9848a0edf5add33", "230ef817450ab0699c6cc3c9c8f7a829c34674456f2ed8df1fe1d39780f7c87f"]
 pytest-flask = ["df69f2b552098227d7b7a8a48d6df2742a4d865d0807eac4916fb622c2d47e1a", "e9b120d23f73e0495d8fa1bc3b580b18cc9f98b8d6808bc45fdbcbab7d718242"]
 python-dateutil = ["063df5763652e21de43de7d9e00ccf239f953a832941e37be541614732cdfc93", "88f9287c0174266bb0d8cedd395cfba9c58e87e5ad86b2ce58859bc11be3cf02"]
-python-editor = ["a3c066acee22a1c94f63938341d4fb374e3fdd69366ed6603d7b24bed1efc565"]
+python-editor = ["1bf6e860a8ad52a14c3ee1252d5dc25b2030618ed80c022598f00176adc8367d", "51fda6bcc5ddbbb7063b2af7509e43bd84bfc32a4ff71349ec7847713882327b", "5f98b069316ea1c2ed3f67e7f5df6c0d8f10b689964a4a811ff64f0106819ec8", "c3da2053dbab6b29c94e43c486ff67206eafbe7eb52dbec7390b5e2fb05aac77", "ea87e17f6ec459e780e4221f295411462e0d0810858e055fc514684350a2f522"]
 six = ["3350809f0555b11f552448330d0b52d5f24c91a322ea4a15ef22629740f3761c", "d16a0141ec1a18405cd4ce8b4613101da75da0e9a7aec5bdd4fa804d0e0eba73"]
 sqlalchemy = ["52a42dbf02d0562d6e90e7af59f177f1cc027e72833cc29c3a821eefa009c71d"]
 sqlalchemy-utils = ["3f1cb542cf0549a0de508d4919f3ad693a36230bf4cd13fdd6253549fec71182"]

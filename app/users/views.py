@@ -15,7 +15,7 @@ def load_user(user_id):
 
 class UsersView(FlaskView):
 
-    @route("/signup/", methods=["POST"])
+    @route("/signup", methods=["POST"])
     def signup(self):
         data = request.get_json()
         user_schema = UserSchema()
@@ -30,10 +30,9 @@ class UsersView(FlaskView):
         db.session.add(new_user)
         db.session.commit()
 
-        user = User.query.get(new_user.id)
-        return user_schema.jsonify(user), 200
+        return user_schema.jsonify(new_user), 201
 
-    @route("/login/", methods=["POST"])
+    @route("/login", methods=["POST"])
     def login(self):
         data = request.get_json()
 
@@ -50,7 +49,8 @@ class UsersView(FlaskView):
 
         return user_schema.jsonify(user), 200
 
+    @route("/logout", methods=["GET"])
     @login_required
     def logout(self):
         logout_user()
-        return 'Logout success', 200
+        return '', 200
