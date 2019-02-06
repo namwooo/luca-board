@@ -16,6 +16,7 @@ class User(db.Model, UserMixin, TimestampMixin):
 
     board = db.relationship('Board', backref='writer', lazy=True)
     post = db.relationship('Post', backref='writer', lazy=True)
+    comment = db.relationship('Comment', backref='writer', lazy=True)
 
     def __str__(self):
         return '{}'.format(self.email)

@@ -17,7 +17,8 @@ class Post(db.Model, TimestampMixin):
     is_published = db.Column(db.Boolean, nullable=False, default=True)
     like_count = db.Column(db.Integer, nullable=False, default=0)
     view_count = db.Column(db.Integer, nullable=False, default=0)
-    image = db.relationship('PostImage', backref='image', lazy=True)
+    image = db.relationship('PostImage', backref='post', lazy=True)
+    comment = db.relationship('Comment', backref='post', lazy=True)
 
     def __str__(self):
         return f'{self.title}'
