@@ -1,4 +1,4 @@
-from marshmallow import post_load
+from marshmallow import post_load, fields, validate, pre_load
 
 from app import ma
 from .models import Board
@@ -6,9 +6,15 @@ from .models import Board
 
 class BoardsSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'writer_id',
-                  'title', 'created_at',
-                  'updated_at')
+        strict = True
+
+    id = fields.Integer(dump_only=True)
+    writer_id = fields.Integer(required=True)
+    title = fields.String(required=True, validate=[
+        validate.Length(min=1, max=240)
+    ])
+    created_at = fields.DateTime(dump_only=True)
+    updated_at = fields.DateTime(dump_only=True)
 
     @post_load
     def make_board(self, data):

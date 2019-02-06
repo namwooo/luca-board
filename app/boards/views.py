@@ -1,52 +1,58 @@
-from flask import request
+from flask import request, jsonify
 from flask_classful import FlaskView, route
 from flask_login import login_required, current_user
+from marshmallow import ValidationError
 from sqlalchemy import exc
 
 from app import db
 from app.exceptions import WriterOnly
 from .models import Board
-from .schemas import board_schema, boards_schema
+from .schemas import BoardsSchema
 
 
 class BoardsView(FlaskView):
 
-    @route("/", methods=['GET'])
+    @route('', methods=['GET'])
     def list(self):
         """List all boards ordered by created date"""
+        boards_schema = BoardsSchema(many=True)
         boards = Board.query.order_by(Board.created_at).all()
 
         return boards_schema.jsonify(boards), 200
 
-    @route("/create/", methods=['POST'])
+    @route('', methods=['POST'])
     @login_required
     def create(self):
         """Create a board"""
         data = request.get_json()
+        data['writer_id'] = current_user.id
 
-        result = board_schema.load(data)
+        board_schema = BoardsSchema()
+        try:
+            result = board_schema.load(data)
+        except ValidationError as e:
+            return jsonify(e.messages), 422
+
         new_board = result.data
-        new_board.writer_id = current_user.id
 
         db.session.add(new_board)
         db.session.commit()
 
-        board = Board.query.get(new_board.id)
-        return board_schema.jsonify(board), 200
+        return board_schema.jsonify(new_board), 200
 
-    @route("/delete/<id>/", methods=['DELETE'])
+    @route("/<id>", methods=['DELETE'])
     @login_required
     def delete(self, id):
         """Delete a board"""
-        board = Board.query.filter_by(id=id).first_or_404()
+        board = Board.query.get_or_404(id)
 
-        if not current_user.id == board.writer_id:
-            raise WriterOnly('Only writer for the board is able to delete')
+        if not board.is_writer(current_user):
+            raise WriterOnly('Writer Only: permission denied')
 
-        db.session.delete(board)
+        db.session.delete(board)  # integrity issue here
         db.session.commit()
 
-        return 'Delete success', 200
+        return '', 200
 
     @route("/update/<id>/", methods=['PUT'])
     @login_required
@@ -56,7 +62,7 @@ class BoardsView(FlaskView):
 
         title = data['title']
         board = Board.query.filter_by(id=id).first()
-        
+
         if not current_user.id == board.writer_id:
             raise WriterOnly('Only writer for the board is able to delete')
 

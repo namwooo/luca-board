@@ -14,13 +14,10 @@ class BaseException(Exception):
         return rv
 
 
-class PasswordDoesNotMatch(BaseException):
-    status_code = 422
-
-
-class UserDoesNotExist(BaseException):
-    status_code = 404
-
-
 class WriterOnly(BaseException):
     status_code = 403
+
+    def to_dict(self):
+        rv = dict(self.payload or ())
+        rv['writer'] = self.message
+        return rv

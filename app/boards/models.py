@@ -14,3 +14,8 @@ class Board(db.Model, TimestampMixin):
 
     def __repr__(self):
         return '<Board {}>'.format(self.title)
+
+    def is_writer(self, user):
+        return self.writer_id == user.id
+
+
