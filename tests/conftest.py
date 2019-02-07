@@ -85,10 +85,7 @@ def logged_in_user(client, password):
 
 @pytest.fixture
 def not_logged_in_user(client, password):
-    user = UserFactory.build()
-
-    # It has to be executed before commit
-    user.set_password(password)
+    user = UserFactory.build(password=password)
 
     _db.session.add(user)
     _db.session.commit()
