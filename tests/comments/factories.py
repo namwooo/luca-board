@@ -12,6 +12,8 @@ class CommentFactory(factory.alchemy.SQLAlchemyModelFactory):
         sqlalchemy_session = db.session
         sqlalchemy_session_persistence = 'commit'
 
+    id = factory.Sequence(lambda n: n + 1)
     writer = factory.SubFactory(UserFactory)
     post = factory.SubFactory(PostFactory)
     body = factory.Faker('paragraph')
+    path = factory.PostGenerationMethodCall('get_path')

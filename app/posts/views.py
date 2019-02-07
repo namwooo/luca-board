@@ -75,7 +75,7 @@ class PostsView(FlaskView):
     def delete(self, id):
         """Delete a post"""
         post = Post.query.get_or_404(id)
-        
+
         db.session.delete(post)
         db.session.commit()
 
@@ -126,7 +126,7 @@ class PostsView(FlaskView):
         return posts_schema.jsonify(post), 200
 
     @route('/<id>/comments', methods=['GET'])
-    def list(self, id):
+    def comment_list(self, id):
         post = Post.query.get_or_404(id)
         comments = Comment.query.filter_by(post_id=id).order_by(Comment.path.asc()).all()
 

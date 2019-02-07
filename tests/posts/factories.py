@@ -12,6 +12,7 @@ class PostFactory(factory.alchemy.SQLAlchemyModelFactory):
         sqlalchemy_session = db.session
         sqlalchemy_session_persistence = None
 
+    id = factory.Sequence(lambda n: n + 1)
     writer = factory.SubFactory(UserFactory)
     board = factory.SubFactory(BoardFactory)
     title = factory.Faker('sentence')

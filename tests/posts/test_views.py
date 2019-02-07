@@ -333,3 +333,40 @@ class Describe_PostsView:
         class Context_비로그인_유저인_경우:
             def test_401을_반환한다(self, not_logged_in_user, subject):
                 assert 401 == subject.status_code
+
+    class Describe_comment_list:
+
+        @pytest.fixture
+        def parent_comment(self):
+            comment = CommentFactory.build()
+
+            comment.save()
+
+            return comment
+
+        @pytest.fixture
+        def children_comments(self, parent_comment):
+            c1 = CommentFactory.build(post=parent_comment.post,
+                                      comment_parent_id=parent_comment.id)
+            c2 = CommentFactory.build(post=parent_comment.post,
+                                      comment_parent_id=parent_comment.id)
+            c3 = CommentFactory.build(post=parent_comment.post,
+                                      comment_parent_id=parent_comment.id)
+
+            for c in [c1, c2, c3]:
+                c.save()
+
+            return c1
+
+        @pytest.fixture
+        def subject(self, client, children_comments):
+            url = f'/posts/{children_comments.post_id}/comments'
+            response = client.get(url)
+
+            return response
+
+        def test_200을_반환한다(self, subject):
+            assert subject.status_code == 200
+
+        def test_댓글_목록을_가져온다(self, response_data):
+            assert len(response_data) == 4
