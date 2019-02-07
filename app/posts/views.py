@@ -2,6 +2,7 @@ from flask import jsonify, request
 from flask_classful import FlaskView, route
 from flask_login import current_user, login_required
 from marshmallow import ValidationError
+from sqlalchemy.orm import joinedload
 
 from app import db
 from app.boards.models import Board
@@ -18,12 +19,12 @@ class PostsView(FlaskView):
     def create(self):
         """Create a post in board"""
         data = request.get_json()
-        board_id = data['board_id']
-        post_schema = PostsSchema(context={'board_id': board_id,
-                                           'writer_id': current_user.id})
 
-        board = Board.query.get_or_404(board_id)  # find or fail
+        board = Board.query.get_or_404(data['board_id'])
 
+        data['writer_id'] = current_user.id
+
+        post_schema = PostsSchema()
         try:
             result = post_schema.load(data)
         except ValidationError as e:
@@ -34,7 +35,9 @@ class PostsView(FlaskView):
         db.session.add(new_post)
         db.session.commit()
 
-        return post_schema.jsonify(new_post), 200
+        post = Post.query.options(joinedload('writer')).get(new_post.id)
+
+        return post_schema.jsonify(post), 200
 
     @route('/<id>', methods=['GET'])
     def detail(self, id):

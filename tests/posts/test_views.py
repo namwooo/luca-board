@@ -23,48 +23,6 @@ class Describe_PostsView:
 
         return json_data
 
-    class Describe_list:
-        @pytest.fixture
-        def board(self):
-            board = BoardFactory.build()
-            board.post = PostFactory.build_batch(16)
-
-            db.session.add(board)
-            db.session.commit()
-
-            return board
-
-        @pytest.fixture
-        def param(self):
-            return '?p=1'  # page 1
-
-        @pytest.fixture
-        def subject(self, client, board, param):
-            url = f'/boards/{board.id}/posts{param}'
-            response = client.get(url)
-
-            return response
-
-        def test_게시글_목록을_가져온다(self, subject):
-            data = subject.get_json()
-
-            assert 15 == len(data)
-            assert 200 == subject.status_code
-
-        class Context_게시판이_존재하지_않을_경우:
-            @pytest.fixture
-            def board(self):
-                board = BoardFactory.build()
-                board.post = PostFactory.build_batch(10)
-
-                return board
-
-            def test_404를_반환한다(self, subject):
-                data = subject.get_json()
-
-                assert 404 == subject.status_code
-                assert 'The board does not exist' == data['message']
-
     class Describe_detail:
 
         def test_게시글_세부_목록을_가져온다_조회수_1_증가(self, client, post):
@@ -104,8 +62,18 @@ class Describe_PostsView:
 
             return response
 
-        def test_게시글이_생성된다(self, logged_in_user, subject):
-            assert 200 == subject.status_code
+        def test_200을_반환한다(self, logged_in_user, subject):
+            assert subject.status_code == 200
+
+        def test_게시글이_생성된다(self, logged_in_user, response_data, post_data):
+            post_id = response_data['id']
+            post = Post.query.get_or_404(post_id)
+
+            assert post.title == post_data['title']
+            assert post.body == post_data['body']
+            assert post.is_published == post_data['is_published']
+            assert post.board_id == post_data['board_id']
+            assert response_data['writer'] == logged_in_user.full_name
 
         class Context_게시판이_존재하지_않는_경우:
             @pytest.fixture
@@ -149,7 +117,7 @@ class Describe_PostsView:
             db.session.add(post)
             db.session.commit()
 
-            return post 
+            return post
 
         @pytest.fixture
         def subject(self, client, post):

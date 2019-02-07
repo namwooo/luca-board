@@ -23,13 +23,14 @@ class PostsSchema(ma.Schema):
         strict = True
 
     id = fields.Integer(dump_only=True)
-    writer_id = fields.Integer(dump_only=True, required=True)
-    board_id = fields.Integer(dump_only=True, required=True)
+    writer_id = fields.Integer(required=True)
+    board_id = fields.Integer(required=True)
+    writer = fields.String(dump_only=True)
     title = fields.String(required=True, validate=[
         validate.Length(min=1, max=120)
     ])
     body = fields.String(required=True, validate=[
-        validate.Length(min=1) # max value
+        validate.Length(min=1, max=20000)
     ])
     is_published = fields.Boolean(required=True)
     like_count = fields.Integer(dump_only=True)
@@ -39,12 +40,10 @@ class PostsSchema(ma.Schema):
 
     @post_load
     def make_post(self, data):
-        post = Post(writer_id=self.context['writer_id'],
-                    board_id=self.context['board_id'],
-                    title=data['title'],
-                    body=data['body'],
-                    is_published=data['is_published'])
+        post = Post(**data)
+
         return post
+
 
 
 class PostsUpdateSchema(PostsSchema):

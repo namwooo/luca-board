@@ -19,10 +19,11 @@ class User(db.Model, UserMixin, TimestampMixin):
     comment = db.relationship('Comment', backref='writer', lazy=True)
 
     def __str__(self):
-        return '{}'.format(self.email)
+        return '{}'.format(self.full_name)
 
     def __repr__(self):
-        return '<User {}>'.format(self.email)
+        return '<User {}>'.format(self.full_name)
 
-    def get_full_name(self):
+    @property
+    def full_name(self):
         return '{} {}'.format(self.first_name, self.last_name)

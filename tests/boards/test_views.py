@@ -3,6 +3,7 @@ import pytest
 from app import db
 from app.boards.models import Board
 from tests.boards.factories import BoardFactory
+from tests.posts.factories import PostFactory
 
 
 class Describe_BoardsView:
@@ -205,3 +206,42 @@ class Describe_BoardsView:
             def test_WriterOnly_메세지를_반환한다(self, logged_in_user, response_data):
                 assert response_data['writer'] == \
                        'Writer Only: permission denied'
+
+    class Describe_post_list:
+        @pytest.fixture
+        def board(self):
+            board = BoardFactory.build()
+            board.post = PostFactory.build_batch(15)
+
+            db.session.add(board)
+            db.session.commit()
+
+            return board
+
+        @pytest.fixture
+        def param(self):
+            return '?p=1'  # page 1
+
+        @pytest.fixture
+        def subject(self, client, board, param):
+            url = f'/boards/{board.id}/posts{param}'
+            response = client.get(url)
+
+            return response
+
+        def test_200을_반환한다(self, subject):
+            assert subject.status_code == 200
+
+        def test_게시글_목록을_가져온다(self, response_data):
+            assert len(response_data) == 15
+
+        class Context_게시판이_존재하지_않을_경우:
+            @pytest.fixture
+            def board(self):
+                board = BoardFactory.build()
+                board.post = PostFactory.build_batch(15)
+
+                return board
+
+            def test_404를_반환한다(self, subject):
+                assert subject.status_code == 404
