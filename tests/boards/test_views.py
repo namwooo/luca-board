@@ -42,7 +42,7 @@ class Describe_BoardsView:
         def test_200을_반환한다(self, subject):
             assert subject.status_code == 200
 
-        def test_게시글_목록을_가져온다(self, response_data):
+        def test_게시판_목록을_가져온다(self, response_data):
             assert len(response_data) == 2
 
     class Describe_create:
