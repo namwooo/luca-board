@@ -87,19 +87,19 @@ class Describe_PostsView:
             return board
 
         @pytest.fixture
-        def form(self):
-            post = PostFactory.build()
+        def post_data(self, board):
+            post_data = {
+                'title': 'Blue Whale vs Blue Dragon',
+                'body': 'Blue Whale win',
+                'is_published': True,
+                'board_id': board.id
+            }
 
-            return post
+            return post_data
 
         @pytest.fixture
-        def subject(self, client, board, form):
-            url = f'/boards/{board.id}/posts'
-            response = client.post(url, json={
-                'title': form.title,
-                'body': form.body,
-                'is_published': form.is_published
-            })
+        def subject(self, client, post_data):
+            response = client.post('/posts', json=post_data)
 
             return response
 
@@ -109,7 +109,7 @@ class Describe_PostsView:
         class Context_게시판이_존재하지_않는_경우:
             @pytest.fixture
             def board(self):
-                board = BoardFactory.build()
+                board = BoardFactory.build(id=99)
 
                 return board
 
@@ -122,36 +122,50 @@ class Describe_PostsView:
 
         class Context_title값이_없는_경우:
             @pytest.fixture
-            def form(self):
-                post = PostFactory.build(title=None)
+            def post_data(self, post_data):
+                post_data.pop('title')
 
-                return post
+                return post_data
 
             def test_422을_반환한다(self, logged_in_user, subject):
                 assert 422 == subject.status_code
 
         class Context_body값이_없는_경우:
             @pytest.fixture
-            def form(self):
-                post = PostFactory.build(body=None)
+            def post_data(self, post_data):
+                post_data.pop('body')
 
-                return post
+                return post_data
 
             def test_422을_반환한다(self, logged_in_user, subject):
                 assert 422 == subject.status_code
 
     class Describe_rank:
+        @pytest.fixture
+        def post(self):
+            posts = PostFactory.create_batch(15)
+
+            # db.session.add(posts)
+            # db.session.commit()
+
+            return posts
 
         @pytest.fixture
-        def subject(self, client):
+        def subject(self, client, post):
             response = client.get('/posts/rank')
 
             return response
 
-        def test_게시글_랭킹_목록을_가져온다(self, post, subject):
+        def test_게시글_랭킹_목록을_가져온다(self, subject):
             assert 200 == subject.status_code
 
         class Context_게시글이_없는_경우:
+            @pytest.fixture
+            def post(self):
+                post = PostFactory.build()
+
+                return post
+
             def test_404를_반환한다(self, subject):
                 assert 404 == subject.status_code
 

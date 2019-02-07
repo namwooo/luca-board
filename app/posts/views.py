@@ -5,52 +5,24 @@ from marshmallow import ValidationError
 
 from app import db
 from app.boards.models import Board
+from app.comments.models import Comment
+from app.comments.schemas import CommentsSchema
 from app.posts.schemas import posts_list_schema, posts_detail_schema, PostsSchema, PostsUpdateSchema
 from .models import Post
 
 
 class PostsView(FlaskView):
-    route_base = '/'
 
-    @route("/boards/<board_id>/posts", methods=['GET'])
-    def list(self, board_id):
-        """List all published posts in board ordered by created date"""
-
-        page = request.args.get('p', default=1, type=int)
-
-        board = Board.query.get(board_id)
-        posts = Post.query.filter(Post.board_id == board_id) \
-            .filter(Post.is_published == True) \
-            .order_by(Post.created_at.desc()) \
-            .paginate(page=page, per_page=15, error_out=False)
-
-        if not board:
-            return jsonify({'message': 'The board does not exist'}), 404
-
-        return posts_list_schema.jsonify(posts.items), 200
-
-    @route("/posts/<id>", methods=['GET'])
-    def detail(self, id):
-        """Detail a post and plus view count"""
-
-        post = Post.query.filter_by(id=id, is_published=True).first_or_404()
-
-        post.view_count += 1
-
-        db.session.add(post)
-        db.session.commit()
-
-        return posts_detail_schema.jsonify(post), 200
-
-    @route("/boards/<board_id>/posts", methods=['POST'])
+    @route('', methods=['POST'])
     @login_required
-    def create(self, board_id):
+    def create(self):
         """Create a post in board"""
         data = request.get_json()
+        board_id = data['board_id']
         post_schema = PostsSchema(context={'board_id': board_id,
                                            'writer_id': current_user.id})
 
-        board = Board.query.get_or_404(board_id)
+        board = Board.query.get_or_404(board_id)  # find or fail
 
         try:
             result = post_schema.load(data)
@@ -64,13 +36,26 @@ class PostsView(FlaskView):
 
         return post_schema.jsonify(new_post), 200
 
-    @route("/posts/<post_id>", methods=['PATCH'])
+    @route('/<id>', methods=['GET'])
+    def detail(self, id):
+        """Detail a post and plus view count"""
+
+        post = Post.query.filter_by(id=id, is_published=True).first_or_404()
+
+        post.view_count += 1
+
+        db.session.add(post)
+        db.session.commit()
+
+        return posts_detail_schema.jsonify(post), 200
+
+    @route('/<id>', methods=['PATCH'])
     @login_required
-    def update(self, post_id):
+    def update(self, id):
         """Update a post"""
         data = request.get_json()
-        post = Post.query.get_or_404(post_id)
-        posts_update_schema = PostsUpdateSchema(context={'post_id': post_id,
+        post = Post.query.get_or_404(id)
+        posts_update_schema = PostsUpdateSchema(context={'post_id': id,
                                                          'writer_id': current_user.id,
                                                          'instance': post})
         try:
@@ -85,35 +70,38 @@ class PostsView(FlaskView):
 
         return posts_update_schema.jsonify(updated_post), 200
 
-    @route("/posts/<post_id>", methods=['DELETE'])
+    @route('/<id>', methods=['DELETE'])
     @login_required
-    def delete(self, post_id):
+    def delete(self, id):
         """Delete a post"""
-        post = Post.query.get_or_404(post_id)
-
+        post = Post.query.get_or_404(id)
+        
         db.session.delete(post)
         db.session.commit()
 
         return '', 200
 
-    @route("/posts/rank", methods=['GET'])
+    @route('/rank', methods=['GET'])
     def rank(self):
         """List ranked posts by its like counts"""
+        # hybrid property
         posts = Post.query.filter(Post.is_published == True) \
             .order_by(Post.like_count.desc()) \
             .limit(10).all()
+
+        print(posts)
 
         if not posts:
             return jsonify({'message': 'posts do not exist'}), 404
 
         return posts_list_schema.jsonify(posts), 200
 
-    @route("/posts/<post_id>/like", methods=['PATCH'])
+    @route('/<id>/like', methods=['PATCH'])
     @login_required
-    def like(self, post_id):
+    def like(self, id):
         """Plus 1 like count for the post"""
         posts_schema = PostsSchema()
-        post = Post.query.get_or_404(post_id)
+        post = Post.query.get_or_404(id)
 
         post.like_count += 1
 
@@ -122,12 +110,12 @@ class PostsView(FlaskView):
 
         return posts_schema.jsonify(post), 200
 
-    @route("/posts/<post_id>/unlike", methods=['PATCH'])
+    @route('/<id>/unlike', methods=['PATCH'])
     @login_required
-    def unlike(self, post_id):
+    def unlike(self, id):
         """Minus 1 like count for the post"""
         posts_schema = PostsSchema()
-        post = Post.query.get_or_404(post_id)
+        post = Post.query.get_or_404(id)
 
         if not post.like_count == 0:
             post.like_count -= 1
@@ -136,3 +124,12 @@ class PostsView(FlaskView):
         db.session.commit()
 
         return posts_schema.jsonify(post), 200
+
+    @route('/<id>/comments', methods=['GET'])
+    def list(self, id):
+        post = Post.query.get_or_404(id)
+        comments = Comment.query.filter_by(post_id=id).order_by(Comment.path.asc()).all()
+
+        comments_schema = CommentsSchema(many=True)
+
+        return comments_schema.jsonify(comments), 200

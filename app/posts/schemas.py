@@ -29,7 +29,7 @@ class PostsSchema(ma.Schema):
         validate.Length(min=1, max=120)
     ])
     body = fields.String(required=True, validate=[
-        validate.Length(min=1)
+        validate.Length(min=1) # max value
     ])
     is_published = fields.Boolean(required=True)
     like_count = fields.Integer(dump_only=True)
