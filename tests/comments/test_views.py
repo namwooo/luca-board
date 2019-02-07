@@ -116,6 +116,14 @@ class Describe_CommentsView:
                     assert subject.status_code == 401
 
         class Describe_update:
+            @pytest.fixture
+            def comment(self, logged_in_user):
+                comment = CommentFactory.build(writer=logged_in_user)
+
+                db.session.add(comment)
+                db.session.commit()
+
+                return comment
 
             @pytest.fixture
             def comment_data(self):
@@ -141,6 +149,23 @@ class Describe_CommentsView:
 
                 assert comment.body == comment_data['body']
 
+            class Context_작성자가_아닌_경우:
+                @pytest.fixture
+                def comment(self):
+                    comment = CommentFactory.build()
+
+                    db.session.add(comment)
+                    db.session.commit()
+
+                    return comment
+
+                def test_403을_반환한다(self, logged_in_user, subject):
+                    assert subject.status_code == 403
+
+                def test_WriterOnly_메세지를_반환한다(self, logged_in_user, response_data):
+                    assert response_data['writer'] == \
+                           'Writer Only: permission denied'
+
             class Context_body값이_없는_경우:
                 @pytest.fixture
                 def comment_data(self, comment_data):
@@ -162,10 +187,27 @@ class Describe_CommentsView:
                     assert subject.status_code == 404
 
             class Context_비로그인_유저인_경우:
+                @pytest.fixture
+                def comment(self):
+                    comment = CommentFactory.build()
+
+                    db.session.add(comment)
+                    db.session.commit()
+
+                    return comment
+
                 def test_401을_반환한다(self, subject):
                     assert subject.status_code == 401
 
         class Describe_delete:
+            @pytest.fixture
+            def comment(self, logged_in_user):
+                comment = CommentFactory.build(writer=logged_in_user)
+
+                db.session.add(comment)
+                db.session.commit()
+
+                return comment
 
             @pytest.fixture
             def subject(self, client, comment, comment_data):
@@ -181,6 +223,23 @@ class Describe_CommentsView:
 
                 assert comment == []
 
+            class Context_작성자가_아닌_경우:
+                @pytest.fixture
+                def comment(self):
+                    comment = CommentFactory.build()
+
+                    db.session.add(comment)
+                    db.session.commit()
+
+                    return comment
+
+                def test_403을_반환한다(self, logged_in_user, subject):
+                    assert subject.status_code == 403
+
+                def test_WriterOnly_메세지를_반환한다(self, logged_in_user, response_data):
+                    assert response_data['writer'] == \
+                           'Writer Only: permission denied'
+
             class Context_댓글이_존재하지_않는_경우:
                 @pytest.fixture
                 def comment(self):
@@ -189,9 +248,17 @@ class Describe_CommentsView:
                     return comment
 
                 def test_404를_반환한다(self, logged_in_user, subject):
-                    assert subject.response_code == 404
+                    assert subject.status_code == 404
 
             class Context_비로그인_유저인_경우:
+                @pytest.fixture
+                def comment(self):
+                    comment = CommentFactory.build()
+
+                    db.session.add(comment)
+                    db.session.commit()
+
+                    return comment
+
                 def test_401을_반환한다(self, subject):
                     assert subject.status_code == 401
-

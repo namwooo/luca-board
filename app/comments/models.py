@@ -42,3 +42,6 @@ class Comment(db.Model, TimestampMixin):
 
     def level(self):
         return len(self.path) // self._N - 1
+
+    def is_writer(self, user):
+        return self.writer_id == user.id

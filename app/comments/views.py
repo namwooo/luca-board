@@ -6,6 +6,7 @@ from marshmallow import ValidationError
 from app import db
 from app.comments.models import Comment
 from app.comments.schemas import CommentsSchema, CommentsUpdateSchema
+from app.exceptions import WriterOnly
 from app.posts.models import Post
 
 
@@ -42,6 +43,9 @@ class CommentsView(FlaskView):
 
         comment = Comment.query.get_or_404(id)
 
+        if not comment.is_writer(current_user):
+            raise WriterOnly('Writer Only: permission denied')
+
         comment_schema = CommentsSchema()
         comment_update_schema = CommentsUpdateSchema(context={'instance': comment})
         try:
@@ -54,3 +58,17 @@ class CommentsView(FlaskView):
         db.session.commit()
 
         return comment_schema.jsonify(updated_comment), 200
+
+    @route('/<id>', methods=['DELETE'])
+    @login_required
+    def delete(self, id):
+        """delete a comment"""
+        comment = Comment.query.get_or_404(id)
+
+        if not comment.is_writer(current_user):
+            raise WriterOnly('Writer Only: permission denied')
+
+        db.session.delete(comment)  # integrity issue here
+        db.session.commit()
+
+        return '', 200
