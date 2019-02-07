@@ -3,6 +3,7 @@ import pytest
 from app import db
 from app.posts.models import Post
 from tests.boards.factories import BoardFactory
+from tests.comments.factories import CommentFactory
 from tests.posts.factories import PostFactory
 
 
@@ -143,12 +144,12 @@ class Describe_PostsView:
     class Describe_rank:
         @pytest.fixture
         def post(self):
-            posts = PostFactory.create_batch(15)
+            post = PostFactory.build()
 
-            # db.session.add(posts)
-            # db.session.commit()
+            db.session.add(post)
+            db.session.commit()
 
-            return posts
+            return post 
 
         @pytest.fixture
         def subject(self, client, post):
@@ -218,6 +219,14 @@ class Describe_PostsView:
                 assert 401 == subject.status_code
 
     class Describe_delete:
+        @pytest.fixture
+        def post(self):
+            post = PostFactory.build()
+
+            db.session.add(post)
+            db.session.commit()
+
+            return post
 
         @pytest.fixture
         def subject(self, client, post):
