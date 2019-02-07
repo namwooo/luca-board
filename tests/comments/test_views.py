@@ -115,6 +115,83 @@ class Describe_CommentsView:
                 def test_401을_반환한다(self, subject):
                     assert subject.status_code == 401
 
-        # class Describe_update:
-        #
-        # class Describe_delete:
+        class Describe_update:
+
+            @pytest.fixture
+            def comment_data(self):
+                comment_data = {
+                    'body': 'This is test comment.'
+                }
+
+                return comment_data
+
+            @pytest.fixture
+            def subject(self, client, comment, comment_data):
+                response = client.patch(f'/comments/{comment.id}', json=comment_data)
+
+                return response
+
+            def test_200을_반환한다(self, logged_in_user, subject):
+                assert subject.status_code == 200
+
+            def test_댓글을_수정한다(self, logged_in_user, response_data, comment_data):
+                comment_id = response_data['id']
+
+                comment = Comment.query.get_or_404(comment_id)
+
+                assert comment.body == comment_data['body']
+
+            class Context_body값이_없는_경우:
+                @pytest.fixture
+                def comment_data(self, comment_data):
+                    comment_data.pop('body')
+
+                    return comment_data
+
+                def test_422을_반환한다(self, logged_in_user, subject):
+                    assert subject.status_code == 422
+
+            class Context_댓글이_존재하지_않는_경우:
+                @pytest.fixture
+                def comment(self):
+                    comment = CommentFactory.build()
+
+                    return comment
+
+                def test_404를_반환한다(self, logged_in_user, subject):
+                    assert subject.status_code == 404
+
+            class Context_비로그인_유저인_경우:
+                def test_401을_반환한다(self, subject):
+                    assert subject.status_code == 401
+
+        class Describe_delete:
+
+            @pytest.fixture
+            def subject(self, client, comment, comment_data):
+                response = client.delete(f'/comments/{comment.id}')
+
+                return response
+
+            def test_200을_반환한다(self, logged_in_user, subject):
+                assert subject.status_code == 200
+
+            def test_댓글을_삭제한다(self, logged_in_user, response_data):
+                comment = Comment.query.all()
+
+                assert comment == []
+
+            class Context_댓글이_존재하지_않는_경우:
+                @pytest.fixture
+                def comment(self):
+                    comment = CommentFactory.build()
+
+                    return comment
+
+                def test_404를_반환한다(self, logged_in_user, subject):
+                    assert subject.response_code == 404
+
+            class Context_비로그인_유저인_경우:
+                def test_401을_반환한다(self, subject):
+                    assert subject.status_code == 401
+

@@ -24,3 +24,18 @@ class CommentsSchema(ma.Schema):
 
         return comment
 
+
+class CommentsUpdateSchema(ma.Schema):
+    class Meta:
+        strict = True
+
+    body = fields.String(required=True, validate=[
+        validate.Length(min=1, max=65535)
+    ])
+
+    @post_load
+    def update_comment(self, data):
+        comment = self.context['instance']
+        comment.body = data['body']
+
+        return comment
