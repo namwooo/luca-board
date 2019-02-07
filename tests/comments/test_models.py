@@ -15,8 +15,13 @@ class Describe_Comment:
 
         return comment
 
-    class Describe_basis:
-        def test_댓글_모델을_생성한다(self, comment):
-            comment = Comment.query.all()
+    @pytest.fixture
+    def subject(self, comment):
+        comment.save()
 
-            assert len(comment) == 1
+        return comment
+
+    def test_path가_저장된다(self, subject):
+        comment = Comment.query.get(subject.id)
+
+        assert comment.path == '000001'
