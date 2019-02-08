@@ -17,14 +17,27 @@ class Post(db.Model, TimestampMixin):
     is_published = db.Column(db.Boolean, nullable=False, default=True)
     like_count = db.Column(db.Integer, nullable=False, default=0)
     view_count = db.Column(db.Integer, nullable=False, default=0)
-    image = db.relationship('PostImage', backref='post', lazy=True)
-    comment = db.relationship('Comment', backref='post', lazy=True)
+    writer = db.relationship('User', backref='posts', lazy=True)
+    board = db.relationship('Board', backref='posts', lazy=True)
+    comment = db.relationship('Comment', backref='posts', lazy=True)
+
+    # delete flag
 
     def __str__(self):
         return f'{self.title}'
 
     def __repr__(self):
         return f'<Post {self.title}>'
+
+    @property
+    def image_count(self):
+        return self.images.count()
+
+    def has_image(self):
+        return len(self.image_count) > 0
+
+    def read(self):
+        self.view_count += 1
 
 
 class PostImage(db.Model, TimestampMixin):
@@ -34,6 +47,8 @@ class PostImage(db.Model, TimestampMixin):
                         nullable=False)
     image_url = db.Column(URLType, nullable=False)
     caption = db.Column(db.String(120), nullable=True)
+
+    post = db.relationship('Post', backref='images', lazy=True)
 
     def __str__(self):
         return f'{self.image_url}'

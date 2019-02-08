@@ -14,10 +14,6 @@ class User(db.Model, UserMixin, TimestampMixin):
     is_admin = db.Column(db.Boolean, nullable=False, default=False)
     is_active = db.Column(db.Boolean, nullable=False, default=False)
 
-    board = db.relationship('Board', backref='writer', lazy=True)
-    post = db.relationship('Post', backref='writer', lazy=True)
-    comment = db.relationship('Comment', backref='writer', lazy=True)
-
     def __str__(self):
         return '{}'.format(self.full_name)
 

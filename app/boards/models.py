@@ -7,7 +7,7 @@ class Board(db.Model, TimestampMixin):
     writer_id = db.Column(db.Integer, db.ForeignKey('user.id'),
                           nullable=False)
     title = db.Column(db.String(240))
-    post = db.relationship('Post', backref='board', lazy=True)
+    writer = db.relationship('User', backref='boards', lazy=True)
 
     def __str__(self):
         return '{}'.format(self.title)
@@ -18,4 +18,9 @@ class Board(db.Model, TimestampMixin):
     def is_writer(self, user):
         return self.writer_id == user.id
 
+    def add_post(self, post):
+        post.board_id = self.id
+        db.session.add(post)
+        db.session.flush()
 
+        return post
