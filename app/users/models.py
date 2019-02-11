@@ -14,9 +14,9 @@ class User(db.Model, UserMixin, TimestampMixin):
     is_admin = db.Column(db.Boolean, nullable=False, default=False)
     is_active = db.Column(db.Boolean, nullable=False, default=False)
 
-    boards = db.relationship('Board', back_populates='writer')
-    posts = db.relationship('Post', back_populates='writer')
-    comments = db.relationship('Comment', back_populates='writer')
+    boards = db.relationship('Board', back_populates='writer', lazy='select')
+    posts = db.relationship('Post', back_populates='writer', lazy='select')
+    comments = db.relationship('Comment', back_populates='writer', lazy='select')
 
     def __repr__(self):
         return '<{}(id: {}, name: {}, email: {}, is_admin: {}, is_active: {})>'\

@@ -12,10 +12,9 @@ class Comment(db.Model, TimestampMixin):
     body = db.Column(db.Text)
     path = db.Column(db.Text)
 
-    writer = db.relationship('User', back_populates='comments', lazy=True)
-    post = db.relationship('Post', back_populates='comments', lazy=True)
-    replies = db.relationship('Comment',
-                              backref=db.backref('parent', remote_side=[id]),
+    writer = db.relationship('User', back_populates='comments', lazy='joined')
+    post = db.relationship('Post', back_populates='comments', lazy='select')
+    replies = db.relationship('Comment', backref=db.backref('parent', remote_side=[id]),
                               lazy='dynamic')
 
     def __repr__(self):

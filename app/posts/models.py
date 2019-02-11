@@ -14,10 +14,10 @@ class Post(db.Model, TimestampMixin):
     like_count = db.Column(db.Integer, nullable=False, default=0)
     view_count = db.Column(db.Integer, nullable=False, default=0)
 
-    writer = db.relationship('User', back_populates='posts', lazy=True)
-    board = db.relationship('Board', back_populates='posts', lazy=True)
-    comments = db.relationship('Comment', back_populates='post', lazy=True)
-    images = db.relationship('PostImage', back_populates='post', lazy=True)
+    writer = db.relationship('User', back_populates='posts', lazy='joined')
+    board = db.relationship('Board', back_populates='posts', lazy='select')
+    comments = db.relationship('Comment', back_populates='post', lazy='select')
+    images = db.relationship('PostImage', back_populates='post', lazy='select')
 
     # delete flag
 
