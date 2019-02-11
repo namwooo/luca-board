@@ -2,7 +2,7 @@ import factory
 
 from app import db
 from app.comments.models import Comment
-from tests.posts.factories import PostFactory
+from tests.posts.factories import PostInBoardFactory
 from tests.users.factories import UserFactory
 
 
@@ -14,6 +14,6 @@ class CommentFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     id = factory.Sequence(lambda n: n + 1)
     writer = factory.SubFactory(UserFactory)
-    post = factory.SubFactory(PostFactory)
+    post = factory.SubFactory(PostInBoardFactory)
     body = factory.Faker('paragraph')
     path = factory.PostGenerationMethodCall('get_path')

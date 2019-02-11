@@ -19,7 +19,7 @@ class Comment(db.Model, TimestampMixin):
                               lazy='dynamic')
 
     def __repr__(self):
-        return '<{} id: {}, writer_id: {}, post_id: {}, path: {}>' \
+        return '<{}(id: {}, writer_id: {}, post_id: {}, path: {})>' \
             .format(self.__class__.__name__, self.id, self.writer_id,
                     self.post_id, self.path)
 

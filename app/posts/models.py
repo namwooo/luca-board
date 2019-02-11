@@ -22,7 +22,7 @@ class Post(db.Model, TimestampMixin):
     # delete flag
 
     def __repr__(self):
-        return '<{} id: {}, writer_id: {}, board_id: {}, title: {}, is_published: {}>' \
+        return '<{}(id: {}, writer_id: {}, board_id: {}, title: {}, is_published: {})>' \
             .format(self.__class__.__name__, self.id, self.writer_id, self.board_id,
                     self.title, self.is_published)
 

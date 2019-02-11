@@ -1,19 +1,19 @@
 import pytest
 
-from tests.posts.factories import PostFactory
+from tests.posts.factories import PostInBoardFactory
 from tests.posts.factories import PostImageFactory
 
 
 class Describe_Post:
     @pytest.fixture
     def post(self):
-        post = PostFactory.create()
+        post = PostInBoardFactory.create()
 
         return post
 
     class Describe___repr__:
         def test_Post_객체를_보여준다(self, post):
-            assert str(post) == '<{} id: {}, writer_id: {}, board_id: {}, title: {}, is_published: {}>' \
+            assert str(post) == '<{}(id: {}, writer_id: {}, board_id: {}, title: {}, is_published: {})>' \
                 .format(post.__class__.__name__, post.id, post.writer_id, post.board_id,
                         post.title, post.is_published)
 

@@ -11,7 +11,7 @@ class Board(db.Model, TimestampMixin):
     posts = db.relationship('Post', back_populates='board', lazy=True)
 
     def __repr__(self):
-        return '<{} id: {}, writer_id: {}, title: {}>'\
+        return '<{}(id: {}, writer_id: {}, title: {})>'\
             .format(self.__class__.__name__, self.id, self.writer_id, self.title)
 
     def is_writer(self, user):

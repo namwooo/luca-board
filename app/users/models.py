@@ -19,7 +19,7 @@ class User(db.Model, UserMixin, TimestampMixin):
     comments = db.relationship('Comment', back_populates='writer')
 
     def __repr__(self):
-        return '<{} id: {}, name: {}, email: {}, is_admin: {}, is_active: {}>'\
+        return '<{}(id: {}, name: {}, email: {}, is_admin: {}, is_active: {})>'\
             .format(self.__class__.__name__, self.id, self.full_name, self.email,
                     self.is_admin, self.is_active)
 

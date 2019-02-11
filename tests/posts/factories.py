@@ -13,10 +13,13 @@ class PostFactory(factory.alchemy.SQLAlchemyModelFactory):
         sqlalchemy_session_persistence = 'commit'
 
     writer = factory.SubFactory(UserFactory)
-    board = factory.SubFactory(BoardFactory)
     title = factory.Faker('sentence')
     body = factory.Faker('paragraph')
     is_published = True
+
+
+class PostInBoardFactory(PostFactory):
+    board = factory.SubFactory(BoardFactory)
 
 
 class PostImageFactory(factory.alchemy.SQLAlchemyModelFactory):
@@ -27,5 +30,4 @@ class PostImageFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     image_url = factory.Faker('url')
     caption = factory.Faker('sentence')
-    post = factory.SubFactory(PostFactory)
-
+    post = factory.SubFactory(PostInBoardFactory)
