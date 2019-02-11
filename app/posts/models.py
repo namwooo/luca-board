@@ -17,8 +17,10 @@ class Post(db.Model, TimestampMixin):
     writer = db.relationship('User', back_populates='posts', lazy=True)
     board = db.relationship('Board', back_populates='posts', lazy=True)
     comments = db.relationship('Comment', back_populates='post', lazy=True)
+    images = db.relationship('PostImage', back_populates='post', lazy=True)
 
     # delete flag
+
     def __repr__(self):
         return '<{} id: {}, writer_id: {}, board_id: {}, title: {}, is_published: {}>' \
             .format(self.__class__.__name__, self.id, self.writer_id, self.board_id,
@@ -36,17 +38,15 @@ class Post(db.Model, TimestampMixin):
 
 
 class PostImage(db.Model, TimestampMixin):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    post_id = db.Column(db.Integer,
-                        db.ForeignKey('post.id'),
-                        nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
     image_url = db.Column(URLType, nullable=False)
     caption = db.Column(db.String(120), nullable=True)
 
-    post = db.relationship('Post', backref='images', lazy=True)
-
-    def __str__(self):
-        return f'{self.image_url}'
+    post = db.relationship('Post', back_populates='images', lazy=True)
 
     def __repr__(self):
-        return f'<PostImage {self.image_url}>'
+        return '<{} id: {}, post_id: {}, image_url: {}, caption: {}>' \
+                .format(self.__class__.__name__, self.id, self.post_id, self.image_url,
+                        self.caption)
+
