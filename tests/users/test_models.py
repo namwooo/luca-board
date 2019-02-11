@@ -15,7 +15,7 @@ class Describe_User:
         return user
 
     class Describe___repr__:
-        def test_User객체를_보여준다(self, user):
+        def test_User_객체를_보여준다(self, user):
             assert str(user) == '<{} id: {}, name: {}, email: {}, is_admin: {}, is_active: {}>'\
                 .format(user.__class__.__name__, user.id,
                         user.full_name, user.email,

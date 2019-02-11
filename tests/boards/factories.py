@@ -9,7 +9,7 @@ class BoardFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = Board
         sqlalchemy_session = db.session
-        sqlalchemy_session_persistence = None
+        sqlalchemy_session_persistence = 'commit'
 
     title = factory.Faker('word')
     writer = factory.SubFactory(UserFactory)
