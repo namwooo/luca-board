@@ -1,14 +1,7 @@
-import random
-import string
-
 import factory
 
 from app import db
 from app.users.models import User
-
-
-def random_string(size=10):
-    return ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(size))
 
 
 class UserFactory(factory.alchemy.SQLAlchemyModelFactory):

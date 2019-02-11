@@ -18,11 +18,10 @@ class User(db.Model, UserMixin, TimestampMixin):
     posts = db.relationship('Post', back_populates='writer')
     comments = db.relationship('Comment', back_populates='writer')
 
-    def __str__(self):
-        return '{}'.format(self.full_name)
-
     def __repr__(self):
-        return '<User {}>'.format(self.full_name)
+        return '<{} id: {}, name: {}, email: {}, is_admin: {}, is_active: {}>'\
+            .format(self.__class__.__name__, self.id, self.full_name, self.email,
+                    self.is_admin, self.is_active)
 
     @property
     def full_name(self):

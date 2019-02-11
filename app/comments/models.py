@@ -18,11 +18,10 @@ class Comment(db.Model, TimestampMixin):
                               backref=db.backref('parent', remote_side=[id]),
                               lazy='dynamic')
 
-    def __str__(self):
-        return f'<Comment:{self.id}>'
-
     def __repr__(self):
-        return f'<Comment: {self.id}>'
+        return '<{} id: {}, writer_id: {}, post_id: {}, path: {}>' \
+            .format(self.__class__.__name__, self.id, self.writer_id,
+                    self.post_id, self.path)
 
     # before insert, create... events
     # naming issue
