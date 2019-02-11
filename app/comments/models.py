@@ -6,18 +6,16 @@ class Comment(db.Model, TimestampMixin):
     _N = 6
 
     id = db.Column(db.Integer, primary_key=True)
-    writer_id = db.Column(db.Integer,
-                          db.ForeignKey('user.id'),
-                          nullable=False)
-    post_id = db.Column(db.Integer,
-                        db.ForeignKey('post.id'),
-                        nullable=False)
-    comment_parent_id = db.Column(db.Integer,
-                                  db.ForeignKey('comment.id'),
-                                  nullable=True)
+    writer_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
+    comment_parent_id = db.Column(db.Integer, db.ForeignKey('comment.id'), nullable=True)
     body = db.Column(db.Text)
     path = db.Column(db.Text)
-    replies = db.relationship('Comment', backref=db.backref('parent', remote_side=[id]),
+
+    writer = db.relationship('User', back_populates='comments', lazy=True)
+    post = db.relationship('Post', back_populates='comments', lazy=True)
+    replies = db.relationship('Comment',
+                              backref=db.backref('parent', remote_side=[id]),
                               lazy='dynamic')
 
     def __str__(self):
@@ -26,6 +24,8 @@ class Comment(db.Model, TimestampMixin):
     def __repr__(self):
         return f'<Comment: {self.id}>'
 
+    # before insert, create... events
+    # naming issue
     def get_path(self):
         prefix = self.parent.path + '.' if self.parent else ''
         self.path = prefix + '{:0{}d}'.format(self.id, self._N)
@@ -33,6 +33,7 @@ class Comment(db.Model, TimestampMixin):
         return self.path
 
     def save(self):
+        # flush. rollback issue
         db.session.add(self)
         db.session.commit()
 
