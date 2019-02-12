@@ -3,6 +3,7 @@ from app.mixins import TimestampMixin
 
 
 class Comment(db.Model, TimestampMixin):
+    # Number of path digit
     _N = 6
 
     id = db.Column(db.Integer, primary_key=True)
@@ -22,25 +23,32 @@ class Comment(db.Model, TimestampMixin):
             .format(self.__class__.__name__, self.id, self.writer_id,
                     self.post_id, self.path)
 
-    # before insert, create... events
-    # naming issue
-    def get_path(self):
+    def set_path(self):
+        db.session.add(self)
+        db.session.flush()
+
         prefix = self.parent.path + '.' if self.parent else ''
         self.path = prefix + '{:0{}d}'.format(self.id, self._N)
 
         return self.path
-
-    def save(self):
-        # flush. rollback issue
-        db.session.add(self)
-        db.session.commit()
-
-        self.get_path()
-
-        db.session.commit()
 
     def level(self):
         return len(self.path) // self._N - 1
 
     def is_writer(self, user):
         return self.writer_id == user.id
+
+    #
+    # def save(self):
+    #     # flush. rollback issue
+    #     db.session.add(self)
+    #     db.session.commit()
+    #
+    #     self.set_path()
+    #
+    #     db.session.commit()
+#
+# @event.listens_for(Comment, 'before_insert')
+# def set_path(mapper, connection, target):
+#     prefix = target.parent.path + '.' if target.parent else ''
+#     target.path = prefix + '{:0{}d}'.format(target.id, target._N)

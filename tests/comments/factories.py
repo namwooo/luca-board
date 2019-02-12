@@ -7,13 +7,14 @@ from tests.users.factories import UserFactory
 
 
 class CommentFactory(factory.alchemy.SQLAlchemyModelFactory):
+    # Number of path digit
+    _N = 6
+
     class Meta:
         model = Comment
         sqlalchemy_session = db.session
         sqlalchemy_session_persistence = 'commit'
 
-    id = factory.Sequence(lambda n: n + 1)
     writer = factory.SubFactory(UserFactory)
     post = factory.SubFactory(PostInBoardFactory)
     body = factory.Faker('paragraph')
-    path = factory.PostGenerationMethodCall('get_path')
