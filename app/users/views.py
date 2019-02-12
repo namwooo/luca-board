@@ -1,11 +1,10 @@
-from flask import request, jsonify
+from flask import request
 from flask_classful import FlaskView, route
 from flask_login import login_user, login_required, logout_user
-from marshmallow import ValidationError
 
-from app import db, lm
+from app import db, lm, transaction, handle_error
 from .models import User
-from .schemas import UserSchema, LoginSchema
+from .schemas import UserSchema, LoginSchema, SignupSchema
 
 
 @lm.user_loader
@@ -14,22 +13,19 @@ def load_user(user_id):
 
 
 class UsersView(FlaskView):
+    decorators = [transaction, handle_error]
 
     @route("/signup", methods=["POST"])
     def signup(self):
         data = request.get_json()
-        user_schema = UserSchema()
 
-        try:
-            result = user_schema.load(data)
-        except ValidationError as e:
-            return jsonify(e.messages), 422
-
-        new_user = result.data
+        signup_schema = SignupSchema()
+        new_user = signup_schema.load(data).data
 
         db.session.add(new_user)
-        db.session.commit()
+        db.session.flush()
 
+        user_schema = UserSchema()
         return user_schema.jsonify(new_user), 201
 
     @route("/login", methods=["POST"])
@@ -37,20 +33,15 @@ class UsersView(FlaskView):
         data = request.get_json()
 
         login_schema = LoginSchema()
-        user_schema = UserSchema()
+        user = login_schema.load(data).data
 
-        try:
-            result = login_schema.load(data)
-        except ValidationError as e:
-            return jsonify(e.messages), 422
-
-        user = result.data
         login_user(user)
 
-        return user_schema.jsonify(user), 200
+        return '', 200
 
     @route("/logout", methods=["GET"])
     @login_required
     def logout(self):
         logout_user()
+
         return '', 200
