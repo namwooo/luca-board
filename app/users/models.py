@@ -3,6 +3,7 @@ from sqlalchemy_utils import EmailType, PasswordType
 
 from app import db
 from app.mixins import TimestampMixin
+from app.posts.models import likes
 
 
 class User(db.Model, UserMixin, TimestampMixin):
@@ -17,6 +18,7 @@ class User(db.Model, UserMixin, TimestampMixin):
     boards = db.relationship('Board', back_populates='writer', lazy='select')
     posts = db.relationship('Post', back_populates='writer', lazy='select')
     comments = db.relationship('Comment', back_populates='writer', lazy='select')
+    like_posts = db.relationship('Post', secondary=likes, back_populates='like_users', lazy='subquery')
 
     def __repr__(self):
         return '<{}(id: {}, name: {}, email: {}, is_admin: {}, is_active: {})>' \

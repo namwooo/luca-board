@@ -3,6 +3,11 @@ from sqlalchemy_utils import URLType
 from app import db
 from app.mixins import TimestampMixin
 
+likes = db.Table('likes',
+                 db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+                 db.Column('post_id', db.Integer, db.ForeignKey('post.id'), primary_key=True)
+                 )
+
 
 class Post(db.Model, TimestampMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -18,6 +23,7 @@ class Post(db.Model, TimestampMixin):
     board = db.relationship('Board', back_populates='posts', lazy='select')
     comments = db.relationship('Comment', back_populates='post', lazy='select')
     images = db.relationship('PostImage', back_populates='post', lazy='select')
+    like_users = db.relationship('User', secondary=likes, back_populates='like_posts', lazy='subquery')
 
     def __repr__(self):
         return '<{}(id: {}, writer_id: {}, board_id: {}, title: {}, is_published: {})>' \
