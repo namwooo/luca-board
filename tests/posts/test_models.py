@@ -1,5 +1,6 @@
 import pytest
 
+from app import db
 from tests.posts.factories import PostInBoardFactory
 from tests.posts.factories import PostImageFactory
 
@@ -7,7 +8,10 @@ from tests.posts.factories import PostImageFactory
 class Describe_Post:
     @pytest.fixture
     def post(self):
-        post = PostInBoardFactory.create()
+        post = PostInBoardFactory.build()
+
+        db.session.add(post)
+        db.session.commit()
 
         return post
 
@@ -21,7 +25,10 @@ class Describe_Post:
 class Describe_PostImage:
     @pytest.fixture
     def post_image(self):
-        post_image = PostImageFactory.create()
+        post_image = PostImageFactory.build()
+
+        db.session.add(post_image)
+        db.session.commit()
 
         return post_image
 

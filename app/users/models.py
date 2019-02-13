@@ -19,10 +19,17 @@ class User(db.Model, UserMixin, TimestampMixin):
     comments = db.relationship('Comment', back_populates='writer', lazy='select')
 
     def __repr__(self):
-        return '<{}(id: {}, name: {}, email: {}, is_admin: {}, is_active: {})>'\
+        return '<{}(id: {}, name: {}, email: {}, is_admin: {}, is_active: {})>' \
             .format(self.__class__.__name__, self.id, self.full_name, self.email,
                     self.is_admin, self.is_active)
 
     @property
     def full_name(self):
         return '{} {}'.format(self.first_name, self.last_name)
+
+    def add_board(self, board):
+        board.writer_id = self.id
+        db.session.add(board)
+        db.session.flush()
+
+        return board

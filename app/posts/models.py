@@ -19,8 +19,6 @@ class Post(db.Model, TimestampMixin):
     comments = db.relationship('Comment', back_populates='post', lazy='select')
     images = db.relationship('PostImage', back_populates='post', lazy='select')
 
-    # delete flag
-
     def __repr__(self):
         return '<{}(id: {}, writer_id: {}, board_id: {}, title: {}, is_published: {})>' \
             .format(self.__class__.__name__, self.id, self.writer_id, self.board_id,
@@ -36,6 +34,15 @@ class Post(db.Model, TimestampMixin):
     def read(self):
         self.view_count += 1
 
+    def like(self):
+        self.like_count += 1
+
+    def unlike(self):
+        if self.like_count == 0:
+            pass
+        else:
+            self.like_count -= 1
+
 
 class PostImage(db.Model, TimestampMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -47,6 +54,5 @@ class PostImage(db.Model, TimestampMixin):
 
     def __repr__(self):
         return '<{} id: {}, post_id: {}, image_url: {}, caption: {}>' \
-                .format(self.__class__.__name__, self.id, self.post_id, self.image_url,
-                        self.caption)
-
+            .format(self.__class__.__name__, self.id, self.post_id, self.image_url,
+                    self.caption)

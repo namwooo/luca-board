@@ -8,7 +8,7 @@ from .models import Board
 from .schemas import BoardSchema, BoardUpdateSchema, BoardCreateSchema
 
 
-class BoardsView(FlaskView):
+class BoardView(FlaskView):
     decorators = [transaction, handle_error]
 
     def index(self):

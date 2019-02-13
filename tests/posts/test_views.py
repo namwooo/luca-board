@@ -4,37 +4,62 @@ from app import db
 from app.posts.models import Post
 from tests.boards.factories import BoardFactory
 from tests.comments.factories import CommentFactory
-from tests.posts.factories import PostFactory
+from tests.posts.factories import PostFactory, PostInBoardFactory
 
 
-class Describe_PostsView:
-    @pytest.fixture
-    def post(self):
-        post = PostFactory.build()
-
-        db.session.add(post)
-        db.session.commit()
-
-        return post
-
+class Describe_PostView:
     @pytest.fixture
     def response_data(self, subject):
         json_data = subject.get_json()
 
         return json_data
 
-    class Describe_detail:
+    class Describe_list:
+        @pytest.fixture
+        def posts(self):
+            posts = PostFactory.build_batch(16)
+            return posts
 
-        def test_게시글_세부_목록을_가져온다_조회수_1_증가(self, client, post):
-            url = f'/posts/{post.id}'
+        @pytest.fixture
+        def board(self, posts):
+            board = BoardFactory.build()
+            board.posts = posts
+
+            db.session.add(board)
+            db.session.commit()
+
+            return board
+
+        @pytest.fixture
+        def param(self):
+            return '?p=1'  # page 1
+
+        @pytest.fixture
+        def subject(self, client, board, param):
+            url = f'/boards/{board.id}/posts{param}'
             response = client.get(url)
-            data = response.get_json()
 
-            assert 200 == response.status_code
-            assert 1 == data['view_count']
-            assert 0 == data['like_count']
+            return response
 
-    class Describe_create:
+        def test_200을_반환한다(self, subject):
+            assert subject.status_code == 200
+
+        def test_게시글_목록을_가져온다(self, response_data):
+            assert len(response_data['items']) == 15
+            assert response_data['total'] == 16
+
+        class Context_게시판이_존재하지_않을_경우:
+            @pytest.fixture
+            def board(self):
+                board = BoardFactory.build()
+                board.post = PostFactory.build_batch(15)
+
+                return board
+
+            def test_404를_반환한다(self, subject):
+                assert subject.status_code == 404
+
+    class Describe_post:
 
         @pytest.fixture
         def board(self):
@@ -62,18 +87,13 @@ class Describe_PostsView:
 
             return response
 
-        def test_200을_반환한다(self, logged_in_user, subject):
-            assert subject.status_code == 200
+        def test_201을_반환한다(self, logged_in_user, subject):
+            assert subject.status_code == 201
 
-        def test_게시글이_생성된다(self, logged_in_user, response_data, post_data):
-            post_id = response_data['id']
-            post = Post.query.get_or_404(post_id)
+        def test_게시글이_생성된다(self, logged_in_user, post_data):
+            post = Post.query.filter(Post.title == post_data['title'])
 
-            assert post.title == post_data['title']
-            assert post.body == post_data['body']
-            assert post.is_published == post_data['is_published']
-            assert post.board_id == post_data['board_id']
-            assert response_data['writer'] == logged_in_user.full_name
+            assert post is not None
 
         class Context_게시판이_존재하지_않는_경우:
             @pytest.fixture
@@ -83,11 +103,11 @@ class Describe_PostsView:
                 return board
 
             def test_404를_반환한다(self, logged_in_user, subject):
-                assert 404 == subject.status_code
+                assert subject.status_code == 404
 
         class Context_비로그인_유저인_경우:
             def test_401을_반환한다(self, not_logged_in_user, subject):
-                assert 401 == subject.status_code
+                assert subject.status_code == 401
 
         class Context_title값이_없는_경우:
             @pytest.fixture
@@ -97,7 +117,7 @@ class Describe_PostsView:
                 return post_data
 
             def test_422을_반환한다(self, logged_in_user, subject):
-                assert 422 == subject.status_code
+                assert subject.status_code == 422
 
         class Context_body값이_없는_경우:
             @pytest.fixture
@@ -107,12 +127,12 @@ class Describe_PostsView:
                 return post_data
 
             def test_422을_반환한다(self, logged_in_user, subject):
-                assert 422 == subject.status_code
+                assert subject.status_code == 422
 
-    class Describe_rank:
+    class Describe_get:
         @pytest.fixture
         def post(self):
-            post = PostFactory.build()
+            post = PostInBoardFactory.build()
 
             db.session.add(post)
             db.session.commit()
@@ -121,27 +141,38 @@ class Describe_PostsView:
 
         @pytest.fixture
         def subject(self, client, post):
-            response = client.get('/posts/rank')
-
+            url = f'/posts/{post.id}'
+            response = client.get(url)
             return response
 
-        def test_게시글_랭킹_목록을_가져온다(self, subject):
-            assert 200 == subject.status_code
+        def test_200을_반환한다(self, subject):
+            assert subject.status_code == 200
+
+        def test_조회수가_1_증가한다(self, response_data):
+            assert response_data['view_count'] == 1
 
         class Context_게시글이_없는_경우:
             @pytest.fixture
             def post(self):
-                post = PostFactory.build()
+                post = PostInBoardFactory.build()
 
                 return post
 
             def test_404를_반환한다(self, subject):
-                assert 404 == subject.status_code
+                assert subject.status_code == 404
 
-    class Describe_update:
+    class Describe_patch:
+        @pytest.fixture
+        def post(self):
+            post = PostInBoardFactory.build()
+
+            db.session.add(post)
+            db.session.commit()
+
+            return post
 
         @pytest.fixture
-        def update_data(self):
+        def patch_data(self):
             data = {
                 'title': 'Recruit',
                 'body': 'Wanted BACKEND developer',
@@ -151,26 +182,19 @@ class Describe_PostsView:
             return data
 
         @pytest.fixture
-        def subject(self, client, post, update_data):
-            response = client.patch(f'/posts/{post.id}', json={
-                'title': update_data['title'],
-                'body': update_data['body'],
-                'is_published': update_data['is_published']
-            })
-
+        def subject(self, client, post, patch_data):
+            response = client.patch(f'/posts/{post.id}', json=patch_data)
             return response
 
         def test_200을_반환한다(self, logged_in_user, subject):
-            assert 200 == subject.status_code
+            assert subject.status_code == 200
 
-        def test_게시글을_수정한다(self, logged_in_user, response_data, update_data):
-            post_id = response_data['id']
+        def test_게시글을_수정한다(self, logged_in_user, subject, patch_data):
+            post = Post.query.filter(Post.title == patch_data['title']).first()
 
-            post = Post.query.get_or_404(post_id)
-
-            assert update_data['title'] == post.title
-            assert update_data['body'] == post.body
-            assert update_data['is_published'] == post.is_published
+            assert patch_data['title'] == post.title
+            assert patch_data['body'] == post.body
+            assert patch_data['is_published'] == post.is_published
 
         class Context_게시글이_없는_경우:
             @pytest.fixture
@@ -189,7 +213,7 @@ class Describe_PostsView:
     class Describe_delete:
         @pytest.fixture
         def post(self):
-            post = PostFactory.build()
+            post = PostInBoardFactory.build()
 
             db.session.add(post)
             db.session.commit()
@@ -199,16 +223,15 @@ class Describe_PostsView:
         @pytest.fixture
         def subject(self, client, post):
             response = client.delete(f'/posts/{post.id}')
-
             return response
 
         def test_200을_반환한다(self, logged_in_user, subject):
-            assert 200 == subject.status_code
+            assert subject.status_code == 200
 
         def test_게시글을_삭제한다(self, logged_in_user, subject):
             post = Post.query.all()
 
-            assert [] == post
+            assert len(post) == 0
 
         class Context_게시글이_없는_경우:
             @pytest.fixture
@@ -218,28 +241,53 @@ class Describe_PostsView:
                 return post
 
             def test_404를_반환한다(self, logged_in_user, subject):
-                assert 404 == subject.status_code
+                assert subject.status_code == 404
 
         class Context_비로그인_유저인_경우:
             def test_401을_반환한다(self, not_logged_in_user, subject):
-                assert 401 == subject.status_code
+                assert subject.status_code == 401
+
+    class Describe_rank:
+        @pytest.fixture
+        def post(self):
+            post = PostInBoardFactory.build()
+
+            db.session.add(post)
+            db.session.commit()
+
+            return post
+
+        @pytest.fixture
+        def subject(self, client, post):
+            response = client.get('/posts/rank')
+            return response
+
+        def test_게시글_랭킹_목록을_가져온다(self, subject):
+            assert subject.status_code == 200
 
     class Describe_like:
+        @pytest.fixture
+        def post(self):
+            post = PostInBoardFactory.build()
+
+            db.session.add(post)
+            db.session.commit()
+
+            return post
 
         @pytest.fixture
         def subject(self, client, post):
             response = client.patch(f'/posts/{post.id}/like')
-
-            return response
+            return post.id, response
 
         def test_200을_반환한다(self, logged_in_user, subject):
-            assert 200 == subject.status_code
+            assert subject[1].status_code == 200
 
-        def test_게시글_좋아요_카운트가_1_증가한다(self, logged_in_user, response_data):
-            post_id = response_data['id']
+        def test_좋아요_수가_1_증가한다(self, logged_in_user, subject):
+            post_id = subject[0]
             post = Post.query.get(post_id)
 
-            assert 1 == post.like_count
+            assert post.like_count == 1
 
         class Context_게시글이_없는_경우:
             @pytest.fixture
@@ -249,17 +297,16 @@ class Describe_PostsView:
                 return post
 
             def test_404를_반환한다(self, logged_in_user, subject):
-                assert 404 == subject.status_code
+                assert subject[1].status_code == 404
 
         class Context_비로그인_유저인_경우:
             def test_401을_반환한다(self, not_logged_in_user, subject):
-                assert 401 == subject.status_code
+                assert subject[1].status_code == 401
 
     class Describe_unlike:
-
         @pytest.fixture
         def post(self):
-            post = PostFactory.build(like_count=100)
+            post = PostInBoardFactory.build(like_count=100)
 
             db.session.add(post)
             db.session.commit()
@@ -269,81 +316,43 @@ class Describe_PostsView:
         @pytest.fixture
         def subject(self, client, post):
             response = client.patch(f'/posts/{post.id}/unlike')
-
-            return response
+            return post.id, response
 
         def test_200을_반환한다(self, logged_in_user, subject):
-            assert 200 == subject.status_code
+            assert subject[1].status_code == 200
 
-        def test_게시글_좋아요_카운트가_1_감소한다(self, logged_in_user, response_data):
-            post_id = response_data['id']
-            post = Post.query.get(post_id)
+        def test_좋아요_수가_1_감소한다(self, logged_in_user, subject):
+            post_id = subject[0]
+            post = Post.query.get_or_404(post_id)
 
-            assert 99 == post.like_count
+            assert post.like_count == 99
 
         class Context_좋아요_카운트가_0인_경우:
             @pytest.fixture
             def post(self):
-                post = PostFactory.build(like_count=0)
+                post = PostInBoardFactory.build()
 
                 db.session.add(post)
                 db.session.commit()
 
                 return post
 
-            def test_게시글_좋아요_카운트는_그대로_0이다(self, logged_in_user, response_data):
-                post_id = response_data['id']
-                post = Post.query.get(post_id)
+            def test_좋아요_수는_0이다(self, logged_in_user, subject):
+                post_id = subject[0]
+                post = Post.query.get_or_404(post_id)
 
-                assert 0 == post.like_count
+                assert post.like_count == 0
 
         class Context_게시글이_없는_경우:
             @pytest.fixture
             def post(self):
-                post = PostFactory.build()
+                post = PostInBoardFactory.build()
 
                 return post
 
             def test_404를_반환한다(self, logged_in_user, subject):
-                assert 404 == subject.status_code
+                assert subject[1].status_code == 404
 
         class Context_비로그인_유저인_경우:
             def test_401을_반환한다(self, not_logged_in_user, subject):
-                assert 401 == subject.status_code
-
-    class Describe_comment_list:
-
-        @pytest.fixture
-        def parent_comment(self):
-            comment = CommentFactory.build()
-
-            comment.save()
-
-            return comment
-
-        @pytest.fixture
-        def children_comments(self, parent_comment):
-            c1 = CommentFactory.build(post=parent_comment.post,
-                                      comment_parent_id=parent_comment.id)
-            c2 = CommentFactory.build(post=parent_comment.post,
-                                      comment_parent_id=parent_comment.id)
-            c3 = CommentFactory.build(post=parent_comment.post,
-                                      comment_parent_id=parent_comment.id)
-
-            for c in [c1, c2, c3]:
-                c.save()
-
-            return c1
-
-        @pytest.fixture
-        def subject(self, client, children_comments):
-            url = f'/posts/{children_comments.post_id}/comments'
-            response = client.get(url)
-
-            return response
-
-        def test_200을_반환한다(self, subject):
-            assert subject.status_code == 200
-
-        def test_댓글_목록을_가져온다(self, response_data):
-            assert len(response_data) == 4
+                assert subject[1].status_code == 401

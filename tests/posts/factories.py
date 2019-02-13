@@ -10,7 +10,7 @@ class PostFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = Post
         sqlalchemy_session = db.session
-        sqlalchemy_session_persistence = 'commit'
+        sqlalchemy_session_persistence = None
 
     writer = factory.SubFactory(UserFactory)
     title = factory.Faker('sentence')

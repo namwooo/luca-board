@@ -40,15 +40,15 @@ def create_app(test_config=None):
     lm.init_app(app)
 
     # register views
-    from .users.views import UsersView
-    from .boards.views import BoardsView
-    from .posts.views import PostsView
-    from .comments.views import CommentsView
+    from .users.views import UserView
+    from .boards.views import BoardView
+    from .posts.views import PostView
+    from .comments.views import CommentView
 
-    UsersView.register(app, trailing_slash=False)
-    BoardsView.register(app, trailing_slash=False)
-    PostsView.register(app, trailing_slash=False)
-    CommentsView.register(app, trailing_slash=False)
+    UserView.register(app, route_base='users', trailing_slash=False)
+    BoardView.register(app, route_base='boards', trailing_slash=False)
+    PostView.register(app, route_base='/', trailing_slash=False)
+    CommentView.register(app, route_base='comments', trailing_slash=False)
 
     return app
 

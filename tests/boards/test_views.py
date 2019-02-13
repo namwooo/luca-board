@@ -3,10 +3,9 @@ import pytest
 from app import db
 from app.boards.models import Board
 from tests.boards.factories import BoardFactory
-from tests.posts.factories import PostFactory
 
 
-class Describe_BoardsView:
+class Describe_BoardView:
 
     @pytest.fixture
     def response_data(self, subject):

@@ -1,7 +1,6 @@
-import json
-
-from flask import Response, abort
 from flask_sqlalchemy import BaseQuery
+
+from app.exceptions import NotFoundException
 
 
 class CustomBaseQuery(BaseQuery):
@@ -11,6 +10,14 @@ class CustomBaseQuery(BaseQuery):
         rv = self.get(ident)
         if rv is None:
             # e.g. 'message': 'User 1 not found'
-            error_message = json.dumps({'message': model_class_name + ' ' + str(ident) + ' not found'})
-            abort(Response(error_message, 404))
+            # abort(mapping=NotFoundException, message=model_class_name + ' ' + str(ident) + ' not found')
+            raise NotFoundException()
+            # error_message = json.dumps({'message': model_class_name + ' ' + str(ident) + ' not found'})
+            # abort(Response(error_message, 404))
+        return rv
+
+    def first_or_404(self):
+        rv = self.first()
+        if rv is None:
+            raise NotFoundException()
         return rv

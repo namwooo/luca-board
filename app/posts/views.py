@@ -2,137 +2,111 @@ from flask import jsonify, request
 from flask_classful import FlaskView, route
 from flask_login import current_user, login_required
 from marshmallow import ValidationError
-from sqlalchemy.orm import joinedload
+from sqlalchemy import and_
 
-from app import db
-from app.boards.models import Board
-from app.comments.models import Comment
-from app.comments.schemas import CommentsSchema
-from app.posts.schemas import posts_list_schema, posts_detail_schema, PostsSchema, PostsUpdateSchema
+from .. import db, handle_error, transaction
+from ..boards.models import Board
+from ..comments.models import Comment
+from ..comments.schemas import CommentsSchema
+from ..posts.schemas import PostsSchema, PostsUpdateSchema, PostWriteSchema, \
+    PagedPostSchema, PostDetailSchema, PostSchema, PostUpdateSchema
 from .models import Post
 
 
-class PostsView(FlaskView):
+class PostView(FlaskView):
+    decorators = [transaction, handle_error]
 
-    @route('', methods=['POST'])
+    @route("/boards/<board_id>/posts", methods=['GET'])
+    def list(self, board_id):
+        """List all published posts in board ordered by created date"""
+        page = request.args.get('p', default=1, type=int)
+        board = Board.query.get_or_404(board_id)
+
+        posts = Post.query.filter(Post.board_id == board_id) \
+            .filter(Post.is_published == True) \
+            .order_by(Post.created_at.desc()) \
+            .paginate(page=page, per_page=15, error_out=False)
+
+        paged_post_schema = PagedPostSchema()
+        return paged_post_schema.jsonify(posts), 200
+
+    @route('/posts', methods=['POST'])
     @login_required
-    def create(self):
+    def post(self):
         """Create a post in board"""
-        data = request.get_json()
+        json_data = request.get_json()
+        board = Board.query.get_or_404(json_data['board_id'])
 
-        board = Board.query.get_or_404(data['board_id'])
+        post_write_schema = PostWriteSchema(context={'writer': current_user})
+        post = post_write_schema.load(json_data)
+        post = post.data
 
-        data['writer_id'] = current_user.id
+        board.add_post(post)
 
-        post_schema = PostsSchema()
-        try:
-            result = post_schema.load(data)
-        except ValidationError as e:
-            return jsonify(e.messages), 422
+        return '', 201
 
-        new_post = result.data
-
-        db.session.add(new_post)
-        db.session.commit()
-
-        post = Post.query.options(joinedload('writer')).get(new_post.id)
-
-        return post_schema.jsonify(post), 200
-
-    @route('/<id>', methods=['GET'])
-    def detail(self, id):
+    @route('/posts/<id>', methods=['GET'])
+    def get(self, id):
         """Detail a post and plus view count"""
+        post = Post.query.filter(and_(Post.id == id, Post.is_published == True)).first_or_404()
 
-        post = Post.query.filter_by(id=id, is_published=True).first_or_404()
+        post.read()
 
-        post.view_count += 1
+        post_detail_schema = PostDetailSchema()
+        return post_detail_schema.jsonify(post), 200
 
-        db.session.add(post)
-        db.session.commit()
-
-        return posts_detail_schema.jsonify(post), 200
-
-    @route('/<id>', methods=['PATCH'])
+    @route('/posts/<id>', methods=['PATCH'])
     @login_required
-    def update(self, id):
+    def patch(self, id):
         """Update a post"""
-        data = request.get_json()
+        json_data = request.get_json()
         post = Post.query.get_or_404(id)
-        posts_update_schema = PostsUpdateSchema(context={'post_id': id,
-                                                         'writer_id': current_user.id,
-                                                         'instance': post})
-        try:
-            result = posts_update_schema.load(data)
-        except ValidationError as e:
-            return jsonify(e.messages), 422
 
-        updated_post = result.data
+        post_update_schema = PostUpdateSchema()
+        post_update_schema.load(json_data)
 
-        db.session.add(updated_post)
-        db.session.commit()
+        post.title = json_data['title']
+        post.body = json_data['body']
+        post.is_published = json_data['is_published']
 
-        return posts_update_schema.jsonify(updated_post), 200
+        return '', 200
 
-    @route('/<id>', methods=['DELETE'])
+    @route('/posts/<id>', methods=['DELETE'])
     @login_required
     def delete(self, id):
         """Delete a post"""
         post = Post.query.get_or_404(id)
 
         db.session.delete(post)
-        db.session.commit()
 
         return '', 200
 
-    @route('/rank', methods=['GET'])
+    @route('/posts/rank', methods=['GET'])
     def rank(self):
         """List ranked posts by its like counts"""
-        # hybrid property
         posts = Post.query.filter(Post.is_published == True) \
             .order_by(Post.like_count.desc()) \
             .limit(10).all()
 
-        print(posts)
+        posts_schema = PostSchema(many=True)
+        return posts_schema.jsonify(posts), 200
 
-        if not posts:
-            return jsonify({'message': 'posts do not exist'}), 404
-
-        return posts_list_schema.jsonify(posts), 200
-
-    @route('/<id>/like', methods=['PATCH'])
+    @route('/posts/<id>/like', methods=['PATCH'])
     @login_required
     def like(self, id):
         """Plus 1 like count for the post"""
-        posts_schema = PostsSchema()
         post = Post.query.get_or_404(id)
 
-        post.like_count += 1
+        post.like()
 
-        db.session.add(post)
-        db.session.commit()
+        return '', 200
 
-        return posts_schema.jsonify(post), 200
-
-    @route('/<id>/unlike', methods=['PATCH'])
+    @route('/posts/<id>/unlike', methods=['PATCH'])
     @login_required
     def unlike(self, id):
         """Minus 1 like count for the post"""
-        posts_schema = PostsSchema()
         post = Post.query.get_or_404(id)
 
-        if not post.like_count == 0:
-            post.like_count -= 1
+        post.unlike()
 
-        db.session.add(post)
-        db.session.commit()
-
-        return posts_schema.jsonify(post), 200
-
-    @route('/<id>/comments', methods=['GET'])
-    def comment_list(self, id):
-        post = Post.query.get_or_404(id)
-        comments = Comment.query.filter_by(post_id=id).order_by(Comment.path.asc()).all()
-
-        comments_schema = CommentsSchema(many=True)
-
-        return comments_schema.jsonify(comments), 200
+        return '', 200
