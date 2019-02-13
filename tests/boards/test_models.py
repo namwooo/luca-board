@@ -1,5 +1,6 @@
 import pytest
 
+from app import db
 from ..boards.factories import BoardFactory
 from ..posts.factories import PostFactory
 from ..users.factories import UserFactory
@@ -8,12 +9,16 @@ from ..users.factories import UserFactory
 class Describe_Board:
     @pytest.fixture
     def board(self):
-        board = BoardFactory.create()
+        board = BoardFactory.build()
+
+        db.session.add(board)
+        db.session.flush()
+
         return board
 
     @pytest.fixture
     def user(self):
-        user = UserFactory.create()
+        user = UserFactory.build()
         return user
 
     class Describe___repr__:

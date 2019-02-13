@@ -1,8 +1,13 @@
+from functools import wraps
+
 from flask import Flask, jsonify
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from marshmallow import ValidationError
+from werkzeug.exceptions import Unauthorized
 
+from app.exceptions import NotFoundException, UnauthorizedException, WriterOnlyException
 from app.queries import CustomBaseQuery
 
 db = SQLAlchemy(query_class=CustomBaseQuery)
@@ -40,21 +45,55 @@ def create_app(test_config=None):
     from .posts.views import PostsView
     from .comments.views import CommentsView
 
-    UsersView.register(app)
-    BoardsView.register(app)
-    PostsView.register(app)
-    CommentsView.register(app)
-
-    @app.errorhandler(Exception)
-    def handle_error(error):
-        response = jsonify(error.to_dict())
-        response.status_code = error.status_code
-        return response
-
-    @app.errorhandler(401)
-    def handle_error(error):
-        response = jsonify({'message': error.description})
-        response.status_code = 401
-        return response
+    UsersView.register(app, trailing_slash=False)
+    BoardsView.register(app, trailing_slash=False)
+    PostsView.register(app, trailing_slash=False)
+    CommentsView.register(app, trailing_slash=False)
 
     return app
+
+
+def handle_error(func):
+    @wraps(func)
+    def decorated_view(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except NotFoundException as e:
+            return jsonify({'message': e.message}), 404
+        except ValidationError as e:
+            return jsonify(e.messages), 422
+        except Unauthorized as e:
+            return jsonify({'message': e.description}), 401
+        except WriterOnlyException as e:
+            return jsonify({'message': e.message}), 403
+        except Exception as e:
+            return jsonify({'message': e.message}), 500
+
+    return decorated_view
+
+
+def transaction(func):
+    @wraps(func)
+    def decorated_view(*args, **kwargs):
+        try:
+            result = func(*args, **kwargs)
+            db.session.commit()
+            return result
+        except Exception as e:
+            db.session.rollback()
+
+    return decorated_view
+
+    # @app.errorhandler(Exception)
+    # def handle_error(error):
+    #     response = jsonify(error.to_dict())
+    #     response.status_code = error.status_code
+    #     return response
+    #
+    # # login_required for flask login
+    #
+    # @app.errorhandler(401)
+    # def handle_error(error):
+    #     response = jsonify({'message': error.description})
+    #     response.status_code = 401
+    #     return response

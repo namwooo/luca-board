@@ -1,36 +1,39 @@
-from marshmallow import post_load, fields, validate, pre_load
+from marshmallow import post_load, fields, validate
 
 from app import ma
 from .models import Board
 
 
-class BoardsSchema(ma.Schema):
+class BoardSchema(ma.Schema):
     class Meta:
         strict = True
 
     id = fields.Integer(dump_only=True)
-    writer_id = fields.Integer(required=True)
-    title = fields.String(required=True, validate=[
+    writer_id = fields.Integer()
+    title = fields.String(validate=[
         validate.Length(min=1, max=240)
     ])
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
+
+
+class BoardCreateSchema(ma.Schema):
+    class Meta:
+        strict = True
+
+    title = fields.String(load_only=True, required=True, validate=[
+        validate.Length(min=1, max=240)
+    ])
 
     @post_load
     def make_board(self, data):
         return Board(**data)
 
 
-class BoardsUpdateSchema(BoardsSchema):
-    writer_id = fields.Integer(dump_only=True, required=True)
+class BoardUpdateSchema(ma.Schema):
+    class Meta:
+        strict = True
 
-    @post_load
-    def update_board(self, data):
-        board = self.context['instance']
-        board.title = data.title
-
-        return board
-
-
-board_schema = BoardsSchema()
-boards_schema = BoardsSchema(many=True)
+    title = fields.String(load_only=True, required=True, validate=[
+        validate.Length(min=1, max=240)
+    ])
