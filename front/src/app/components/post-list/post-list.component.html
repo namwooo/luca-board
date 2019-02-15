@@ -1,10 +1,27 @@
 <ul class="posts">
     <li *ngFor="let post of posts">
-      <a routerLink="/posts/{{post.id}}">
-        {{post.title}}
-      </a>
-      <span class="icon"><mat-icon *ngIf="post.has_image" 
-        [inline]="true">image</mat-icon></span>
-        [{{post.like_count}}]
+      <div class="id">
+          {{post.id}}
+      </div>
+      <div class="title">
+          <a routerLink="/posts/{{post.id}}">
+            {{post.title}}
+          </a>
+          <span class="icon"><mat-icon *ngIf="post.has_image" 
+            [inline]="true">image</mat-icon></span>
+            [{{post.like_count}}]
+      </div>
+      <div class="writer">
+          {{post.writer.name}}
+      </div>
+      <div class="created_at">
+          {{post.created_at}}
+      </div>
+      <div class="view_count">
+          {{post.view_count}}
+      </div>
+      <div class="like_count">
+          {{post.like_count}}
+      </div>
     </li>
   </ul>
