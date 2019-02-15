@@ -7,11 +7,13 @@ import { InMemoryDataService } from './services/in-memory-data.service';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BoardListComponent } from './components/board-list/board-list.component';
+import { PostListComponent } from './components/post-list/post-list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    BoardListComponent
+    BoardListComponent,
+    PostListComponent
   ],
   imports: [
     BrowserModule,
