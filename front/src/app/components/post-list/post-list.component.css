@@ -1,6 +1,6 @@
 .posts {
     list-style-type: none; 
-    background-color: white;
+    background-color: #f2f1f1;
  }
  .icon {
     font-size: 1.3em;
@@ -11,10 +11,15 @@
  .posts > * + * {
     margin-top: 0;
  }
+
+ ul {
+     padding-left: 0;
+ }
  li {
     border: 1px solid #EAEAEA;
     border-right: none;
     border-left: none;
+    background-color: white;
  }
 
  li + li {

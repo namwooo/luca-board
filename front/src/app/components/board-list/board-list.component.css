@@ -3,3 +3,12 @@
     background-color: white;
  }
 
+ ul {
+    padding-left: 0;
+ }
+
+ .icon {
+   font-size: 1em;
+   position: relative;
+   top: 1px;
+}
