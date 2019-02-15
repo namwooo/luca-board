@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { HttpClientModule } from '@angular/common/http';
+import { MatIconModule } from "@angular/material/icon";
 import { InMemoryDataService } from './services/in-memory-data.service';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -22,6 +23,7 @@ import { PostListComponent } from './components/post-list/post-list.component';
     HttpClientInMemoryWebApiModule.forRoot(
       InMemoryDataService, { dataEncapsulation: false}
     ),
+    MatIconModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

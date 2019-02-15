@@ -3,5 +3,8 @@
       <a routerLink="/posts/{{post.id}}">
         {{post.title}}
       </a>
+      <span class="icon"><mat-icon *ngIf="post.has_image" 
+        [inline]="true">image</mat-icon></span>
+        [{{post.like_count}}]
     </li>
   </ul>
