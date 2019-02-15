@@ -1,18 +1,25 @@
 import pytest
 
-from tests.comments.factories import CommentFactory
+from app import db
+from tests.comments.factories import CommentFactory, CommentInPostFactory
 from tests.users.factories import UserFactory
 
 
 class Describe_Comment:
     @pytest.fixture
     def comment(self):
-        comment = CommentFactory.create()
+        comment = CommentInPostFactory.build()
+        db.session.add(comment)
+        db.session.commit()
+
         return comment
 
     @pytest.fixture
     def user(self):
-        user = UserFactory.create()
+        user = UserFactory.build()
+        db.session.add(user)
+        db.session.commit()
+
         return user
 
     class Describe___repr__:
@@ -33,7 +40,7 @@ class Describe_Comment:
     class Describe_set_path:
         @pytest.fixture
         def comment(self):
-            comment = CommentFactory.build()
+            comment = CommentInPostFactory.build()
             return comment
 
         def test_path값을_할당한다(self, comment):

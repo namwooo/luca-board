@@ -49,6 +49,13 @@ class Post(db.Model, TimestampMixin):
         else:
             self.like_count -= 1
 
+    def add_comment(self, comment):
+        comment.post_id = self.id
+        db.session.add(comment)
+        db.session.flush()
+
+        return comment
+
 
 class PostImage(db.Model, TimestampMixin):
     id = db.Column(db.Integer, primary_key=True)

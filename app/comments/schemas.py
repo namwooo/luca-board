@@ -1,10 +1,11 @@
-from marshmallow import fields, validate, post_load
+from marshmallow import fields, validate, post_load, validates
 
 from app import ma
 from app.comments.models import Comment
+from app.posts.models import Post
 
 
-class CommentsSchema(ma.Schema):
+class CommentSchema(ma.Schema):
     class Meta:
         strict = True
 
@@ -13,7 +14,7 @@ class CommentsSchema(ma.Schema):
     post_id = fields.Integer(required=True)
     comment_parent_id = fields.Integer()
     body = fields.String(required=True, validate=[
-        validate.Length(min=1, max=65535)
+        validate.Length(min=1, max=20000)
     ])
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
@@ -23,6 +24,27 @@ class CommentsSchema(ma.Schema):
         comment = Comment(**data)
 
         return comment
+
+
+class CommentWriteSchema(ma.Schema):
+    class Meta:
+        strict = True
+
+    post_id = fields.Integer(required=True)
+    comment_parent_id = fields.Integer()
+    body = fields.String(required=True, validate=[
+        validate.Length(min=1, max=20000)
+    ])
+
+    @post_load
+    def make_comment(self, data):
+        return Comment(**data, writer=self.context['writer'])
+
+    @validates('post_id')
+    def check_post_existence(self, post_id):
+        user = Post.query.filter(Post.id == post_id).first_or_404()
+        # if user is not None:
+        #     raise ValidationError('email is duplicated')
 
 
 class CommentsUpdateSchema(ma.Schema):

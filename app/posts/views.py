@@ -7,7 +7,7 @@ from sqlalchemy import and_
 from .. import db, handle_error, transaction
 from ..boards.models import Board
 from ..comments.models import Comment
-from ..comments.schemas import CommentsSchema
+from ..comments.schemas import CommentSchema
 from ..posts.schemas import PostsSchema, PostsUpdateSchema, PostWriteSchema, \
     PagedPostSchema, PostDetailSchema, PostSchema, PostUpdateSchema
 from .models import Post

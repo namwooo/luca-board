@@ -27,7 +27,11 @@ class Comment(db.Model, TimestampMixin):
         db.session.add(self)
         db.session.flush()
 
-        prefix = self.parent.path + '.' if self.parent else ''
+        if self.parent:
+            prefix = self.parent.path + '.'
+        else:
+            prefix = ''
+
         self.path = prefix + '{:0{}d}'.format(self.id, self._N)
 
         return self.path

@@ -3,37 +3,44 @@ from flask_classful import FlaskView, route
 from flask_login import login_required, current_user
 from marshmallow import ValidationError
 
-from app import db
+from app import db, WriterOnlyException, handle_error, transaction
 from app.comments.models import Comment
-from app.comments.schemas import CommentsSchema, CommentsUpdateSchema
-from app.exceptions import WriterOnly
+from app.comments.schemas import CommentSchema, CommentsUpdateSchema, CommentWriteSchema
 from app.posts.models import Post
 
 
-class CommentsView(FlaskView):
+class CommentView(FlaskView):
+    decorators = [transaction, handle_error]
+
+    @route('/posts/<id>/comments', methods=['GET'])
+    def comment_list(self, id):
+        post = Post.query.get_or_404(id)
+        comments = Comment.query.filter_by(post_id=id) \
+            .order_by(Comment.path.asc()).all()
+
+        post.comments.order_by(Comment.path.asc()).all()
+
+        comments_schema = CommentSchema(many=True)
+        return comments_schema.jsonify(comments), 200
 
     @route('', methods=['POST'])
     @login_required
-    def create(self):
+    def post(self):
         """create a comment in post"""
-        data = request.get_json()
-        data['writer_id'] = current_user.id
+        json_data = request.get_json()
 
-        if 'post_id' in data.keys():
-            post = Post.query.get_or_404(data['post_id'])
+        comment_write_schema = CommentWriteSchema(context={'writer': current_user})
+        new_comment = comment_write_schema.load(data).data
+
+        # if 'post_id' in data.keys():
+        #     post = Post.query.get_or_404(data['post_id'])
         if 'comment_parent_id' in data.keys():
             comment = Comment.query.get_or_404(data['comment_parent_id'])
 
-        comment_schema = CommentsSchema()
-        try:
-            result = comment_schema.load(data)
-        except ValidationError as e:
-            return jsonify(e.messages), 422
+        new_comment.set_path()
+        post.add_comment(new_comment)
 
-        new_comment = result.data
-        new_comment.save()
-
-        return comment_schema.jsonify(new_comment), 200
+        return '', 201
 
     @route('/<id>', methods=['PATCH'])
     @login_required
@@ -44,7 +51,7 @@ class CommentsView(FlaskView):
         comment = Comment.query.get_or_404(id)
 
         if not comment.is_writer(current_user):
-            raise WriterOnly('Writer Only: permission denied')
+            raise WriterOnlyException('Writer Only: permission denied')
 
         comment_schema = CommentsSchema()
         comment_update_schema = CommentsUpdateSchema(context={'instance': comment})
@@ -66,7 +73,7 @@ class CommentsView(FlaskView):
         comment = Comment.query.get_or_404(id)
 
         if not comment.is_writer(current_user):
-            raise WriterOnly('Writer Only: permission denied')
+            raise WriterOnlyException('Writer Only: permission denied')
 
         db.session.delete(comment)  # integrity issue here
         db.session.commit()
