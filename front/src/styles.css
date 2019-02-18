@@ -18,11 +18,6 @@
 body * + * {
     margin-top: 0.5em;
 }
-.container {
-    width: 1050px;
-    max-width: none !important;
-    margin: 0 auto;
-  }
 
 a {
     cursor: pointer;

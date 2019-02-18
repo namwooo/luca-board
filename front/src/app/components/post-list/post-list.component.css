@@ -39,20 +39,20 @@ ul {
 }
 
 .id {
-    flex: 5%;
+    flex: 10%;
     text-align: center;
 }
 
 .title {
-    flex: 52%;
+    flex: 60%;
 }
 
 .writer {
-    flex: 10%;
+    flex: 15%;
 }
 
 .created_at {
-    flex: 13%;
+    flex: 15%;
     text-align: center;
 }
 .view_count {

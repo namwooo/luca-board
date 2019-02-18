@@ -10,6 +10,7 @@ import { AppComponent } from './app.component';
 import { BoardListComponent } from './components/board-list/board-list.component';
 import { PostListComponent } from './components/post-list/post-list.component';
 import { PostDetailComponent } from './components/post-detail/post-detail.component';
+import { HeaderComponent } from './components/header/header.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { PostDetailComponent } from './components/post-detail/post-detail.compon
     BoardListComponent,
     PostListComponent,
     PostDetailComponent,
+    HeaderComponent,
   ],
   imports: [
     BrowserModule,

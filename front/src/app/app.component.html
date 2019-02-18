@@ -1,10 +1,14 @@
-<div class="container" >
-    <div class="row">
-            <div class="col-1 col-md-2">
-                <app-board-list></app-board-list>
-            </div>
-            <div class="col-12 col-md-9">
-                <router-outlet></router-outlet>
-            </div>
-    </div>
+
+<div class="wrapper" >
+    <header>
+        <app-header></app-header>
+    </header>
+    <main class="main-wrapper">
+        <section class="sidebar">
+            <app-board-list></app-board-list>
+        </section>
+        <section class="content">
+            <router-outlet></router-outlet>
+        </section> 
+    </main>  
 </div>

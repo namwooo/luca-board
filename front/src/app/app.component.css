@@ -1,0 +1,21 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    width:1050px;
+    margin: 0 auto;
+}
+
+.main-wrapper {
+    display: flex;
+    flex-direction: row;
+}
+
+.sidebar {
+    flex: 16%;
+    padding-right: 20px;
+}
+
+.content {
+    flex: 84%;
+    margin-top: 0;
+}
