@@ -9,12 +9,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BoardListComponent } from './components/board-list/board-list.component';
 import { PostListComponent } from './components/post-list/post-list.component';
+import { PostDetailComponent } from './components/post-detail/post-detail.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     BoardListComponent,
     PostListComponent,
+    PostDetailComponent,
   ],
   imports: [
     BrowserModule,

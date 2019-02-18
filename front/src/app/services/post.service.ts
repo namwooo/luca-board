@@ -9,18 +9,26 @@ import { Post } from '../models/post';
   providedIn: 'root'
 })
 export class PostService {
-  private postsUrl = 'api/posts';
+  private postUrl = 'api/posts';
 
   constructor(
     private http: HttpClient
   ) { }
 
   getPostsInBoard(board_id: number): Observable<Post[]> {
-    const url = `api/posts?board_id=${board_id}`;
+    const url = this.postUrl + `/?board_id=${board_id}`;
     return this.http.get<Post[]>(url)
     .pipe(
       catchError(this.handleError<Post[]>(`getPostsInBoard`))
       )
+  }
+
+  getPost(post_id: number): Observable<Post[]> {
+    const url = this.postUrl + `/${post_id}`;
+    return this.http.get<Post[]>(url)
+    .pipe(
+      catchError(this.handleError<Post[]>(`getPost`))
+    )
   }
 
   private handleError<T> (operation = 'operation', result?: T) {

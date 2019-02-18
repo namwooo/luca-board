@@ -1,5 +1,5 @@
 <ul class="boards">
-  <li *ngFor="let board of boards" routerLinkActive="active current">
+  <li *ngFor="let board of boards">
       <a [routerLink]="['boards', board.id]">
         <span class="icon"><mat-icon [inline]="true">receipt</mat-icon></span>
         {{board.title}}
