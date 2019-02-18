@@ -1,7 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { PostListComponent } from './components/post-list/post-list.component';
 
-const routes: Routes = [];
+const routes: Routes = [
+  { path: 'boards/:id', component: PostListComponent },
+  { path: '', redirectTo: '', pathMatch: 'full' },
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

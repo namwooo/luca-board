@@ -15,16 +15,19 @@ export class PostService {
     private http: HttpClient
   ) { }
 
-  getPosts(): Observable<Post[]> {
-    return this.http.get<Post[]>(this.postsUrl)
-    .pipe(catchError(this.handleError('getPosts', [])))
+  getPostsInBoard(board_id: number): Observable<Post[]> {
+    const url = `api/posts?board_id=${board_id}`;
+    return this.http.get<Post[]>(url)
+    .pipe(
+      catchError(this.handleError<Post[]>(`getPostsInBoard`))
+      )
   }
 
   private handleError<T> (operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
 
       // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
+      console.error('error'); // log to console instead
 
       // Let the app keep running by returning an empty result.
       return of(result as T);

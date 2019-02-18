@@ -20,15 +20,15 @@ export class InMemoryDataService {
     ];
 
     const posts = [
-      { id: 1, like_count: 10, view_count: 10, created_at: '2019.01.01', writer: { name: '루카' }, has_image: true, title: 'GSAT 시각적사고 도서 질문이요~~'},
-      { id: 2, like_count: 10, view_count: 10, created_at: '2019.01.01', writer: { name: '루카' }, has_image: true, title: '전자공학과 스펙 질문' },
-      { id: 3, like_count: 10, view_count: 10, created_at: '2019.01.01', writer: { name: '루카' }, has_image: true, title: '명지대 자연과학vs가톨릭대 미디어기술콘텐츠' },
-      { id: 4, like_count: 10, view_count: 10, created_at: '2019.01.01', writer: { name: '루카' }, has_image: true, title: '대학교 2학년' },
-      { id: 5, like_count: 10, view_count: 10, created_at: '2019.01.01', writer: { name: '루카' }, has_image: true, title: '경영 복전!!' },
-      { id: 6, like_count: 10, view_count: 10, created_at: '2019.01.01', writer: { name: '루카' }, has_image: true, title: '학점관리 좀 열심히 할 것 그랬어요. ' },
-      { id: 7, like_count: 10, view_count: 10, created_at: '2019.01.01', writer: { name: '루카' }, has_image: true, title: '다들 동아리활동 어떤거 하시나요' },
-      { id: 8, like_count: 10, view_count: 10, created_at: '2019.01.01', writer: { name: '루카' }, has_image: true, title: '학점 3.68과 3.73의 차이는 있습니까?' },
-      { id: 9, like_count: 10, view_count: 10, created_at: '2019.01.01', writer: { name: '루카' }, has_image: false, title: '기계공학과 4학년 노답인데 도대체 어떻게 풀어나가야 할까요ㅠㅠ'},
+      { id: 1, board_id: 1, like_count: 10, view_count: 10, created_at: '2019.01.01', writer: { name: '루카' }, has_image: true, title: 'GSAT 시각적사고 도서 질문이요~~'},
+      { id: 2, board_id: 1, like_count: 10, view_count: 10, created_at: '2019.01.01', writer: { name: '루카' }, has_image: true, title: '전자공학과 스펙 질문' },
+      { id: 3, board_id: 2, like_count: 10, view_count: 10, created_at: '2019.01.01', writer: { name: '루카' }, has_image: true, title: '명지대 자연과학vs가톨릭대 미디어기술콘텐츠' },
+      { id: 4, board_id: 2, like_count: 10, view_count: 10, created_at: '2019.01.01', writer: { name: '루카' }, has_image: true, title: '대학교 2학년' },
+      { id: 5, board_id: 2, like_count: 10, view_count: 10, created_at: '2019.01.01', writer: { name: '루카' }, has_image: true, title: '경영 복전!!' },
+      { id: 6, board_id: 3, like_count: 10, view_count: 10, created_at: '2019.01.01', writer: { name: '루카' }, has_image: true, title: '학점관리 좀 열심히 할 것 그랬어요. ' },
+      { id: 7, board_id: 3, like_count: 10, view_count: 10, created_at: '2019.01.01', writer: { name: '루카' }, has_image: true, title: '다들 동아리활동 어떤거 하시나요' },
+      { id: 8, board_id: 3, like_count: 10, view_count: 10, created_at: '2019.01.01', writer: { name: '루카' }, has_image: true, title: '학점 3.68과 3.73의 차이는 있습니까?' },
+      { id: 9, board_id: 3, like_count: 10, view_count: 10, created_at: '2019.01.01', writer: { name: '루카' }, has_image: false, title: '기계공학과 4학년 노답인데 도대체 어떻게 풀어나가야 할까요ㅠㅠ'},
     ]; 
     return {boards, posts};
     

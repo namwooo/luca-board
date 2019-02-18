@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
 import { Post } from 'src/app/models/post';
 import { PostService } from 'src/app/services/post.service';
 
@@ -10,14 +12,23 @@ import { PostService } from 'src/app/services/post.service';
 export class PostListComponent implements OnInit {
   posts: Post[];
 
-  constructor(private postService: PostService) { }
+  constructor(
+    private postService: PostService,
+    private route: ActivatedRoute,
+    ) { }
 
   ngOnInit() {
-    this.getPosts();
+    this.route.params.subscribe(
+      params => {
+        let id = +params['id']
+        this.getPostsInBoard(id);
+      }
+    )
   }
 
-  getPosts(): void {
-    this.postService.getPosts()
+  getPostsInBoard(id: number): void {
+    const board_id = +this.route.snapshot.paramMap.get('id')
+    this.postService.getPostsInBoard(board_id)
     .subscribe(posts => this.posts = posts)
   }
 
