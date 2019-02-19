@@ -1,65 +1,42 @@
-.posts {
-    list-style-type: none; 
-    background-color: #f2f1f1;
-    display: flex;
-    display: -webkit-flex;
-    flex-direction: column;
- }
-
-li {
-    border: 1px solid #EAEAEA;
-    border-right: none;
-    border-left: none;
-    background-color: white;
-    display: inline-flex;
-    align-items: center;
-    height: 2.5em;
+.t-posts {
+    width: 100%;
+    table-layout: fixed;
 }
 
-li + li {
-    border-top: none;
-}
-
-li * + * {
-    margin-top: 0;
-}
-
-.icon {
-    font-size: 1.3em;
-    position: relative;
-    top: 5px;
-}
-
-.posts > * + * {
-    margin-top: 0;
-}
-
-ul {
-    padding-left: 0;
-}
-
-.id {
-    flex: 10%;
+.t-posts th {
+    /* position of text in th */
     text-align: center;
+    border-top: 1px solid black;
+    padding: 0.9em;
 }
 
-.title {
-    flex: 60%;
+.t-posts tr {
+    /* gap between tr */
+    height: 2em;
+    border-bottom: 1px solid #EAEAEA;
 }
 
-.writer {
-    flex: 15%;
+.t-posts td {
+    padding: 0.7em;
 }
 
-.created_at {
-    flex: 15%;
-    text-align: center;
+/* align row with % */
+.row-title {
+    width: 60%;
 }
-.view_count {
-    flex: 10%;
-    text-align: center;
+.row-writer {
+    width:20%;
 }
-.like_count {
-    flex: 10%;
+.row-date {
+    width:20%;
+}
+.row-view {
+    width: 10%;
+}
+.row-like {
+    width: 10%;
+}
+
+.text-centered {
     text-align: center;
 }
