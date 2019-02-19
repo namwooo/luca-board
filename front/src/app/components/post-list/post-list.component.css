@@ -40,3 +40,9 @@
 .text-centered {
     text-align: center;
 }
+
+.icon {
+    font-size: 1.3em;
+    position: relative;
+    top: 4px;
+}

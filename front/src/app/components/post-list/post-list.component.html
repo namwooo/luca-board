@@ -10,7 +10,13 @@
     </thead>
     <tbody *ngFor="let post of posts">
         <tr>
-            <td><a routerLink="/posts/{{post.id}}">{{post.id}} {{post.title}}</a></td>
+            <td>
+                <a routerLink="/posts/{{post.id}}">
+                {{post.id}} {{post.title}}
+                <span class="icon"><mat-icon *ngIf="post.has_image" 
+                [inline]="true">image</mat-icon></span>
+                [{{post.like_count}}]</a>
+            </td>
             <td class="text-centered">{{post.writer.full_name}}</td>
             <td class="text-centered">{{post.created_at}}</td>
             <td class="text-centered">{{post.view_count}}</td>
