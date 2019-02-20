@@ -6,7 +6,7 @@ import { PostDetailComponent } from './components/post-detail/post-detail.compon
 const routes: Routes = [
   { path: 'posts/:id', component: PostDetailComponent },
   { path: 'boards/:id', component: PostListComponent },
-  { path: '', redirectTo: '', pathMatch: 'full' },
+  { path: '', redirectTo: 'boards/1', pathMatch: 'full' },
 ];
 
 @NgModule({

@@ -9,6 +9,7 @@ import { BoardService } from 'src/app/services/board.service';
 })
 export class BoardListComponent implements OnInit {
   boards: Board[];
+  selectedBoard: Board;
 
   constructor(private boardService: BoardService) {}
 

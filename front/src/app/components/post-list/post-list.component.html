@@ -1,15 +1,16 @@
+<h3 class="board-title" *ngIf="board">{{board.title}}</h3>
 <table class="t-posts">
     <thead>
         <tr>
-            <th class="row-title">제목</th>
+            <th class="row-title text-centered">제목</th>
             <th class="row-writer">작성자</th>
-            <th class="row-date">작성일</th>
-            <th class="row-view">조회</th>
-            <th class="row-like">좋아요</th>
+            <th class="row-date text-centered">작성일</th>
+            <th class="row-view text-centered">조회</th>
+            <th class="row-like text-centered">좋아요</th>
         </tr>
     </thead>
-    <tbody *ngFor="let post of posts">
-        <tr>
+    <tbody>
+        <tr *ngFor="let post of posts">
             <td>
                 <a routerLink="/posts/{{post.id}}">
                 {{post.id}} {{post.title}}
@@ -17,7 +18,7 @@
                 [inline]="true">image</mat-icon></span>
                 [{{post.like_count}}]</a>
             </td>
-            <td class="text-centered">{{post.writer.full_name}}</td>
+            <td>{{post.writer.full_name}}</td>
             <td class="text-centered">{{post.created_at}}</td>
             <td class="text-centered">{{post.view_count}}</td>
             <td class="text-centered">{{post.like_count}}</td>

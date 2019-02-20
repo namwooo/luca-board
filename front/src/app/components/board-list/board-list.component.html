@@ -1,6 +1,6 @@
 <ul class="boards">
   <li *ngFor="let board of boards">
-      <a [routerLink]="['boards', board.id]">
+      <a [routerLink]="['boards/', board.id]" [state]="{board: board.title}">
         <span class="icon"><mat-icon [inline]="true">receipt</mat-icon></span>
         {{board.title}}
       </a>
