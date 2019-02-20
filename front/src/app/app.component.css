@@ -19,3 +19,7 @@
     flex: 84%;
     margin-top: 0;
 }
+
+:host ::ng-deep .ck-editor__editable {
+    min-height: 400px;
+}
