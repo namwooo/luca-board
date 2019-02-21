@@ -10,7 +10,7 @@
       <input type="text" class="form-control" id="title" required
       [(ngModel)]="postForm.title" name="title">
   </div>
-  <quill-editor [(ngModel)]="postForm.body" name="body" [style]="{height: '400px'}"></quill-editor>
+  <app-quill-editor [postForm]=postForm></app-quill-editor>
   <div class="form-group">
     <label>
       <input type="radio" name="is_published" [(ngModel)]="postForm.is_published" [value]="true">

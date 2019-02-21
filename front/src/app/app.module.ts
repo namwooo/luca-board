@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { HttpClientModule } from '@angular/common/http';
 import { MatIconModule } from "@angular/material/icon";
-import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { QuillModule } from 'ngx-quill';
 
 import { InMemoryDataService } from './services/in-memory-data.service';
@@ -15,6 +14,8 @@ import { PostDetailComponent } from './components/post-detail/post-detail.compon
 import { HeaderComponent } from './components/header/header.component';
 import { PostFormComponent } from './components/post-form/post-form.component';
 import { FormsModule } from '@angular/forms';
+import { QuillEditorComponent } from './shared/components/quill-editor/quill-editor.component';
+
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { FormsModule } from '@angular/forms';
     PostDetailComponent,
     HeaderComponent,
     PostFormComponent,
+    QuillEditorComponent,
   ],
   imports: [
     BrowserModule,
@@ -33,7 +35,6 @@ import { FormsModule } from '@angular/forms';
       InMemoryDataService, { dataEncapsulation: false}
     ),
     MatIconModule,
-    CKEditorModule,
     FormsModule,
     QuillModule,
   ],
