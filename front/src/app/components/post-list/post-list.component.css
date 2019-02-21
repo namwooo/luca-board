@@ -45,7 +45,15 @@
 }
 
 .icon {
-    font-size: 1.3em;
+    font-size: 1.2em;
     position: relative;
-    top: 4px;
+    top: 3px;
+}
+
+.write {
+    float: right;
+}
+
+.btn-write {
+    padding: 0.5em;
 }

@@ -30,3 +30,13 @@ a:hover {
     text-decoration: underline;
     color: #6F6C6C;
 }
+
+.btn {
+    font-size: .9em;
+    border-radius: 0%;
+}
+
+.btn:hover {
+    background-color: #ffffff !important;
+}
+  
