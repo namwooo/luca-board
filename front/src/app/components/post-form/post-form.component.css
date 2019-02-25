@@ -1,0 +1,9 @@
+label {
+    margin-right: 2em;
+    font-weight: bold;
+}
+
+input[type="text"] {
+    box-sizing: border-box;
+    height: 28px;
+}

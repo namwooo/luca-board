@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
+import { InMemoryDbService } from 'angular-in-memory-web-api';
 
 @Injectable({
   providedIn: 'root'
 })
 
-export class InMemoryDataService {
+export class InMemoryDataService implements InMemoryDbService{
   createDb() {
     const boards = [
       { id: 1, title: '서류합격스펙' },

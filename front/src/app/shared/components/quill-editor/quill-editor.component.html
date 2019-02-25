@@ -1,2 +1,4 @@
-<quill-editor [(ngModel)]="postForm.body" name="body" [style]="{height: '400px'}" 
+<quill-editor 
+[(ngModel)]="postForm.body" name="body" 
+[style]="{height: '400px'}" 
 (onEditorCreated)="getEditorInstance($event)"></quill-editor>

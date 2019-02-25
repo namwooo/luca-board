@@ -23,3 +23,6 @@
 :host ::ng-deep .ck-editor__editable {
     min-height: 400px;
 }
+.test {
+    font: 100px;
+}

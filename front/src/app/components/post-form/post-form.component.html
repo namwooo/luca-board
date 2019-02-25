@@ -1,25 +1,38 @@
-<form (ngSubmit)="onSubmit()">
-  <div class="form-group">
-      <label for="name">게시판</label>
-      <select name="form-control" id="board" [(ngModel)]="postForm.board_id" required>
-        <option *ngFor="let board of boards" [value]="board.id">{{board.title}}</option>
-      </select>
-  </div>
-  <div class="form-group">
-      <label for="title">제목</label>
-      <input type="text" class="form-control" id="title" required
-      [(ngModel)]="postForm.title" name="title">
-  </div>
-  <app-quill-editor [postForm]=postForm></app-quill-editor>
-  <div class="form-group">
-    <label>
-      <input type="radio" name="is_published" [(ngModel)]="postForm.is_published" [value]="true">
-      전체공개
-    </label>
-    <label>
-      <input type="radio" name="is_published" [(ngModel)]="postForm.is_published" [value]="false">
-      비공개
-    </label>
-  </div>
+<form [formGroup]="postForm" (ngSubmit)="onSubmit()">
+  
+  <label>
+    게시판
+    <select formControlName="idBoard">
+      <option *ngFor="let board of boards" 
+      [value]="board.id">{{board.title}}
+      </option>
+    </select>
+  </label>
+
+  <label>
+    제목
+    <input type="text" formControlName="title">
+  </label>
+
+  <label>
+    <quill-editor formControlName="body" 
+    (onEditorCreated)="getEditorInstance($event)" [style]="{height: '400px'}"></quill-editor>
+  </label>
+
+  <label>
+    전체공개
+    <input type="radio" formControlName="isPublished" 
+    name=isPublished [value]="true">
+  </label>
+
+  <label>
+    비공개
+    <input type="radio" formControlName="isPublished" 
+    name=isPublished [value]="false">
+  </label>
+
   <button type="submit">확인</button>
 </form>
+
+<p>todo remove this: {{diagnostic}}</p>
+<p>todo remove this: {{postForm.status}}</p>

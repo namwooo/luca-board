@@ -13,7 +13,7 @@ import { PostListComponent } from './components/post-list/post-list.component';
 import { PostDetailComponent } from './components/post-detail/post-detail.component';
 import { HeaderComponent } from './components/header/header.component';
 import { PostFormComponent } from './components/post-form/post-form.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { QuillEditorComponent } from './shared/components/quill-editor/quill-editor.component';
 
 
@@ -37,6 +37,7 @@ import { QuillEditorComponent } from './shared/components/quill-editor/quill-edi
     MatIconModule,
     FormsModule,
     QuillModule,
+    ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

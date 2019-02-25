@@ -3,7 +3,7 @@ import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 
-import { Post } from '../models/post';
+import { Post, PostForm } from '../models/post';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +28,14 @@ export class PostService {
     return this.http.get<Post[]>(url)
     .pipe(
       catchError(this.handleError<Post[]>(`getPost`))
+    )
+  }
+
+  createPost(postForm: PostForm) {
+    console.log(postForm)
+    return this.http.post(this.postUrl, postForm)
+    .pipe(
+      catchError(this.handleError<Post>(`createPost`))
     )
   }
 
