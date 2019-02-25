@@ -15,6 +15,7 @@ import { PostDetailComponent } from './components/post-detail/post-detail.compon
 import { HeaderComponent } from './components/header/header.component';
 import { PostFormComponent } from './components/post-form/post-form.component';
 import { CommentListComponent } from './components/comment-list/comment-list.component';
+import { CommentFormComponent } from './components/comment-form/comment-form.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { CommentListComponent } from './components/comment-list/comment-list.com
     HeaderComponent,
     PostFormComponent,
     CommentListComponent,
+    CommentFormComponent,
   ],
   imports: [
     BrowserModule,

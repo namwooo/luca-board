@@ -1,0 +1,9 @@
+<form (ngSubmit)="onSubmit()">
+
+  <textarea type="text" class="comment-input" 
+    [formControl]="body" name="body"></textarea>
+
+  <button type="submit" class="btn">등록</button>
+
+</form>
+todo: remove this: {{body.value }}

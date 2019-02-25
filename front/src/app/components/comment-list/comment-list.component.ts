@@ -9,6 +9,8 @@ import { Comment } from 'src/app/models/comment';
 })
 export class CommentListComponent implements OnInit {
   comments: Comment[];
+  addComment = false;
+  idComment: number;
 
   constructor(
     private commentService: CommentService,
@@ -21,5 +23,14 @@ export class CommentListComponent implements OnInit {
   getCommentsInPost(id: number) {
     this.commentService.getCommentsInPost(id)
     .subscribe(comments => this.comments = comments)
+  }
+  
+  addCommentForm(event: any) {
+    this.idComment = event.target.id;
+    if (this.addComment) {
+      this.addComment = false;
+    } else {
+      this.addComment= true;
+    }
   }
 }
