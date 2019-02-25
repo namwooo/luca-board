@@ -1,0 +1,24 @@
+.wrapper {
+    background-color: #FBFBFB;
+    padding: 1em 2em;    
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+.comment {
+    border-bottom: 1px solid #EAEAEA;
+    padding: .5em;
+
+}
+
+.date {
+    font-size: .3em;
+    color: #ACACAC;
+}
+
+.reply {
+    font-size: .8em;
+}

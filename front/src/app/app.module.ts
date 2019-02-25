@@ -4,6 +4,7 @@ import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { HttpClientModule } from '@angular/common/http';
 import { MatIconModule } from "@angular/material/icon";
 import { QuillModule } from 'ngx-quill';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { InMemoryDataService } from './services/in-memory-data.service';
 import { AppRoutingModule } from './app-routing.module';
@@ -13,9 +14,7 @@ import { PostListComponent } from './components/post-list/post-list.component';
 import { PostDetailComponent } from './components/post-detail/post-detail.component';
 import { HeaderComponent } from './components/header/header.component';
 import { PostFormComponent } from './components/post-form/post-form.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { QuillEditorComponent } from './shared/components/quill-editor/quill-editor.component';
-
+import { CommentListComponent } from './components/comment-list/comment-list.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +24,7 @@ import { QuillEditorComponent } from './shared/components/quill-editor/quill-edi
     PostDetailComponent,
     HeaderComponent,
     PostFormComponent,
-    QuillEditorComponent,
+    CommentListComponent,
   ],
   imports: [
     BrowserModule,

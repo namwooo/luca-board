@@ -41,7 +41,16 @@ export class InMemoryDataService implements InMemoryDbService{
       { id: 9, board_id: 3, like_count: 10, view_count: 10, body: '<h1>Test header</h1> <p>test paragraph</p>', created_at: '2019.01.01', writer: users[0], has_image: false, title: '기계공학과 4학년 노답인데 도대체 어떻게 풀어나가야 할까요ㅠㅠ'},
     ];
 
-    return {boards, posts, users};
+    const comments =[
+      { id:1, idPost: 1, idParentComment: 1, body: '테스트 댓글', path:'000001', writer: users[0], createdAt: '2019.01.01', updatedAt: '2019.01.01' },
+      { id:2, idPost: 1, idParentComment: 1, body: '테스트 댓글', path:'000001', writer: users[0], createdAt: '2019.01.01', updatedAt: '2019.01.01' },
+      { id:3, idPost: 1, idParentComment: 1, body: '테스트 댓글', path:'000001', writer: users[0], createdAt: '2019.01.01', updatedAt: '2019.01.01' },
+      { id:4, idPost: 1, idParentComment: 1, body: '테스트 댓글', path:'000001', writer: users[0], createdAt: '2019.01.01', updatedAt: '2019.01.01' },
+      { id:5, idPost: 1, idParentComment: 1, body: '테스트 댓글', path:'000001', writer: users[0], createdAt: '2019.01.01', updatedAt: '2019.01.01' },
+
+    ]
+
+    return {boards, posts, users, comments};
     
   }
 

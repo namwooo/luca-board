@@ -1,0 +1,17 @@
+<div class="wrapper">
+  <ul>
+    <li *ngFor="let comment of comments" class="comment">
+      <div>
+          <span>{{comment.writer.full_name}} </span>
+          <span class="date">{{comment.createdAt}}</span>
+          <span class="reply">
+              <mat-icon [inline]="true">subdirectory_arrow_right</mat-icon>
+              답글 
+          </span>
+      </div>
+      <div>
+          {{comment.body}}
+      </div>
+    </li>
+  </ul>
+</div>
