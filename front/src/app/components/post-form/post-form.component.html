@@ -3,32 +3,37 @@
   <label>
     게시판
     <select formControlName="idBoard">
+      <option value="">게시판선택</option>
       <option *ngFor="let board of boards" 
-      [value]="board.id">{{board.title}}
+      [ngValue]="board.id">{{board.title}}
       </option>
     </select>
   </label>
 
   <label>
     제목
-    <input type="text" formControlName="title">
+    <input type="text" formControlName="title"
+    required>
   </label>
 
   <label>
     <quill-editor formControlName="body" 
-    (onEditorCreated)="getEditorInstance($event)" [style]="{height: '400px'}"></quill-editor>
+    (onEditorCreated)="getEditorInstance($event)" [style]="{height: '400px'}"
+    required></quill-editor>
   </label>
 
   <label>
     전체공개
     <input type="radio" formControlName="isPublished" 
-    name=isPublished [value]="true">
+    name=isPublished [value]="true"
+    required>
   </label>
 
   <label>
     비공개
     <input type="radio" formControlName="isPublished" 
-    name=isPublished [value]="false">
+    name=isPublished [value]="false"
+    required>
   </label>
 
   <button type="submit">확인</button>
