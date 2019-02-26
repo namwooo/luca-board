@@ -42,6 +42,13 @@ class Comment(db.Model, TimestampMixin):
     def is_writer(self, user):
         return self.writer_id == user.id
 
+    def add_child_comment(self, comment):
+        comment.comment_parent_id = self.id
+        db.session.add(comment)
+        db.session.flush()
+
+        return comment
+
     #
     # def save(self):
     #     # flush. rollback issue

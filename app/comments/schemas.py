@@ -1,4 +1,4 @@
-from marshmallow import fields, validate, post_load, validates
+from marshmallow import fields, validate, post_load, validates, ValidationError
 
 from app import ma
 from app.comments.models import Comment
@@ -30,8 +30,6 @@ class CommentWriteSchema(ma.Schema):
     class Meta:
         strict = True
 
-    post_id = fields.Integer(required=True)
-    comment_parent_id = fields.Integer()
     body = fields.String(required=True, validate=[
         validate.Length(min=1, max=20000)
     ])
@@ -39,12 +37,6 @@ class CommentWriteSchema(ma.Schema):
     @post_load
     def make_comment(self, data):
         return Comment(**data, writer=self.context['writer'])
-
-    @validates('post_id')
-    def check_post_existence(self, post_id):
-        user = Post.query.filter(Post.id == post_id).first_or_404()
-        # if user is not None:
-        #     raise ValidationError('email is duplicated')
 
 
 class CommentsUpdateSchema(ma.Schema):

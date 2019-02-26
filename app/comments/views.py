@@ -13,31 +13,33 @@ class CommentView(FlaskView):
     decorators = [transaction, handle_error]
 
     @route('/posts/<id>/comments', methods=['GET'])
-    def comment_list(self, id):
+    def index(self, id):
         post = Post.query.get_or_404(id)
+
         comments = Comment.query.filter_by(post_id=id) \
             .order_by(Comment.path.asc()).all()
-
-        post.comments.order_by(Comment.path.asc()).all()
 
         comments_schema = CommentSchema(many=True)
         return comments_schema.jsonify(comments), 200
 
-    @route('', methods=['POST'])
+    @route('/comments', methods=['POST'])
     @login_required
     def post(self):
         """create a comment in post"""
         json_data = request.get_json()
+        post_id = request.args.get('post_id')
+        parent_comment_id = request.args.get('parent_comment_id')
+
+        post = Post.query.get_or_404(post_id)
+        parent_comment = Comment.query.get_or_404(parent_comment_id)
 
         comment_write_schema = CommentWriteSchema(context={'writer': current_user})
-        new_comment = comment_write_schema.load(data).data
-
-        # if 'post_id' in data.keys():
-        #     post = Post.query.get_or_404(data['post_id'])
-        if 'comment_parent_id' in data.keys():
-            comment = Comment.query.get_or_404(data['comment_parent_id'])
+        result = comment_write_schema.load(json_data)
+        new_comment = result.data
 
         new_comment.set_path()
+        if parent_comment:
+            parent_comment.add_child_comment(new_comment)
         post.add_comment(new_comment)
 
         return '', 201

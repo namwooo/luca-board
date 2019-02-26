@@ -4,6 +4,7 @@ from flask import Flask, jsonify
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from flask_cors import CORS
 from marshmallow import ValidationError
 from werkzeug.exceptions import Unauthorized
 
@@ -39,16 +40,18 @@ def create_app(test_config=None):
     ma.init_app(app)
     lm.init_app(app)
 
+    CORS(app)
+
     # register views
     from .users.views import UserView
     from .boards.views import BoardView
     from .posts.views import PostView
     from .comments.views import CommentView
 
-    UserView.register(app, route_base='users', trailing_slash=False)
-    BoardView.register(app, route_base='boards', trailing_slash=False)
+    CommentView.register(app, route_base='/', trailing_slash=False)
     PostView.register(app, route_base='/', trailing_slash=False)
-    CommentView.register(app, route_base='comments', trailing_slash=False)
+    BoardView.register(app, route_base='boards', trailing_slash=False)
+    UserView.register(app, route_base='users', trailing_slash=False)
 
     return app
 

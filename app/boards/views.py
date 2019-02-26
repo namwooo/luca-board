@@ -18,6 +18,12 @@ class BoardView(FlaskView):
         boards_schema = BoardSchema(many=True)
         return boards_schema.jsonify(boards), 200
 
+    def get(self, id):
+        board = Board.query.get_or_404(id)
+        
+        board_schema = BoardSchema()
+        return board_schema.jsonify(board), 200
+
     @login_required
     def post(self):
         """Create a board"""

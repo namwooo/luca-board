@@ -16,7 +16,7 @@ from .models import Post
 class PostView(FlaskView):
     decorators = [transaction, handle_error]
 
-    @route("/boards/<board_id>/posts", methods=['GET'])
+    @route("boards/<board_id>/posts", methods=['GET'])
     def list(self, board_id):
         """List all published posts in board ordered by created date"""
         page = request.args.get('p', default=1, type=int)
