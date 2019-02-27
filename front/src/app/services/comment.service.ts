@@ -2,21 +2,20 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
-
 import { Comment } from '../models/comment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CommentService {
-  private baseUrl = 'api/comments';
+  private baseUrl = 'http://0.0.0.0:5000/';
 
   constructor(
     private http: HttpClient,
   ) { }
 
   getCommentsInPost(idPost: number): Observable<Comment[]> {
-    const url = this.baseUrl + `/?idPost=${idPost}`;
+    const url = this.baseUrl + `posts/${idPost}/comments`;
     return this.http.get<Comment[]>(url)
     .pipe(
       catchError(this.handleError<Comment[]>(`getPostsInBoard`))

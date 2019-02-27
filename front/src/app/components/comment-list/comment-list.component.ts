@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { CommentService } from 'src/app/services/comment.service';
 import { Comment } from 'src/app/models/comment';
 import { Post } from 'src/app/models/post';
+import * as camelCaseKeys from 'camelcase-keys';
 
 @Component({
   selector: 'app-comment-list',
@@ -11,6 +12,7 @@ import { Post } from 'src/app/models/post';
 export class CommentListComponent implements OnInit {
   @Input() post: Post;
   comments: Comment[];
+
   idComment: number;
   addComment = false;
 
@@ -20,11 +22,12 @@ export class CommentListComponent implements OnInit {
 
   ngOnInit() {
     this.getCommentsInPost(this.post.id);
+
   }
 
   getCommentsInPost(idPost: number) {
     this.commentService.getCommentsInPost(idPost)
-    .subscribe(comments => this.comments = comments)
+    .subscribe(comments => this.comments = camelCaseKeys(comments))
   }
   
   addCommentForm(event: any) {

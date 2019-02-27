@@ -2,10 +2,10 @@
 
   <ul>
     <li *ngFor="let comment of comments" class="comment">
-
+  
       <div>
-          <span>{{comment.writer.full_name}} </span>
-          <span class="date">{{comment.createdAt}}</span>
+          <span>{{comment.writer.name}} </span>
+          <span class="date">{{comment.createdAt | date:'yyyy-MM-dd'}} </span>
           <span class="reply">
             <mat-icon [inline]="true">subdirectory_arrow_right</mat-icon>
             <button id="{{comment.id}}" (click)="addCommentForm($event)">답글</button>         

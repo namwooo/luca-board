@@ -1,4 +1,4 @@
-/* .wrapper {
+.wrapper {
     display: flex;
     flex-direction: column;
     width:1050px;
@@ -25,4 +25,4 @@
 }
 .test {
     font: 100px;
-} */ 
+}
