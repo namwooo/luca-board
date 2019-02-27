@@ -22,6 +22,16 @@ export class CommentService {
       catchError(this.handleError<Comment[]>(`getPostsInBoard`))
       )
   }
+
+  createComment(commentForm: any, idPost: number, idComment: number) {
+    const url = 'http://127.0.0.1:5000/posts' + `?idPost=${idPost}&idComment:${idComment}`;
+    // const url = this.baseUrl + `?idPost=${idPost}&idComment:${idComment}`;
+    return this.http.post(url, commentForm)
+    .pipe(
+      catchError(this.handleError<Comment>(`createComment`))
+    )
+  }
+
   private handleError<T> (operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
 

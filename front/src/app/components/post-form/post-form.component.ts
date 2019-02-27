@@ -51,7 +51,8 @@ export class PostFormComponent implements OnInit {
     }
 
     this.postService.createPost(this.postForm.value)
-    .subscribe(post => this.router.navigate([`/boards/${post['idBoard']}`]));
+    // .subscribe(post => this.router.navigate([`/boards/${post['idBoard']}`]));
+    .subscribe(post => console.log(post));
   }
 
   getEditorInstance(editorInstance: any) {

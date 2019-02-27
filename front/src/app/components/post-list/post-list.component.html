@@ -18,8 +18,8 @@
                 [inline]="true">image</mat-icon></span>
                 [{{post.like_count}}]</a>
             </td>
-            <td>{{post.writer.full_name}}</td>
-            <td class="text-centered">{{post.created_at}}</td>
+            <td>{{post.writer.name}}</td>
+            <td class="text-centered">{{post.created_at | date:'yyyy-MM-dd'}}</td>
             <td class="text-centered">{{post.view_count}}</td>
             <td class="text-centered">{{post.like_count}}</td>
         </tr>

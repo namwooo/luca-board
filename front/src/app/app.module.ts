@@ -32,9 +32,9 @@ import { CommentFormComponent } from './components/comment-form/comment-form.com
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    HttpClientInMemoryWebApiModule.forRoot(
-      InMemoryDataService, { dataEncapsulation: false}
-    ),
+    // HttpClientInMemoryWebApiModule.forRoot(
+    //   InMemoryDataService, { dataEncapsulation: false}
+    // ),
     MatIconModule,
     FormsModule,
     QuillModule,

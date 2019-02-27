@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { InMemoryDbService } from 'angular-in-memory-web-api';
+import { Comment } from '../models/comment';
 
 @Injectable({
   providedIn: 'root'
@@ -42,16 +43,19 @@ export class InMemoryDataService implements InMemoryDbService{
     ];
 
     const comments =[
-      { id:1, idPost: 1, idParentComment: 1, body: '테스트 댓글', path:'000001', writer: users[0], createdAt: '2019.01.01', updatedAt: '2019.01.01' },
-      { id:2, idPost: 1, idParentComment: 1, body: '테스트 댓글', path:'000001', writer: users[0], createdAt: '2019.01.01', updatedAt: '2019.01.01' },
-      { id:3, idPost: 1, idParentComment: 1, body: '테스트 댓글', path:'000001', writer: users[0], createdAt: '2019.01.01', updatedAt: '2019.01.01' },
-      { id:4, idPost: 1, idParentComment: 1, body: '테스트 댓글', path:'000001', writer: users[0], createdAt: '2019.01.01', updatedAt: '2019.01.01' },
-      { id:5, idPost: 1, idParentComment: 1, body: '테스트 댓글', path:'000001', writer: users[0], createdAt: '2019.01.01', updatedAt: '2019.01.01' },
-
+      { id: 1, idPost: 1, idParentComment: 1, body: '테스트 댓글', path:'000001', writer: users[0], createdAt: '2019.01.01', updatedAt: '2019.01.01' },
+      { id: 2, idPost: 1, idParentComment: 1, body: '테스트 댓글', path:'000001', writer: users[0], createdAt: '2019.01.01', updatedAt: '2019.01.01' },
+      { id: 3, idPost: 2, idParentComment: 1, body: '테스트 댓글', path:'000001', writer: users[0], createdAt: '2019.01.01', updatedAt: '2019.01.01' },
+      { id: 4, idPost: 2, idParentComment: 1, body: '테스트 댓글', path:'000001', writer: users[0], createdAt: '2019.01.01', updatedAt: '2019.01.01' },
+      { id: 5, idPost: 3, idParentComment: 1, body: '테스트 댓글', path:'000001', writer: users[0], createdAt: '2019.01.01', updatedAt: '2019.01.01' },
     ]
 
     return {boards, posts, users, comments};
     
+  }
+
+  genId(comments: Comment[]): number {
+    return comments.length > 0 ? Math.max(...comments.map(comment => comment.id)) + 1: 11;
   }
 
   constructor() { }

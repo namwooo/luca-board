@@ -25,20 +25,23 @@ export class PostListComponent implements OnInit {
     this.route.params.subscribe(
       params => {
         let id = +params['id']
-        this.getBoard(id);
         this.getPostsInBoard(id);
+        this.getBoard(id);
       }
     )
   }
 
   getPostsInBoard(id: number): void {
-    const board_id = +this.route.snapshot.paramMap.get('id')
-    this.postService.getPostsInBoard(board_id)
-    .subscribe(posts => this.posts = posts)
+    this.postService.getPostsInBoard(id)
+    .subscribe(posts => {
+      this.posts = posts['items']
+    });
   }
+
   getBoard(id: number): void {
-    const board_id = +this.route.snapshot.paramMap.get('id')
-    this.boardService.getBoard(board_id)
-    .subscribe(board => this.board = board)
+    this.boardService.getBoard(id)
+    .subscribe(board => {
+      this.board = board
+    })
   }
 }

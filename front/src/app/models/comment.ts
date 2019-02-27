@@ -13,8 +13,5 @@ export class Comment {
 }
 
 export class CommentForm {
-    idWriter: number;
-    idPost: number;
-    idParentComment: number;
     body: string;
 }

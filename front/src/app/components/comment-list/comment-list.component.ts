@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { CommentService } from 'src/app/services/comment.service';
 import { Comment } from 'src/app/models/comment';
+import { Post } from 'src/app/models/post';
 
 @Component({
   selector: 'app-comment-list',
@@ -8,20 +9,21 @@ import { Comment } from 'src/app/models/comment';
   styleUrls: ['./comment-list.component.css']
 })
 export class CommentListComponent implements OnInit {
+  @Input() post: Post;
   comments: Comment[];
-  addComment = false;
   idComment: number;
+  addComment = false;
 
   constructor(
     private commentService: CommentService,
   ) { }
 
   ngOnInit() {
-    this.getCommentsInPost(1);
+    this.getCommentsInPost(this.post.id);
   }
 
-  getCommentsInPost(id: number) {
-    this.commentService.getCommentsInPost(id)
+  getCommentsInPost(idPost: number) {
+    this.commentService.getCommentsInPost(idPost)
     .subscribe(comments => this.comments = comments)
   }
   

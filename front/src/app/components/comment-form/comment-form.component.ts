@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { CommentService } from 'src/app/services/comment.service';
+import { Post } from 'src/app/models/post';
 
 @Component({
   selector: 'app-comment-form',
@@ -8,7 +9,10 @@ import { CommentService } from 'src/app/services/comment.service';
   styleUrls: ['./comment-form.component.css']
 })
 export class CommentFormComponent implements OnInit {
-  body = new FormControl('');
+  @Input() post: Post;
+  @Input() comments: Comment[];
+  @Input() idComment: number;
+  commentForm = new FormControl('');
 
   constructor(
     private commentService: CommentService
@@ -17,12 +21,11 @@ export class CommentFormComponent implements OnInit {
   ngOnInit() {
   }
 
-  // onSubmit(): void {
-  //   this.commentService.createComment(this.body)
-  //   .subscribe(comment => console.log(comment))
-  // }
+  onSubmit(): void {
+    this.commentService.createComment(this.commentForm.value, this.post.id, this.idComment)
+    .subscribe(comment => console.log(comment))
+  }
 
     // todo: remove this after dev
-    get diagnostic() { return JSON.stringify(this.body.value); }
-
+    get diagnostic() { return JSON.stringify(this.commentForm.value); }
 }

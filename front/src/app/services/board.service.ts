@@ -10,7 +10,7 @@ import { Board } from '../models/board';
   providedIn: 'root'
 })
 export class BoardService {
-  private boardsUrl = 'api/boards';
+  private boardsUrl = 'http://0.0.0.0:5000/boards';
   private boardSource = new Subject<Board>();
 
   board$ = this.boardSource.asObservable();

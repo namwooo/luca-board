@@ -1,5 +1,7 @@
-<div *ngIf="post">
-  <div innerHTML="{{post.body}}"></div>
-</div>
+<div class="wrapper">
 
-<app-comment-list></app-comment-list>
+  <div *ngIf="post" innerHTML="{{post.body}}"></div>
+
+  <app-comment-list *ngIf="post" [post]="post"></app-comment-list>
+
+</div>
