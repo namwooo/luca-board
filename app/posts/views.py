@@ -1,14 +1,11 @@
-from flask import jsonify, request
+from flask import request
 from flask_classful import FlaskView, route
 from flask_login import current_user, login_required
-from marshmallow import ValidationError
 from sqlalchemy import and_
 
 from .. import db, handle_error, transaction
 from ..boards.models import Board
-from ..comments.models import Comment
-from ..comments.schemas import CommentSchema
-from ..posts.schemas import PostsSchema, PostsUpdateSchema, PostWriteSchema, \
+from ..posts.schemas import PostWriteSchema, \
     PagedPostSchema, PostDetailSchema, PostSchema, PostUpdateSchema
 from .models import Post
 
@@ -27,7 +24,8 @@ class PostView(FlaskView):
             .order_by(Post.created_at.desc()) \
             .paginate(page=page, per_page=15, error_out=False)
 
-        paged_post_schema = PagedPostSchema()
+        paged_post_schema = PagedPostSchema(context=posts)
+
         return paged_post_schema.jsonify(posts), 200
 
     @route('/posts', methods=['POST'])

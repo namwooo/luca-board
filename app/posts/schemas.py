@@ -22,11 +22,14 @@ class PostSchema(ma.Schema):
         validate.Length(min=1, max=120)
     ])
     is_published = fields.Boolean(required=True)
-    # has_image = fields.Boolean(required=True)
+    has_image = fields.Method("get_has_image")
     like_count = fields.Integer(dump_only=True)
     view_count = fields.Integer(dump_only=True)
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
+
+    def get_has_image(self, obj):
+        return obj.has_image()
 
 
 class PostWriteSchema(ma.Schema):

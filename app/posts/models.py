@@ -23,7 +23,8 @@ class Post(db.Model, TimestampMixin):
     board = db.relationship('Board', back_populates='posts', lazy='select')
     comments = db.relationship('Comment', back_populates='post', lazy='select')
     images = db.relationship('PostImage', back_populates='post', lazy='select')
-    like_users = db.relationship('User', secondary=likes, back_populates='like_posts', lazy='subquery')
+    like_users = db.relationship('User', secondary=likes,
+                                 back_populates='like_posts', lazy='subquery')
 
     def __repr__(self):
         return '<{}(id: {}, writer_id: {}, board_id: {}, title: {}, is_published: {})>' \
@@ -32,10 +33,10 @@ class Post(db.Model, TimestampMixin):
 
     @property
     def image_count(self):
-        return self.images.count()
-
+        return len(self.images)
+    
     def has_image(self):
-        return len(self.image_count) > 0
+        return self.image_count > 0
 
     def read(self):
         self.view_count += 1
