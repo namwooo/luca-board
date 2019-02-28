@@ -23,9 +23,9 @@ export class CommentService {
   }
 
   createComment(commentForm: any, idPost: number, idComment: number) {
-    const url = 'http://127.0.0.1:5000/posts' + `?idPost=${idPost}&idComment:${idComment}`;
+    const url = this.baseUrl + `comments?idPost=${idPost}&idComment:${idComment}`;
     // const url = this.baseUrl + `?idPost=${idPost}&idComment:${idComment}`;
-    return this.http.post(url, commentForm)
+    return this.http.post(url, commentForm, httpOptions)
     .pipe(
       catchError(this.handleError<Comment>(`createComment`))
     )
@@ -44,5 +44,6 @@ export class CommentService {
 }
 
 const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+  withCredentials: true
 };

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError} from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 
-import { Post, PostForm} from '../models/post';
+import { Post, PostForm } from '../models/post';
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +35,8 @@ export class PostService {
   }
 
   createPost(postForm: PostForm) {
-    return this.http.post(this.postUrl, postForm)
+    const url = this.postUrl + 'posts';
+    return this.http.post(url, postForm, httpOptions)
     .pipe(
       catchError(this.handleError<Post>(`createPost`))
     )
@@ -54,5 +55,6 @@ export class PostService {
 }
 
 const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' }), 
+  withCredentials: true,
 };

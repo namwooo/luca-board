@@ -19,6 +19,7 @@ import { CommentFormComponent } from './components/comment-form/comment-form.com
 import { LoginComponent } from './components/login/login.component';
 import { MainLayoutComponent } from './components/main-layout/main-layout.component';
 import { ContentOnlyLayoutComponent } from './components/content-only-layout/content-only-layout.component';
+import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,7 @@ import { ContentOnlyLayoutComponent } from './components/content-only-layout/con
     QuillModule,
     ReactiveFormsModule,
   ],
-  providers: [],
+  providers: [ CookieService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

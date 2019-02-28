@@ -5,7 +5,7 @@ export class Post {
     board_id: number;
     title: string;
     body: string;
-    is_published: boolean;
+is_published: boolean;
     like_count: number;
     view_count: number;
     updated_at: string;

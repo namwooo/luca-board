@@ -1,3 +1,13 @@
-<p>
-  login works!
-</p>
+<div>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    
+    <input type="text" placeholder="이메일" class="form-control"
+    formControlName="email">
+
+    <input type="password" placeholder="비밀번호" class="form-control"
+    formControlName="password">
+
+    <button type="submit" class="btn btn-success">로그인</button>
+  </form>
+  {{diagnostic}}
+</div>
