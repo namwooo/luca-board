@@ -1,25 +1,34 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import * as moment from 'moment';
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class LoginService {
+export class AuthService {
   private baseUrl = 'http://0.0.0.0:5000/';
 
   constructor(
     private http: HttpClient
     ) { }
 
-  login(loginForm: any) {
+  login(email: String, password: String) {
     const url = this.baseUrl + 'users/login';
-    return this.http.post(url, loginForm, httpOptions)
+    return this.http.post(url, {email, password}, httpOptions) // POST localhost:5000/users/login
     .pipe(
+      tap(res => this.setSession(res)), 
       catchError(this.handleError<any>(`login`))
     )
+  }
+
+  private setSession(authResult) {
+    const expiresAt = moment().add(authResult.expiresIn, 'second')
+
+    localStorage.setItem('access_token', authResult.access_token);
+    localStorage.setItem('expries_at', JSON.stringify(expiresAt.valueOf()))
   }
 
   private handleError<T> (operation = 'operation', result?: T) {

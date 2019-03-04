@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { LoginService } from 'src/app/api/login.service';
+import { AuthService } from 'src/app/api/auth.service';
 import * as camelCaseKeys from 'camelcase-keys';
 import { CookieService } from 'ngx-cookie-service';
 
@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
   })
 
   constructor(
-    private loginService: LoginService,
+    private authService: AuthService,
     private cookieService: CookieService,
   ) { }
 
@@ -24,10 +24,11 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    this.loginService.login(this.loginForm.value)
-    .subscribe(user => {
-      console.log(user);
-      // this.cookieService.set('remeber_token', user.id);
+    let email = this.loginForm.value.email
+    let password = this.loginForm.value.password
+    this.authService.login(email, password)
+    .subscribe(token => {
+      console.log(token);
     })
   }
     // todo: remove this after dev

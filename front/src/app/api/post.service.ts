@@ -36,11 +36,16 @@ export class PostService {
 
   createPost(body: any, idBoard: any) {
     const url = this.baseUrl + `posts?idBoard=${idBoard}`;
-    return this.http.post(url, body, httpOptions)
+    let token = this.getToken();
+    return this.http.post(url, body,  
+      { headers: new HttpHeaders().set('Authorization', `Bearer ${token}`) })
     .pipe(
       catchError(this.handleError<Post>(`createPost`))
     )
-    debugger;
+  }
+
+  private getToken() {
+    return localStorage.getItem('access_token')
   }
 
   private handleError<T> (operation = 'operation', result?: T) {
@@ -57,5 +62,5 @@ export class PostService {
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }), 
-  // withCredentials: true,
+  withCredentials: true,
 };

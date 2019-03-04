@@ -7,9 +7,10 @@ import { PostFormComponent } from './components/post-form/post-form.component';
 
 const routes: Routes = [
     { 
-        path: '', component: MainLayoutComponent, 
+        path: '', component: MainLayoutComponent,  
         children: [    
             { path: 'boards/:id', component: PostListComponent },
+            { path: 'boards', component: PostListComponent },
             { path: 'posts/:id', component: PostDetailComponent },
             { path: 'posts', component: PostFormComponent },
 
