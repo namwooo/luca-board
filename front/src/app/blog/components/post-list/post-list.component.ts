@@ -34,6 +34,7 @@ export class PostListComponent implements OnInit {
   getPostsInBoard(id: number): void {
     this.postService.getPostsInBoard(id)
     .subscribe(posts => {
+      console.log(posts)
       this.posts = posts['items']
     });
   }

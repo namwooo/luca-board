@@ -35,6 +35,7 @@ class PostWriteSchema(ma.Schema):
 
     writer_id = fields.Integer(required=True)
     board_id = fields.Integer(required=True)
+    has_image = fields.Boolean(required=True)
     title = fields.String(required=True, validate=[
         validate.Length(min=1, max=120)
     ])

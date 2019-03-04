@@ -16,11 +16,11 @@
     required>
   </label>
 
-  <label>
-    <quill-editor formControlName="body" 
-    (onEditorCreated)="getEditorInstance($event)" [style]="{height: '400px'}"
+  <div class="editor">
+    <quill-editor formControlName="body"
+    [style]="{height: '400px'}"
     required></quill-editor>
-  </label>
+  </div>
 
   <label>
     전체공개
@@ -39,5 +39,8 @@
   <button type="submit">확인</button>
 </form>
 
-<p>todo remove this: {{diagnostic}}</p>
+<!-- <p>todo remove this: {{diagnostic}}</p> -->
 <p>todo remove this: {{postForm.status}}</p>
+
+
+<!-- (onEditorCreated)="getEditorInstance($event)" -->

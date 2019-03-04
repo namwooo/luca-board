@@ -53,16 +53,20 @@ export class PostFormComponent implements OnInit {
     let idBoard = this.postForm.value.idBoard
     let body = this.postForm.value
     delete body.idBoard
-    
+
+    if (this.postForm.value.body.includes('img')) {
+      body['has_image'] = true
+    }
+
     /* Call post service */
     this.postService.createPost(body, idBoard)
     .subscribe(post => console.log(post));
   }
 
-  getEditorInstance(editorInstance: any) {
-    let toolbar = editorInstance.getModule('toolbar');
-    toolbar.addHandler('image', selectLocalImage.bind(editorInstance))
-  }
+  // getEditorInstance(editorInstance: any) {
+  //   let toolbar = editorInstance.getModule('toolbar');
+  //   toolbar.addHandler('image', selectLocalImage.bind(editorInstance))
+  // }
 
   getBoards(): void {
     this.boardService.getBoards()
