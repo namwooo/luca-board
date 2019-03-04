@@ -15,6 +15,7 @@ class Post(db.Model, TimestampMixin):
     board_id = db.Column(db.Integer, db.ForeignKey('board.id'), nullable=False)
     title = db.Column(db.String(240), nullable=False)
     body = db.Column(db.Text)
+    has_image = db.Column(db.Boolean, nullable=False, default=False)
     is_published = db.Column(db.Boolean, nullable=False, default=True)
     like_count = db.Column(db.Integer, nullable=False, default=0)
     view_count = db.Column(db.Integer, nullable=False, default=0)
@@ -22,7 +23,7 @@ class Post(db.Model, TimestampMixin):
     writer = db.relationship('User', back_populates='posts', lazy='joined')
     board = db.relationship('Board', back_populates='posts', lazy='select')
     comments = db.relationship('Comment', back_populates='post', lazy='select')
-    images = db.relationship('PostImage', back_populates='post', lazy='select') #join
+    images = db.relationship('PostImage', back_populates='post', lazy='select')  # joined
     like_users = db.relationship('User', secondary=likes,
                                  back_populates='like_posts', lazy='subquery')
 
@@ -30,13 +31,6 @@ class Post(db.Model, TimestampMixin):
         return '<{}(id: {}, writer_id: {}, board_id: {}, title: {}, is_published: {})>' \
             .format(self.__class__.__name__, self.id, self.writer_id, self.board_id,
                     self.title, self.is_published)
-
-    @property
-    def image_count(self):
-        return len(self.images)
-    
-    def has_image(self):
-        return self.image_count > 0
 
     def read(self):
         self.view_count += 1

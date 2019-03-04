@@ -57,22 +57,15 @@ def create_app(test_config=None):
     BoardView.register(app, route_base='boards', trailing_slash=False)
     UserView.register(app, route_base='users', trailing_slash=False)
 
-    # @app.before_request
-    # def change_case_convention():
-    #     if request.json:
-    #         converted_data = change_dict_naming_convention(request.json, camel_to_snake)
-    #         request.data = converted_data
-    #
-    #     if request.args:
-    #         converted_args = change_dict_naming_convention(request.args, camel_to_snake)
-    #         request.args = converted_args
-    #
-    #     return response
+    @app.before_request
+    def change_case_convention():
+        if request.json:
+            converted_data = change_dict_naming_convention(request.json, camel_to_snake)
+            request.data = converted_data
 
-    @app.route('/protected', methods=['GET'])
-    @jwt_required
-    def protected():
-        return 'test', 200
+        if request.args:
+            converted_args = change_dict_naming_convention(request.args, camel_to_snake)
+            request.args = converted_args
 
     return app
 
