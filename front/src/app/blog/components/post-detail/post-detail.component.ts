@@ -10,7 +10,6 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class PostDetailComponent implements OnInit {
   post: Post;
-  // update require id
 
   constructor(
     private postService: PostService,
@@ -31,11 +30,13 @@ export class PostDetailComponent implements OnInit {
     .subscribe(post => this.post = post)
   }
 
-  editPost(id: number): void {
-    
+  updatePost(id: number): void {
+    this.postService.updatePost(this.post.id)
+    .subscribe(resp => console.log(resp))
   }
 
-  deletePost(id: number): void {
-    
+  deletePost(): void {
+    this.postService.deletePost(this.post.id)
+    .subscribe(resp => console.log(resp))
   }
 }

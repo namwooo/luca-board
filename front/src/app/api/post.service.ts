@@ -44,6 +44,24 @@ export class PostService {
     )
   }
 
+  updatePost(id: number) {
+    const url = this.baseUrl + `posts/${id}`;
+    let token = this.getToken();
+    return this.http.patch(url, { headers: new HttpHeaders().set('Authorization', `Bearer ${token}`) })
+    .pipe(
+      catchError(this.handleError<Post>(`patchPost`))
+    )
+  }
+
+  deletePost(id: number) {
+    const url = this.baseUrl + `posts/${id}`;
+    let token = this.getToken();
+    return this.http.delete(url, { headers: new HttpHeaders().set('Authorization', `Bearer ${token}`) })
+    .pipe(
+      catchError(this.handleError<Post>(`deletePost`))
+    )
+  }
+
   private getToken() {
     return localStorage.getItem('access_token')
   }
