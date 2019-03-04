@@ -1,19 +1,24 @@
 from flask import request
 from flask_classful import FlaskView, route
-from flask_login import current_user, login_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from sqlalchemy import and_
 
-from .. import db, handle_error, transaction
+from .. import db, transaction, handle_error
 from ..boards.models import Board
-from ..posts.schemas import PostWriteSchema, \
-    PagedPostSchema, PostDetailSchema, PostSchema, PostUpdateSchema
+from ..posts.schemas import (
+    PostWriteSchema,
+    PagedPostSchema,
+    PostDetailSchema,
+    PostSchema,
+    PostUpdateSchema
+)
 from .models import Post
 
 
 class PostView(FlaskView):
     decorators = [transaction, handle_error]
 
-    @route("boards/<board_id>/posts", methods=['GET'])
+    @route("/boards/<board_id>/posts", methods=['GET'])
     def list(self, board_id):
         """List all published posts in board ordered by created date"""
         page = request.args.get('p', default=1, type=int)
@@ -28,18 +33,24 @@ class PostView(FlaskView):
 
         return paged_post_schema.jsonify(posts), 200
 
-    @route('/posts', methods=['POST'])
-    @login_required
+    @route("/posts", methods=['POST'])
+    @jwt_required
     def post(self):
         """Create a post in board"""
-        json_data = request.get_json()
-        board = Board.query.get_or_404(json_data['board_id'])
+        data = request.data
+        board_id = request.args.get('id_board', 0)
+        writer_id = get_jwt_identity()  # user identity from jwt
 
-        post_write_schema = PostWriteSchema(context={'writer': current_user})
-        post = post_write_schema.load(json_data)
-        post = post.data
+        # Check existence of board
+        board = Board.query.get_or_404(board_id)
 
-        board.add_post(post)
+        data['writer_id'] = writer_id
+        data['board_id'] = board.id
+
+        post_write_schema = PostWriteSchema()
+        new_post = post_write_schema.load(data).data
+
+        board.add_post(new_post)
 
         return '', 201
 
@@ -54,7 +65,7 @@ class PostView(FlaskView):
         return post_detail_schema.jsonify(post), 200
 
     @route('/posts/<id>', methods=['PATCH'])
-    @login_required
+    @jwt_required
     def patch(self, id):
         """Update a post"""
         json_data = request.get_json()
@@ -70,7 +81,7 @@ class PostView(FlaskView):
         return '', 200
 
     @route('/posts/<id>', methods=['DELETE'])
-    @login_required
+    @jwt_required
     def delete(self, id):
         """Delete a post"""
         post = Post.query.get_or_404(id)
@@ -90,7 +101,7 @@ class PostView(FlaskView):
         return posts_schema.jsonify(posts), 200
 
     @route('/posts/<id>/like', methods=['PATCH'])
-    @login_required
+    @jwt_required
     def like(self, id):
         """Plus 1 like count for the post"""
         post = Post.query.get_or_404(id)
@@ -100,7 +111,7 @@ class PostView(FlaskView):
         return '', 200
 
     @route('/posts/<id>/unlike', methods=['PATCH'])
-    @login_required
+    @jwt_required
     def unlike(self, id):
         """Minus 1 like count for the post"""
         post = Post.query.get_or_404(id)

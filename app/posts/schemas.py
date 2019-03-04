@@ -36,6 +36,7 @@ class PostWriteSchema(ma.Schema):
     class Meta:
         strict = True
 
+    writer_id = fields.Integer(required=True)
     board_id = fields.Integer(required=True)
     title = fields.String(required=True, validate=[
         validate.Length(min=1, max=120)
@@ -47,7 +48,7 @@ class PostWriteSchema(ma.Schema):
 
     @post_load
     def make_post(self, data):
-        return Post(**data, writer=self.context['writer'])
+        return Post(**data)
 
 
 class PostDetailSchema(PostSchema):

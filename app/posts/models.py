@@ -22,7 +22,7 @@ class Post(db.Model, TimestampMixin):
     writer = db.relationship('User', back_populates='posts', lazy='joined')
     board = db.relationship('Board', back_populates='posts', lazy='select')
     comments = db.relationship('Comment', back_populates='post', lazy='select')
-    images = db.relationship('PostImage', back_populates='post', lazy='select')
+    images = db.relationship('PostImage', back_populates='post', lazy='select') #join
     like_users = db.relationship('User', secondary=likes,
                                  back_populates='like_posts', lazy='subquery')
 
