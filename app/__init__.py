@@ -1,6 +1,9 @@
+from datetime import timedelta
 from functools import wraps
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
+from flask_jwt_extended import JWTManager, jwt_required
+from flask_jwt_extended.exceptions import UserClaimsVerificationError, NoAuthorizationError
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
@@ -8,24 +11,23 @@ from flask_cors import CORS
 from marshmallow import ValidationError
 from werkzeug.exceptions import Unauthorized
 
+from app.config import config
 from app.exceptions import NotFoundException, UnauthorizedException, WriterOnlyException
+from app.helpers import camel_to_snake, change_dict_naming_convention
 from app.queries import CustomBaseQuery
 
 db = SQLAlchemy(query_class=CustomBaseQuery)
 ma = Marshmallow()
 lm = LoginManager()
+jm = JWTManager()
 
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
-    app.config.from_mapping(
-        SECRET_KEY='dev',
-        SQLALCHEMY_DATABASE_URI="mysql+pymysql://root:Demian!89@localhost/specup",
-        SQLALCHEMY_TRACK_MODIFICATIONS=False,
-        SQLALCHEMY_ECHO=True
-    )
+
+    # Set config
     if test_config is None:
-        app.config.from_pyfile('config.py', silent=True)
+        app.config.from_object(config.BaseConfig)
     else:
         app.config.from_mapping(test_config)
 
@@ -39,8 +41,10 @@ def create_app(test_config=None):
     db.init_app(app)
     ma.init_app(app)
     lm.init_app(app)
+    jm.init_app(app)
 
-    CORS(app)
+    # CORS policy
+    CORS(app, supports_credentials=True)
 
     # register views
     from .users.views import UserView
@@ -53,26 +57,24 @@ def create_app(test_config=None):
     BoardView.register(app, route_base='boards', trailing_slash=False)
     UserView.register(app, route_base='users', trailing_slash=False)
 
+    # @app.before_request
+    # def change_case_convention():
+    #     if request.json:
+    #         converted_data = change_dict_naming_convention(request.json, camel_to_snake)
+    #         request.data = converted_data
+    #
+    #     if request.args:
+    #         converted_args = change_dict_naming_convention(request.args, camel_to_snake)
+    #         request.args = converted_args
+    #
+    #     return response
+
+    @app.route('/protected', methods=['GET'])
+    @jwt_required
+    def protected():
+        return 'test', 200
+
     return app
-
-
-def handle_error(func):
-    @wraps(func)
-    def decorated_view(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except NotFoundException as e:
-            return jsonify({'message': e.message}), 404
-        except ValidationError as e:
-            return jsonify(e.messages), 422
-        except Unauthorized as e:
-            return jsonify({'message': e.description}), 401
-        except WriterOnlyException as e:
-            return jsonify({'message': e.message}), 403
-        except Exception as e:
-            return jsonify({'message': e.message}), 500
-
-    return decorated_view
 
 
 def transaction(func):
@@ -84,19 +86,28 @@ def transaction(func):
             return result
         except Exception as e:
             db.session.rollback()
+            raise e
 
     return decorated_view
 
-    # @app.errorhandler(Exception)
-    # def handle_error(error):
-    #     response = jsonify(error.to_dict())
-    #     response.status_code = error.status_code
-    #     return response
-    #
-    # # login_required for flask login
-    #
-    # @app.errorhandler(401)
-    # def handle_error(error):
-    #     response = jsonify({'message': error.description})
-    #     response.status_code = 401
-    #     return response
+
+def handle_error(func):
+    @wraps(func)
+    def decorated_view(*args, **kwargs):
+        try:
+            result = func(*args, **kwargs)
+            return result
+        except NotFoundException as e:
+            return jsonify({'msg': e.message}), 404
+        except ValidationError as e:
+            return jsonify(e.messages), 422
+        except Unauthorized as e:
+            return jsonify({'msg': e.description}), 401
+        except WriterOnlyException as e:
+            return jsonify({'msg': e.message}), 403
+        except NoAuthorizationError as e:
+            raise NoAuthorizationError
+        except Exception as e:
+            raise e
+
+    return decorated_view
