@@ -30,4 +30,12 @@ export class PostDetailComponent implements OnInit {
     this.postService.getPost(id)
     .subscribe(post => this.post = post)
   }
+
+  editPost(id: number): void {
+    
+  }
+
+  deletePost(id: number): void {
+    
+  }
 }
