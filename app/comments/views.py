@@ -1,6 +1,7 @@
 from flask import request, jsonify
 from flask_classful import FlaskView, route
-from flask_login import login_required, current_user
+from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_login import current_user
 from marshmallow import ValidationError
 
 from app import db, WriterOnlyException, handle_error, transaction
@@ -20,32 +21,39 @@ class CommentView(FlaskView):
             .order_by(Comment.path.asc()).all()
 
         comments_schema = CommentSchema(many=True)
+        a = comments_schema.jsonify(comments)
         return comments_schema.jsonify(comments), 200
 
     @route('/comments', methods=['POST'])
-    # @login_required
+    @jwt_required
     def post(self):
         """create a comment in post"""
-        json_data = request.get_json()
-        post_id = request.args.get('post_id')
-        parent_comment_id = request.args.get('parent_comment_id')
+        data = request.data
+        post_id = request.args.get('post_id', 0)
+        comment_parent_id = request.args.get('comment_id', 0)
 
+        # check existence of post
         post = Post.query.get_or_404(post_id)
-        parent_comment = Comment.query.get_or_404(parent_comment_id)
 
-        comment_write_schema = CommentWriteSchema(context={'writer': current_user})
-        result = comment_write_schema.load(json_data)
+        writer_id = get_jwt_identity()
+        data['writer_id'] = writer_id
+        data['post_id'] = post_id
+
+        # check only when parent comment id is passed
+        if comment_parent_id:
+            parent_comment = Comment.query.get_or_404(comment_parent_id)
+            data['comment_parent_id'] = comment_parent_id
+
+        comment_write_schema = CommentWriteSchema()
+        result = comment_write_schema.load(data)
         new_comment = result.data
 
         new_comment.set_path()
-        if parent_comment:
-            parent_comment.add_child_comment(new_comment)
-        post.add_comment(new_comment)
 
         return '', 201
 
     @route('/<id>', methods=['PATCH'])
-    # @login_required
+    @jwt_required
     def update(self, id):
         """update a comment"""
         data = request.get_json()
@@ -69,7 +77,7 @@ class CommentView(FlaskView):
         return comment_schema.jsonify(updated_comment), 200
 
     @route('/<id>', methods=['DELETE'])
-    # @login_required
+    @jwt_required
     def delete(self, id):
         """delete a comment"""
         comment = Comment.query.get_or_404(id)

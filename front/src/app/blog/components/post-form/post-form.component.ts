@@ -69,7 +69,7 @@ export class PostFormComponent implements OnInit {
     }
 
     if (this.isEdit) {
-      this.postService.updatePost(body, this.id)
+      this.postService.updatePost(body, this.post.id)
       .subscribe(post => console.log(post))
     } else {
       this.postService.createPost(body, idBoard)

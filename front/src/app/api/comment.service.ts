@@ -8,7 +8,7 @@ import { Comment } from '../blog/models/comment';
   providedIn: 'root'
 })
 export class CommentService {
-  private baseUrl = 'http://0.0.0.0:5000/';
+  private baseUrl = 'http://localhost:5000/';
 
   constructor(
     private http: HttpClient,
@@ -22,10 +22,16 @@ export class CommentService {
       )
   }
 
-  createComment(commentForm: any, idPost: number, idComment: number) {
-    const url = this.baseUrl + `comments?idPost=${idPost}&idComment:${idComment}`;
-    // const url = this.baseUrl + `?idPost=${idPost}&idComment:${idComment}`;
-    return this.http.post(url, commentForm, httpOptions)
+  createComment(commentForm: any, postId: Number, commentId: Number) {
+    let url;
+    if (commentId) {
+      url = this.baseUrl + `comments?postId=${postId}&commentId=${commentId}`;
+    } else {
+      url = this.baseUrl + `comments?postId=${postId}`;
+    }
+
+    let token = this.getToken();
+    return this.http.post(url, commentForm, { headers: new HttpHeaders().set('Authorization', `Bearer ${token}`) })
     .pipe(
       catchError(this.handleError<Comment>(`createComment`))
     )
@@ -40,6 +46,10 @@ export class CommentService {
       // Let the app keep running by returning an empty result.
       return of(result as T);
     };
+  }
+
+  private getToken() {
+    return localStorage.getItem('access_token')
   }
 }
 

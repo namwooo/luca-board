@@ -20,5 +20,14 @@ ul {
 }
 
 .reply {
+    margin-left: 2em;
+}
+
+.reply-btn {
     font-size: .8em;
+}
+
+.reply-icon {
+    color:red; 
+    float: left;
 }

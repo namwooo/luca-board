@@ -26,7 +26,7 @@ export class CommentListComponent implements OnInit {
 
   getCommentsInPost(idPost: number) {
     this.commentService.getCommentsInPost(idPost)
-    .subscribe(comments => this.comments = camelCaseKeys(comments))
+    .subscribe(comments => this.comments = comments)
   }
   
   addCommentForm(event: any) {

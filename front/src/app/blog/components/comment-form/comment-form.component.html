@@ -1,7 +1,7 @@
-<form (ngSubmit)="onSubmit()">
+<form [formGroup]="commentForm" (ngSubmit)="onSubmit()">
 
   <textarea type="text" class="comment-input" 
-    [formControl]="commentForm" name="commentForm"></textarea>
+    formControlName="body" name="body"></textarea>
 
   <button type="submit" class="btn">등록</button>
 

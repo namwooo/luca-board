@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators, FormBuilder } from '@angular/forms';
 import { CommentService } from 'src/app/api/comment.service';
 import { Post } from 'src/app/blog/models/post';
 
@@ -11,18 +11,24 @@ import { Post } from 'src/app/blog/models/post';
 export class CommentFormComponent implements OnInit {
   @Input() post: Post;
   @Input() comments: Comment[];
-  @Input() idComment: number;
-  commentForm = new FormControl('');
+  @Input() commentId: Number;
 
+  commentForm = this.formBuilder.group({
+    body: ['', Validators.required], 
+    })
+  
   constructor(
-    private commentService: CommentService
+    private commentService: CommentService,
+    private formBuilder: FormBuilder,
   ) { }
 
   ngOnInit() {
   }
 
   onSubmit(): void {
-    this.commentService.createComment(this.commentForm.value, this.post.id, this.idComment)
+    let body = this.commentForm.value
+    console.log(body)
+    this.commentService.createComment(this.commentForm.value, this.post.id, this.commentId)
     .subscribe(comment => console.log(comment))
   }
 
