@@ -21,7 +21,7 @@ class Post(db.Model, TimestampMixin):
     view_count = db.Column(db.Integer, nullable=False, default=0)
 
     writer = db.relationship('User', back_populates='posts', lazy='joined')
-    board = db.relationship('Board', back_populates='posts', lazy='select')
+    board = db.relationship('Board', back_populates='posts', lazy='joined')
     comments = db.relationship('Comment', back_populates='post', lazy='select')
     images = db.relationship('PostImage', back_populates='post', lazy='select')  # joined
     like_users = db.relationship('User', secondary=likes,

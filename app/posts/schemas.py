@@ -12,11 +12,20 @@ class WriterSchema(ma.Schema):
     name = fields.String(dump_only=True, attribute='full_name')
 
 
+class BoardSchema(ma.Schema):
+    class Meta:
+        strict = True
+
+    id = fields.Integer(dump_only=True)
+    title = fields.String(dump_only=True)
+
+
 class PostSchema(ma.Schema):
     class Meta:
         strict = True
 
     id = fields.Integer(dump_only=True)
+    board = fields.Nested(BoardSchema)
     writer = fields.Nested(WriterSchema)
     title = fields.String(required=True, validate=[
         validate.Length(min=1, max=120)

@@ -1,9 +1,10 @@
 import { Member } from 'src/app/member/models/member';
+import { Board } from './board';
 
 
 export class Post {
     id: number;
-    board_id: number;
+    board: Board;
     title: string;
     body: string;
 is_published: boolean;

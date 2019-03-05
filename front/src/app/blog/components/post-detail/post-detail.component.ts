@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Post } from 'src/app/blog/models/post';
 import { PostService } from 'src/app/api/post.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-post-detail',
@@ -14,6 +14,7 @@ export class PostDetailComponent implements OnInit {
   constructor(
     private postService: PostService,
     private route: ActivatedRoute,
+    private router: Router,
     ) { }
 
   ngOnInit() {
@@ -30,13 +31,18 @@ export class PostDetailComponent implements OnInit {
     .subscribe(post => this.post = post)
   }
 
-  updatePost(id: number): void {
+  onClickEdit(): void {
     this.postService.updatePost(this.post.id)
     .subscribe(resp => console.log(resp))
   }
 
-  deletePost(): void {
-    this.postService.deletePost(this.post.id)
-    .subscribe(resp => console.log(resp))
+  onClickDelete(): void {
+    let postId = this.post.id
+    let boardId = this.post.board.id
+
+    this.postService.deletePost(postId)
+    .subscribe(resp => {
+      this.router.navigate([`/boards/${boardId}`,])
+    })
   }
 }
