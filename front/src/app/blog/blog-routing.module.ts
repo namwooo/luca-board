@@ -11,8 +11,9 @@ const routes: Routes = [
         children: [    
             { path: 'boards/:id', component: PostListComponent },
             { path: 'boards', component: PostListComponent },
+            { path: 'posts/:id/edit', component: PostFormComponent, data: {isEdit: true} },
             { path: 'posts/:id', component: PostDetailComponent },
-            { path: 'posts', component: PostFormComponent },
+            { path: 'posts', component: PostFormComponent, data: {isEdit: false} },
 
         ]
     },

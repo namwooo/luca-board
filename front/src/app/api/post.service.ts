@@ -26,7 +26,7 @@ export class PostService {
       )
   }
 
-  getPost(idPost: number): Observable<Post> {
+  getPost(idPost: Number): Observable<Post> {
     const url = this.baseUrl + `posts/${idPost}`;
     return this.http.get<Post>(url)
     .pipe(
@@ -34,8 +34,8 @@ export class PostService {
     )
   }
 
-  createPost(body: any, idBoard: any) {
-    const url = this.baseUrl + `posts?idBoard=${idBoard}`;
+  createPost(body: any, boardId: Number) {
+    const url = this.baseUrl + `posts?idBoard=${boardId}`;
     let token = this.getToken();
     return this.http.post(url, body,  
       { headers: new HttpHeaders().set('Authorization', `Bearer ${token}`) })
@@ -44,10 +44,11 @@ export class PostService {
     )
   }
 
-  updatePost(id: number) {
-    const url = this.baseUrl + `posts/${id}`;
+  updatePost(body: any, postId: Number) {
+    const url = this.baseUrl + `posts/${postId}`;
     let token = this.getToken();
-    return this.http.patch(url, { headers: new HttpHeaders().set('Authorization', `Bearer ${token}`) })
+    return this.http.patch(url, body, 
+      { headers: new HttpHeaders().set('Authorization', `Bearer ${token}`) })
     .pipe(
       catchError(this.handleError<Post>(`patchPost`))
     )

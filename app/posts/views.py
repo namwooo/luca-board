@@ -76,7 +76,7 @@ class PostView(FlaskView):
 
         post.title = json_data['title']
         post.body = json_data['body']
-        post.is_published = json_data['is_published']
+        post.is_published = json_data['isPublished']
 
         return '', 200
 

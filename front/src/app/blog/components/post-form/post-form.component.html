@@ -2,8 +2,8 @@
   
   <label>
     게시판
-    <select formControlName="idBoard">
-      <option value="">게시판선택</option>
+    <select formControlName="idBoard" [(ngModel)]="boardSelected">
+      <option value="0">게시판선택</option>
       <option *ngFor="let board of boards" 
       [ngValue]="board.id">{{board.title}}
       </option>
@@ -24,23 +24,23 @@
 
   <label>
     전체공개
-    <input type="radio" formControlName="isPublished" 
+    <input type="radio" formControlName="isPublished"
     name=isPublished [value]="true"
     required>
   </label>
 
   <label>
     비공개
-    <input type="radio" formControlName="isPublished" 
+    <input type="radio" formControlName="isPublished"
     name=isPublished [value]="false"
     required>
   </label>
 
-  <button type="submit">확인</button>
+  <button type="submit" *ngIf="isEdit === false">확인</button>
+  <button type="submit" *ngIf="isEdit === true">
+    <mat-icon class="icon" [inline]="true">check</mat-icon>
+    수정 완료
+  </button>
 </form>
 
-<!-- <p>todo remove this: {{diagnostic}}</p> -->
 <p>todo remove this: {{postForm.status}}</p>
-
-
-<!-- (onEditorCreated)="getEditorInstance($event)" -->

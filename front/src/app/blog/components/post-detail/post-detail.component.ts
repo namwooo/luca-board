@@ -32,8 +32,9 @@ export class PostDetailComponent implements OnInit {
   }
 
   onClickEdit(): void {
-    this.postService.updatePost(this.post.id)
-    .subscribe(resp => console.log(resp))
+    let postId = this.post.id
+    
+    this.router.navigate([`/posts/${postId}/edit`])
   }
 
   onClickDelete(): void {
