@@ -11,8 +11,8 @@ likes = db.Table('likes',
 
 class Post(db.Model, TimestampMixin):
     id = db.Column(db.Integer, primary_key=True)
-    writer_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    board_id = db.Column(db.Integer, db.ForeignKey('board.id'), nullable=False)
+    writer_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='SET NULL'), nullable=True)
+    board_id = db.Column(db.Integer, db.ForeignKey('board.id', ondelete='SET NULL'), nullable=True)
     title = db.Column(db.String(240), nullable=False)
     body = db.Column(db.Text)
     has_image = db.Column(db.Boolean, nullable=False, default=False)

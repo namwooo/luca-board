@@ -4,7 +4,7 @@ from app.mixins import TimestampMixin
 
 class Board(db.Model, TimestampMixin):
     id = db.Column(db.Integer, primary_key=True)
-    writer_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    writer_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='SET NULL'), nullable=True)
     title = db.Column(db.String(240))
 
     writer = db.relationship('User', back_populates='boards', lazy='select')

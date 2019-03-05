@@ -1,15 +1,14 @@
-from flask import request
+import base64
+from urllib import response
+
+from flask import request, make_response, redirect, session, jsonify
 from flask_classful import FlaskView, route
-from flask_login import login_user, login_required, logout_user
+from flask_jwt_extended import create_access_token, jwt_required, set_access_cookies
+from flask_login import login_user, login_required, logout_user, encode_cookie
 
 from app import db, lm, transaction, handle_error
 from .models import User
 from .schemas import UserSchema, LoginSchema, SignupSchema
-
-
-@lm.user_loader
-def load_user(user_id):
-    return User.query.get(user_id)
 
 
 class UserView(FlaskView):
@@ -35,12 +34,13 @@ class UserView(FlaskView):
         login_schema = LoginSchema()
         user = login_schema.load(data).data
 
-        login_user(user)
+        access_token = create_access_token(identity=user.id)
+        resp = jsonify({'access_token': access_token})
 
-        return '', 200
+        return resp, 200
 
     @route("/logout", methods=["GET"])
-    @login_required
+    # @login_required
     def logout(self):
         logout_user()
 

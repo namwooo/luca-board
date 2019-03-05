@@ -4,13 +4,19 @@ from app import ma
 from app.comments.models import Comment
 from app.posts.models import Post
 
+class WriterSchema(ma.Schema):
+    class Meta:
+        strict = True
+
+    id = fields.Integer(dump_only=True)
+    name = fields.String(dump_only=True, attribute='full_name')
 
 class CommentSchema(ma.Schema):
     class Meta:
         strict = True
 
     id = fields.Integer(dump_only=True)
-    writer_id = fields.Integer(required=True)
+    writer = fields.Nested(WriterSchema)
     post_id = fields.Integer(required=True)
     comment_parent_id = fields.Integer()
     body = fields.String(required=True, validate=[
@@ -22,7 +28,7 @@ class CommentSchema(ma.Schema):
     @post_load
     def make_comment(self, data):
         comment = Comment(**data)
-
+        
         return comment
 
 

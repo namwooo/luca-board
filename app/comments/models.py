@@ -7,9 +7,9 @@ class Comment(db.Model, TimestampMixin):
     _N = 6
 
     id = db.Column(db.Integer, primary_key=True)
-    writer_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
-    comment_parent_id = db.Column(db.Integer, db.ForeignKey('comment.id'), nullable=True)
+    writer_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='SET NULL'), nullable=True)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id', ondelete='SET NULL'), nullable=True)
+    comment_parent_id = db.Column(db.Integer, db.ForeignKey('comment.id', onupdate='SET NULL'), nullable=True)
     body = db.Column(db.Text)
     path = db.Column(db.Text)
 
@@ -48,18 +48,3 @@ class Comment(db.Model, TimestampMixin):
         db.session.flush()
 
         return comment
-
-    #
-    # def save(self):
-    #     # flush. rollback issue
-    #     db.session.add(self)
-    #     db.session.commit()
-    #
-    #     self.set_path()
-    #
-    #     db.session.commit()
-#
-# @event.listens_for(Comment, 'before_insert')
-# def set_path(mapper, connection, target):
-#     prefix = target.parent.path + '.' if target.parent else ''
-#     target.path = prefix + '{:0{}d}'.format(target.id, target._N)

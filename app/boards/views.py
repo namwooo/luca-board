@@ -24,7 +24,7 @@ class BoardView(FlaskView):
         board_schema = BoardSchema()
         return board_schema.jsonify(board), 200
 
-    @login_required
+    # @login_required
     def post(self):
         """Create a board"""
         data = request.get_json()
@@ -36,7 +36,7 @@ class BoardView(FlaskView):
 
         return '', 201
 
-    @login_required
+    # @login_required
     def patch(self, id):
         """Partial-update a board"""
         data = request.get_json()
@@ -52,7 +52,7 @@ class BoardView(FlaskView):
 
         return '', 200
 
-    @login_required
+    # @login_required
     def delete(self, id):
         """Delete a board"""
         board = Board.query.get_or_404(id)

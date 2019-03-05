@@ -23,7 +23,7 @@ class CommentView(FlaskView):
         return comments_schema.jsonify(comments), 200
 
     @route('/comments', methods=['POST'])
-    @login_required
+    # @login_required
     def post(self):
         """create a comment in post"""
         json_data = request.get_json()
@@ -45,7 +45,7 @@ class CommentView(FlaskView):
         return '', 201
 
     @route('/<id>', methods=['PATCH'])
-    @login_required
+    # @login_required
     def update(self, id):
         """update a comment"""
         data = request.get_json()
@@ -55,7 +55,7 @@ class CommentView(FlaskView):
         if not comment.is_writer(current_user):
             raise WriterOnlyException('Writer Only: permission denied')
 
-        comment_schema = CommentsSchema()
+        # comment_schema = CommentsSchema()
         comment_update_schema = CommentsUpdateSchema(context={'instance': comment})
         try:
             result = comment_update_schema.load(data)
@@ -69,7 +69,7 @@ class CommentView(FlaskView):
         return comment_schema.jsonify(updated_comment), 200
 
     @route('/<id>', methods=['DELETE'])
-    @login_required
+    # @login_required
     def delete(self, id):
         """delete a comment"""
         comment = Comment.query.get_or_404(id)
