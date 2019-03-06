@@ -19,7 +19,7 @@
     
           <div *ngIf="addComment && comment.id == idComment">
               <mat-icon [inline]="true">subdirectory_arrow_right</mat-icon>
-              <app-comment-form [post]="post" [comments]="comments" [commentId]="comment.id"></app-comment-form>
+              <app-comment-form [post]="post" [comments]="comments" [targetCommentId]="comment.id"></app-comment-form>
           </div>
       </div>
 
@@ -41,7 +41,7 @@
       
             <div *ngIf="addComment && comment.id == idComment">
                 <mat-icon [inline]="true">subdirectory_arrow_right</mat-icon>
-                <app-comment-form [post]="post" [comments]="comments" [commentId]="comment.id"></app-comment-form>
+                <app-comment-form [post]="post" [comments]="comments" [targetCommentId]="comment.id"></app-comment-form>
             </div>
           </div>
 

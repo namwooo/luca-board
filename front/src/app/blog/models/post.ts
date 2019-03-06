@@ -1,27 +1,56 @@
-import { Member } from 'src/app/member/models/member';
-import { Board } from './board';
+export class PagedPost {
 
+    constructor(
+        public page: number,
+        public perPage: number,
+        public total: number,
+        public items: Post[],
+    ){}
 
-export class Post {
-    id: number;
-    board: Board;
-    title: string;
-    body: string;
-is_published: boolean;
-    like_count: number;
-    view_count: number;
-    updated_at: string;
-    created_at: string;
-    writer: Member;
-
-    constructor(){
-        this.is_published = true;
+    getBoardTitle() {
+        // return this.items[0].board.title
     }
 }
 
-export class PostForm {
-    idBoard: number;
+export class Post {
+    
+    constructor(
+        public id: number,
+        public title: string,
+        public body: string,
+        public hasImage: boolean,
+        public isPublished: boolean,
+        public likeCount: number,
+        public viewCount: number,
+        public createdAt: string,
+        public updatedAt: string,
+        public board: Board,
+        public writer: Writer,
+    ) {
+        this.isPublished = true;
+    }
+}
+
+// interface Post {
+//     id: number,
+//     title: string,
+//     body: string,
+//     hasImage: boolean,
+//     isPublished: boolean,
+//     likeCount: number,
+//     viewCount: number,
+//     createdAt: string,
+//     updatedAt: string,
+//     board: Board,
+//     writer: Writer,
+// }
+
+interface Board {
+    id: number;
     title: string;
-    body: string;
-    isPublished: boolean;
+}
+
+interface Writer {
+    id: number;
+    name: string;
 }

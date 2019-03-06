@@ -3,7 +3,7 @@ import { Observable, of, Subject } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 
-import { Post, PostForm } from '../blog/models/post';
+import { Post, PagedPost } from '../blog/models/post';
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +18,8 @@ export class PostService {
     private http: HttpClient
   ) { }
 
-  getPostsInBoard(idBoard: number): Observable<Post[]> {
-    const url = this.baseUrl + `boards/${idBoard}/posts`;
+  getPostsInBoard(boardId: number): Observable<Post[]> {
+    const url = this.baseUrl + `boards/${boardId}/posts`;
     return this.http.get<Post[]>(url)
     .pipe(
       catchError(this.handleError<Post[]>(`getPostsInBoard`, []))

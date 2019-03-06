@@ -47,7 +47,7 @@ export class PostFormComponent implements OnInit {
           idBoard: [this.post.board.id, Validators.required], 
           title: [`${this.post.title}`, Validators.required],
           body: [`${this.post.body}`, Validators.required],
-          isPublished: [this.post.is_published, Validators.required]
+          isPublished: [this.post.isPublished, Validators.required]
         })
       }) 
     } 
