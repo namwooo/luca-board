@@ -2,7 +2,7 @@
 
   <div *ngIf="post" innerHTML="{{post.body}}"></div>
 
-  <app-comment-list *ngIf="post" [post]="post"></app-comment-list>
+  <app-comment-list *ngIf="post" [postId]="post.id"></app-comment-list>
 
   <div class="edit">
       <span>

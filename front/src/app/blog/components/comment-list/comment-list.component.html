@@ -3,13 +3,18 @@
   <ul>
     <li *ngFor="let comment of comments" class="comment">
       
-      <div *ngIf="comment.level === 0">
+      <div [ngClass]="{'reply': comment.level !== 0}">
+
+          <mat-icon *ngIf="comment.level !== 0"
+          [inline]="true" class="reply-icon">
+          subdirectory_arrow_right</mat-icon>
+
           <div>
               <span>{{comment.writer.name}} </span>
               <span class="date">{{comment.createdAt | date:'yyyy-MM-dd'}} </span>
               <span class="reply-btn">
                 <mat-icon [inline]="true">subdirectory_arrow_right</mat-icon>
-                <button id="{{comment.id}}" (click)="addCommentForm($event)">답글</button>         
+                <button id="{{comment.id}}" (click)="insertCommentForm($event)">답글</button>         
               </span>
           </div>
      
@@ -17,34 +22,11 @@
               {{comment.body}}
           </div>
     
-          <div *ngIf="addComment && comment.id == idComment">
+          <div *ngIf="isCommentFormInserted && comment.id == targetCommentId">
               <mat-icon [inline]="true">subdirectory_arrow_right</mat-icon>
-              <app-comment-form [post]="post" [comments]="comments" [targetCommentId]="comment.id"></app-comment-form>
+              <app-comment-form [post]="post" [comments]="comments" [targetCommentId]="comment.id">
+              </app-comment-form>
           </div>
-      </div>
-
-      <div *ngIf="comment.level != 0" class=reply>
-          <mat-icon [inline]="true" class="reply-icon" >subdirectory_arrow_right</mat-icon>
-          <div>
-            <div>
-                <span>{{comment.writer.name}} </span>
-                <span class="date">{{comment.createdAt | date:'yyyy-MM-dd'}} </span>
-                <span class="reply-btn">
-                  <mat-icon [inline]="true">subdirectory_arrow_right</mat-icon>
-                  <button id="{{comment.id}}" (click)="addCommentForm($event)">답글</button>         
-                </span>
-            </div>
-      
-            <div>
-                {{comment.body}}
-            </div>
-      
-            <div *ngIf="addComment && comment.id == idComment">
-                <mat-icon [inline]="true">subdirectory_arrow_right</mat-icon>
-                <app-comment-form [post]="post" [comments]="comments" [targetCommentId]="comment.id"></app-comment-form>
-            </div>
-          </div>
-
       </div>
 
     </li>

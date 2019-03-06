@@ -23,7 +23,7 @@ export class CommentFormComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-
+    this.setReplyWriter();
   }
 
   onSubmit(): void {
@@ -57,6 +57,13 @@ export class CommentFormComponent implements OnInit {
       }
       this.commentForm.reset();
     })
+  }
+
+  setReplyWriter() {
+    let targetComment = this.comments.filter(comment => comment.id === this.targetCommentId)
+    console.log(targetComment[0].writer.name)
+    console.log(this.commentForm.value)
+    this.commentForm.setValue({body: targetComment[0].writer.name})
   }
 
     // todo: remove this after dev

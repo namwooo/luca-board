@@ -1,8 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CommentService } from 'src/app/api/comment.service';
 import { Comment } from 'src/app/blog/models/comment';
-import { Post } from 'src/app/blog/models/post';
-import * as camelCaseKeys from 'camelcase-keys';
 
 @Component({
   selector: 'app-comment-list',
@@ -10,31 +8,33 @@ import * as camelCaseKeys from 'camelcase-keys';
   styleUrls: ['./comment-list.component.css']
 })
 export class CommentListComponent implements OnInit {
-  @Input() post: Post;
+  @Input() postId: number;
   comments: Comment[];
-
-  idComment: number;
-  addComment = false;
+  targetCommentId: number;
+  isCommentFormInserted = false;
 
   constructor(
     private commentService: CommentService,
   ) { }
 
   ngOnInit() {
-    this.getCommentsInPost(this.post.id);
+    this.getCommentsInPost(this.postId);
   }
 
-  getCommentsInPost(idPost: number) {
-    this.commentService.getCommentsInPost(idPost)
+  getCommentsInPost(postId: number) {
+    this.commentService.getCommentsInPost(postId)
     .subscribe(comments => this.comments = comments)
   }
   
-  addCommentForm(event: any) {
-    this.idComment = event.target.id;
-    if (this.addComment) {
-      this.addComment = false;
+  insertCommentForm(event: any) {
+    if (this.targetCommentId != event.target.id) {
+      this.isCommentFormInserted= true;
+      this.targetCommentId = event.target.id;
+    } else if (this.isCommentFormInserted) {
+      this.isCommentFormInserted = false;
     } else {
-      this.addComment= true;
+      this.targetCommentId = event.target.id;
+      this.isCommentFormInserted= true;
     }
   }
 }
