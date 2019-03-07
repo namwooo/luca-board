@@ -14,6 +14,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { QuillModule } from 'ngx-quill';
 import { BlogRoutingModule } from './blog-routing.module';
 import { CommentDeleteComponent } from './components/comment-delete/comment-delete.component';
+import { CommentEditComponent } from './components/comment-edit/comment-edit.component';
+
 
 
 @NgModule({
@@ -26,6 +28,7 @@ import { CommentDeleteComponent } from './components/comment-delete/comment-dele
     CommentListComponent,
     CommentFormComponent,
     CommentDeleteComponent,
+    CommentEditComponent,
   ],
   imports: [
     CommonModule,

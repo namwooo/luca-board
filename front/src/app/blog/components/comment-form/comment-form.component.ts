@@ -1,7 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input} from '@angular/core';
 import { Validators, FormBuilder } from '@angular/forms';
 import { CommentService } from 'src/app/api/comment.service';
-import { Post } from 'src/app/blog/models/post';
 import { Comment } from 'src/app/blog/models/comment';
 
 @Component({
@@ -13,6 +12,7 @@ export class CommentFormComponent implements OnInit {
   @Input() postId: number;
   @Input() comments: Comment[];
   @Input() targetComment: Comment;
+  @Input() isEdit: boolean;
 
   commentForm = this.formBuilder.group({
     body: ['', Validators.required], 
@@ -24,14 +24,18 @@ export class CommentFormComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log(this.targetComment);
-    console.log(this.postId)
+    this.setCommentEditForm();
+  }
+
+  setCommentEditForm() {
+    if(this.isEdit) {
+      this.commentForm = this.formBuilder.group({
+        body: [this.targetComment.body, Validators.required], 
+        })
+    }
   }
 
   onSubmit(): void {
-    console.log(this.commentForm.value)
-    console.log(this.postId)
-
     this.commentService.createComment(this.commentForm.value, this.postId, this.targetComment)
     .subscribe(comment => {
       console.log(comment)
@@ -63,14 +67,4 @@ export class CommentFormComponent implements OnInit {
       this.commentForm.reset();
     })
   }
-
-  setReplyWriter() {
-    console.log(this.targetComment.level);
-    if (this.targetComment.level !== 0){
-      this.commentForm.setValue({body: this.targetComment[0].writer.name})
-    }
-  }
-
-    // todo: remove this after dev
-    get diagnostic() { return JSON.stringify(this.commentForm.value); }
 }

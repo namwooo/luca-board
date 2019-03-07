@@ -1,8 +1,8 @@
-<mat-icon [inline]="true" class="sub-comment-icon">subdirectory_arrow_right</mat-icon>
+<mat-icon [inline]="true" class="sub-comment-icon" 
+*ngIf="isEdit == false">subdirectory_arrow_right</mat-icon>
+
 <form [formGroup]="commentForm" (ngSubmit)="onSubmit()">
+  <textarea type="text" formControlName="body" name="body"></textarea>
 
-  <textarea type="text" class="comment-input"
-    formControlName="body" name="body"></textarea>
-
-  <button type="submit" class="btn">등록</button>
+  <button type="submit" class="btn">{{isEdit? '수정' : '등록'}}</button>
 </form>

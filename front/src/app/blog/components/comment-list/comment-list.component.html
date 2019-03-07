@@ -11,24 +11,23 @@
               <span class="date">{{comment.createdAt | date:'yyyy-MM-dd'}} </span>
               <mat-icon [inline]="true">reply</mat-icon>
             
-              <button id="{{comment.id}}" 
-              (click)="insertCommentForm($event)" 
-              class="reply-btn">답글</button>
+              <button class="reply-btn"
+              (click)="insertCommentForm(comment)">
+              답글</button>
               
               <span class="comment-control">
-                <a (click)="onClickEdit(comment)">수정</a>
+                <app-comment-edit [targetComment]="comment" (click)="insertCommentEditForm(comment)"></app-comment-edit> |
                 <app-comment-delete [targetComment]="comment" (deleted)="onDeleted($event)"></app-comment-delete>
               </span>
-
           </div>
      
-          <div>
-              {{comment.body}}
-          </div>
-    
-          <div *ngIf="isCommentFormInserted && comment.id == targetCommentId">
-              <app-comment-form [postId]="postId" [comments]="comments" [targetComment]="comment"></app-comment-form>
-          </div>
+          <div>{{comment.body}}</div>
+
+          <app-comment-form [postId]="postId" [comments]="comments" [targetComment]="comment" [isEdit]="true"
+          *ngIf="isCommentEditFormInserted && comment.id == targetCommentId"></app-comment-form>
+  
+          <app-comment-form [postId]="postId" [comments]="comments" [targetComment]="comment"
+          *ngIf="isCommentFormInserted && comment.id == targetCommentId"></app-comment-form>
       </div>
 
     </li>

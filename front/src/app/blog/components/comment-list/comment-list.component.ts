@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, forwardRef, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { CommentService } from 'src/app/api/comment.service';
 import { Comment } from 'src/app/blog/models/comment';
 
@@ -12,6 +12,7 @@ export class CommentListComponent implements OnInit {
   comments: Comment[];
   targetCommentId: number;
   isCommentFormInserted = false;
+  isCommentEditFormInserted = false;
 
   constructor(
     private commentService: CommentService,
@@ -36,14 +37,27 @@ export class CommentListComponent implements OnInit {
     }
   }
   
-  insertCommentForm(event: any) {
-    if (this.targetCommentId != event.target.id) {
-      this.targetCommentId = event.target.id;
+  insertCommentForm(comment: Comment) {
+    if (this.targetCommentId != comment.id) {
+      this.targetCommentId = comment.id;
     } else if (this.isCommentFormInserted) {
       this.isCommentFormInserted = false;
     } else {
-      this.targetCommentId = event.target.id;
+      this.targetCommentId = comment.id;
       this.isCommentFormInserted= true;
     }
+  }
+
+  insertCommentEditForm(comment) {
+    if (this.targetCommentId != comment.id) {
+      this.targetCommentId = comment.id;
+      this.isCommentEditFormInserted= true;
+    } else if (this.isCommentEditFormInserted) {
+      this.isCommentEditFormInserted = false;
+    } else {
+      this.targetCommentId = comment.id;
+      this.isCommentEditFormInserted= true;
+    }
+
   }
 }
