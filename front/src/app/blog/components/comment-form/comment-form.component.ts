@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Validators, FormBuilder } from '@angular/forms';
 import { CommentService } from 'src/app/api/comment.service';
 import { Post } from 'src/app/blog/models/post';
+import { Comment } from 'src/app/blog/models/comment';
 
 @Component({
   selector: 'app-comment-form',
@@ -9,9 +10,9 @@ import { Post } from 'src/app/blog/models/post';
   styleUrls: ['./comment-form.component.css']
 })
 export class CommentFormComponent implements OnInit {
-  @Input() post: Post;
-  @Input() comments;
-  @Input() targetCommentId: number;
+  @Input() postId: number;
+  @Input() comments: Comment[];
+  @Input() targetComment: Comment;
 
   commentForm = this.formBuilder.group({
     body: ['', Validators.required], 
@@ -23,20 +24,24 @@ export class CommentFormComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.setReplyWriter();
+    console.log(this.targetComment);
+    console.log(this.postId)
   }
 
   onSubmit(): void {
-    this.commentService.createComment(this.commentForm.value, this.post.id, this.targetCommentId)
-    .subscribe(comment => {
+    console.log(this.commentForm.value)
+    console.log(this.postId)
 
+    this.commentService.createComment(this.commentForm.value, this.postId, this.targetComment)
+    .subscribe(comment => {
+      console.log(comment)
       /* 댓글 생성 시, 댓글 삽입 위치를 결정하는 로직 
          1. 루트 댓글은 댓글 창 맨 아래 삽입
          2. 답글은 타겟 댓글 트리 맨 아래 삽입
          3. 답글에 대한 답글도 타겟 댓글 트리 맨 아래 삽입 */
-      if(this.targetCommentId) {
+      if(this.targetComment) {
         // 답글을 달려는 타겟 댓글 인덱스
-        let targetCommentIndex = this.comments.map(comment => comment.id).indexOf(this.targetCommentId)
+        let targetCommentIndex = this.comments.map(comment => comment.id).indexOf(this.targetComment.id)
         console.log(targetCommentIndex)
 
         // 타겟 댓글 이후 첫 루트 댓글에 대한 인덱스
@@ -60,10 +65,10 @@ export class CommentFormComponent implements OnInit {
   }
 
   setReplyWriter() {
-    let targetComment = this.comments.filter(comment => comment.id === this.targetCommentId)
-    console.log(targetComment[0].writer.name)
-    console.log(this.commentForm.value)
-    this.commentForm.setValue({body: targetComment[0].writer.name})
+    console.log(this.targetComment.level);
+    if (this.targetComment.level !== 0){
+      this.commentForm.setValue({body: this.targetComment[0].writer.name})
+    }
   }
 
     // todo: remove this after dev

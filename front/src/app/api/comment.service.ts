@@ -22,18 +22,28 @@ export class CommentService {
       )
   }
 
-  createComment(commentForm: any, postId: Number, commentId: Number) {
+  createComment(commentForm: any, postId: number, targetComment: Comment): Observable<Comment> {
     let url;
-    if (commentId) {
+    if (targetComment) {
+      let commentId = targetComment.id
       url = this.baseUrl + `comments?postId=${postId}&commentId=${commentId}`;
     } else {
       url = this.baseUrl + `comments?postId=${postId}`;
     }
 
     let token = this.getToken();
-    return this.http.post(url, commentForm, { headers: new HttpHeaders().set('Authorization', `Bearer ${token}`) })
+    return this.http.post<Comment>(url, commentForm, { headers: new HttpHeaders().set('Authorization', `Bearer ${token}`) })
     .pipe(
       catchError(this.handleError<Comment>(`createComment`))
+    )
+  }
+
+  deleteComment(commentId: number) {
+    const url = this.baseUrl + `comments/${commentId}`;
+    let token = this.getToken();
+    return this.http.delete(url, { headers: new HttpHeaders().set('Authorization', `Bearer ${token}`) })
+    .pipe(
+      catchError(this.handleError(`deleteComment`))
     )
   }
 

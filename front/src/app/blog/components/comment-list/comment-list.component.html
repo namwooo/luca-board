@@ -1,21 +1,25 @@
 <div class="wrapper">
 
   <ul>
-    <li *ngFor="let comment of comments" class="comment">
+    <li *ngFor="let comment of comments">
       
       <div [ngClass]="{'reply': comment.level !== 0}">
-
-          <mat-icon *ngIf="comment.level !== 0"
-          [inline]="true" class="reply-icon">
-          subdirectory_arrow_right</mat-icon>
-
           <div>
+              <mat-icon *ngIf="comment.level !== 0" 
+              [inline]="true" class="sub-comment-icon">subdirectory_arrow_right</mat-icon>
               <span>{{comment.writer.name}} </span>
               <span class="date">{{comment.createdAt | date:'yyyy-MM-dd'}} </span>
-              <span class="reply-btn">
-                <mat-icon [inline]="true">subdirectory_arrow_right</mat-icon>
-                <button id="{{comment.id}}" (click)="insertCommentForm($event)">답글</button>         
+              <mat-icon [inline]="true">reply</mat-icon>
+            
+              <button id="{{comment.id}}" 
+              (click)="insertCommentForm($event)" 
+              class="reply-btn">답글</button>
+              
+              <span class="comment-control">
+                <a (click)="onClickEdit(comment)">수정</a>
+                <app-comment-delete [targetComment]="comment" (deleted)="onDeleted($event)"></app-comment-delete>
               </span>
+
           </div>
      
           <div>
@@ -23,16 +27,13 @@
           </div>
     
           <div *ngIf="isCommentFormInserted && comment.id == targetCommentId">
-              <mat-icon [inline]="true">subdirectory_arrow_right</mat-icon>
-              <app-comment-form [post]="post" [comments]="comments" [targetCommentId]="comment.id">
-              </app-comment-form>
+              <app-comment-form [postId]="postId" [comments]="comments" [targetComment]="comment"></app-comment-form>
           </div>
       </div>
 
     </li>
-
   </ul>
 
-  <app-comment-form [post]="post" [comments]="comments"></app-comment-form>
+  <app-comment-form [postId]="postId" [comments]="comments"></app-comment-form>
 
 </div>

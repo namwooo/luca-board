@@ -13,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { QuillModule } from 'ngx-quill';
 import { BlogRoutingModule } from './blog-routing.module';
+import { CommentDeleteComponent } from './components/comment-delete/comment-delete.component';
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import { BlogRoutingModule } from './blog-routing.module';
     PostFormComponent,
     CommentListComponent,
     CommentFormComponent,
+    CommentDeleteComponent,
   ],
   imports: [
     CommonModule,

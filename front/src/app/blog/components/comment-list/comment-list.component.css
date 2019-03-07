@@ -8,10 +8,9 @@ ul {
     padding: 0;
 }
 
-.comment {
+li {
     border-bottom: 1px solid #EAEAEA;
     padding: .5em;
-
 }
 
 .date {
@@ -27,7 +26,15 @@ ul {
     font-size: .8em;
 }
 
-.reply-icon {
-    color:red; 
-    float: left;
+.sub-comment-icon {
+    color: red;
+    font-size: 1em;
+}
+
+.comment-control {
+    float: right;
+}
+
+.comment-control a {
+    margin-left: .5em;
 }

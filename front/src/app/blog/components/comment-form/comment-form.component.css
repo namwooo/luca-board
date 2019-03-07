@@ -14,5 +14,9 @@ textarea {
     font-weight: bold;
     background-color: white;
     border: 1px solid #e2e2e2;;
+}
 
+.sub-comment-icon {
+    color: red;
+    font-size: 1em;
 }
