@@ -50,10 +50,10 @@
     top: 3px;
 }
 
-.write {
-    float: right;
-}
-
 .btn-write {
     padding: 0.5em;
+}
+
+.float-right {
+    float: right;
 }

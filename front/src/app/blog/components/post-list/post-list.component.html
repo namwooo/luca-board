@@ -12,10 +12,10 @@
     <tbody>
         <tr *ngFor="let post of posts">
             <td>
-                <a routerLink="/posts/{{post.id}}">
+                <a [routerLink]="['/posts', post.id]">
                 {{post.id}} {{post.title}}
-                <span class="icon"><mat-icon *ngIf="post.has_image" 
-                [inline]="true">image</mat-icon></span>
+                <span class="icon"><mat-icon *ngIf="post.hasImage" 
+                inline="true">image</mat-icon></span>
                 [{{post.commentCount}}]</a>
             </td>
             <td>{{post.writer.name}}</td>
@@ -25,9 +25,10 @@
         </tr>
     </tbody>
 </table>
-<div class="write">
-    <button type="button" class="btn btn-outline-secondary btn-write">
-    <a routerLink="/posts">
-    <mat-icon class="icon" [inline]="true">create</mat-icon>
-    글쓰기</a></button>
-</div>
+
+<button type="button" class="btn btn-outline-secondary btn-write float-right">
+    <a [routerLink]="['/posts']">
+        <mat-icon class="icon" inline="true">create</mat-icon>글쓰기
+    </a>
+</button>
+

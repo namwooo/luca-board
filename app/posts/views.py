@@ -1,7 +1,7 @@
 from flask import request
 from flask_classful import FlaskView, route
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from sqlalchemy import and_
+from sqlalchemy import and_, desc
 
 from app.helpers import convert_dump
 from .. import db, transaction, handle_error
@@ -59,11 +59,16 @@ class PostView(FlaskView):
     def get(self, id):
         """Detail a post and plus view count"""
         post = Post.query.filter(and_(Post.id == id, Post.is_published == True)).first_or_404()
+        next_post = Post.query.filter(and_(Post.id > post.id, Post.board_id == post.board_id)).order_by(Post.id).first()
+        prev_post = Post.query.filter(and_(Post.id < post.id, Post.board_id == post.board_id)).order_by(desc(Post.id)).first()
 
-        post.read()
+        post.next_post = next_post
+        post.prev_post = prev_post
+
+        post.read()  # view_count +1
 
         post_detail_schema = PostDetailSchema()
-        return post_detail_schema.jsonify(post), 200
+        return convert_dump(post, post_detail_schema), 200
 
     @route('/posts/<id>', methods=['PATCH'])
     @jwt_required

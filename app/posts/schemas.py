@@ -66,6 +66,8 @@ class PostDetailSchema(PostSchema):
     class Meta:
         strict = True
 
+    next_post = fields.Nested(PostSchema)
+    prev_post = fields.Nested(PostSchema)
     body = fields.String(required=True, validate=[
         validate.Length(min=1, max=20000)
     ])
