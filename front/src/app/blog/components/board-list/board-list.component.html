@@ -1,7 +1,9 @@
 <ul class="boards">
   <li *ngFor="let board of boards">
-      <a routerLink="/boards/{{board.id}}" [state]="{board: board.title}">
-        <span class="icon"><mat-icon [inline]="true">receipt</mat-icon></span>
+      <a [routerLink]="['/boards', board.id]" 
+      [ngClass]="{'bold': board.id === selectedBoardId}"
+      (click)="onClick(board.id)">
+        <mat-icon class="icon" inline="true">receipt</mat-icon>
         {{board.title}}
       </a>
   </li>

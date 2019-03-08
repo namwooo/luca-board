@@ -9,7 +9,7 @@ import { BoardService } from 'src/app/api/board.service';
 })
 export class BoardListComponent implements OnInit {
   boards: Board[];
-  selectedBoard: Board;
+  selectedBoardId: number;
 
   constructor(private boardService: BoardService) {}
 
@@ -19,6 +19,14 @@ export class BoardListComponent implements OnInit {
 
   getBoards(): void {
     this.boardService.getBoards()
-    .subscribe(boards => this.boards = boards);
+    .subscribe(boards => {
+      this.boards = boards;
+      // set ID of first board to ID of selected board
+      this.selectedBoardId = boards[0].id;
+    });
+  }
+
+  onClick(boardId: number) {
+    this.selectedBoardId = boardId;
   }
 }
