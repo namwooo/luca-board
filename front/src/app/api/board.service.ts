@@ -26,6 +26,7 @@ export class BoardService {
 
   getBoard(id: number): Observable<Board> {
     return this.http.get<Board>(this.boardsUrl + `/${id}`)
+    .pipe(catchError(this.handleError<Board>('getBoards')))
   }
 
   private handleError<T> (operation = 'operation', result?: T) {
