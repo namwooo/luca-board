@@ -1,0 +1,28 @@
+<table class="t-posts" *ngIf="post">
+    <tbody>
+        <tr *ngIf="post.prevPost">
+            <td class="row-title">
+                <a (click)="onClickPrevious()">
+                <mat-icon inline="true">keyboard_arrow_up</mat-icon>
+                이전글
+                {{post.prevPost.title}}
+                <mat-icon *ngIf="post.prevPost.hasImage" inline="true" class="icon">image</mat-icon>
+                [{{post.prevPost.commentCount}}]</a>
+            </td>
+            <td class="row-writer">{{post.prevPost.writer.name}}</td>
+            <td class="text-centered row-date">{{post.prevPost.createdAt | date:'yyyy-MM-dd'}}</td>
+        </tr>
+        <tr *ngIf="post.nextPost">
+            <td>
+                <a (click)="onClickNext()">
+                <mat-icon inline="true">keyboard_arrow_down</mat-icon>
+                다음글
+                {{post.nextPost.title}}
+                <mat-icon *ngIf="post.nextPost.hasImage" inline="true" class="icon">image</mat-icon>
+                [{{post.nextPost.commentCount}}]</a>
+            </td>
+            <td>{{post.nextPost.writer.name}}</td>
+            <td class="text-centered">{{post.nextPost.createdAt | date:'yyyy-MM-dd'}}</td>
+        </tr>
+    </tbody>
+</table>

@@ -1,7 +1,35 @@
-.edit {
-    float: right;
+.wrapper {
+    padding: 1.2em;
+    border: 1px solid #DADADA;
+    clear: both;
 }
 
-.edit span {
-    margin-right: .4em;
+.top-control-btn {
+    margin-bottom: .6em;
+    float: left;
+}
+
+.top-control-btn button {
+    margin: 0em .2em;
+}
+
+.bottom-control-btn {
+    float: right;
+    margin-top: .6em;
+}
+
+.bottom-control-btn button {
+    margin: 0em .2em;
+}
+
+.btn {
+    border-color: #DADADA;
+}
+
+.control-nav {
+    clear: both;
+}
+
+.nav {
+    margin: 100px 0;
 }

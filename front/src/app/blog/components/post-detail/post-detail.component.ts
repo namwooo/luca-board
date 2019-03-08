@@ -28,12 +28,14 @@ export class PostDetailComponent implements OnInit {
 
   getPost(id: number): void {
     this.postService.getPost(id)
-    .subscribe(post => this.post = post)
+    .subscribe(post => {
+      this.post = post;
+      console.log(post);
+    })
   }
 
   onClickEdit(): void {
     let postId = this.post.id
-    
     this.router.navigate([`/posts/${postId}/edit`])
   }
 
@@ -46,4 +48,22 @@ export class PostDetailComponent implements OnInit {
       this.router.navigate([`/boards/${boardId}`,])
     })
   }
+
+  onClickBackToList(): void {
+    let boardId = this.post.board.id
+    this.router.navigate([`/boards/${boardId}`])
+  }
+  
+  onClickPrevious(): void {
+    let prevPostId = this.post.prevPost.id
+    this.router.navigate([`/posts/${prevPostId}`])
+
+  }
+
+  onClickNext(): void {
+    let nextPostId = this.post.nextPost.id
+    this.router.navigate([`/posts/${nextPostId}`])
+  }
+
 }
+

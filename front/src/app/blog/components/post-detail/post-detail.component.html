@@ -1,21 +1,42 @@
-<div class="wrapper">
+<div class="top-control-btn">
+  <button type="button" class="btn btn-outline-secondary" 
+  (click)="onClickPrevious()">
+    이전글
+  </button>
 
+  <button type="button" class="btn btn-outline-secondary" 
+  (click)="onClickNext()">
+    다음글
+  </button>
+
+  <button type="button" class="btn btn-outline-secondary list" 
+    (click)="onClickBackToList()">
+      목록
+  </button>
+</div>
+
+<div class="wrapper">
   <div *ngIf="post" innerHTML="{{post.body}}"></div>
 
   <app-comment-list *ngIf="post" [postId]="post.id"></app-comment-list>
-
-  <div class="edit">
-      <span>
-        <button type="button" class="btn btn-outline-secondary">
-          <a (click)="onClickEdit()">수정</a>
-        </button>
-      </span>
-
-      <span>
-        <button type="button" class="btn btn-outline-secondary">
-          <a (click)="onClickDelete()">삭제</a>
-        </button> 
-      </span>
-  </div>
-
 </div>
+
+<div class="bottom-control-btn">
+  <button type="button" class="btn btn-outline-secondary" 
+  (click)="onClickBackToList()">
+    목록
+  </button>
+
+  <button type="button" class="btn btn-outline-secondary edit" 
+  (click)="onClickEdit()">
+    수정
+  </button>
+
+  <button type="button" class="btn btn-outline-secondary delete" 
+  (click)="onClickDelete()">
+    삭제
+  </button>
+</div>
+
+<app-post-nav [post]=post class="nav"></app-post-nav>
+

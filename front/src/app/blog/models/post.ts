@@ -20,6 +20,8 @@ export class Post {
         public body: string,
         public hasImage: boolean,
         public isPublished: boolean,
+        public nextPost: Post,
+        public prevPost: Post,
         public likeCount: number,
         public viewCount: number,
         public createdAt: string,

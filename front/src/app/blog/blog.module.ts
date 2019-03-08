@@ -15,6 +15,7 @@ import { QuillModule } from 'ngx-quill';
 import { BlogRoutingModule } from './blog-routing.module';
 import { CommentDeleteComponent } from './components/comment-delete/comment-delete.component';
 import { CommentEditComponent } from './components/comment-edit/comment-edit.component';
+import { PostNavComponent } from './components/post-nav/post-nav.component';
 
 
 
@@ -29,6 +30,7 @@ import { CommentEditComponent } from './components/comment-edit/comment-edit.com
     CommentFormComponent,
     CommentDeleteComponent,
     CommentEditComponent,
+    PostNavComponent,
   ],
   imports: [
     CommonModule,

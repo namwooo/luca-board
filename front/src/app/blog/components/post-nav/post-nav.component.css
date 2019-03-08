@@ -1,0 +1,46 @@
+
+.board-title {
+    padding-bottom: .5em;
+}
+
+.t-posts {
+    width: 100%;
+    table-layout: fixed;
+}
+
+.t-posts th {
+    /* position of text in th */
+    border-top: 1px solid black;
+    padding: 0.9em;
+}
+
+.t-posts tr {
+    /* gap between tr */
+    height: 2em;
+    border-top: 1px solid #EAEAEA;
+    border-bottom: 1px solid #EAEAEA;
+}
+
+.t-posts td {
+    padding: 0.7em;
+}
+
+/* align row with % */
+.row-title {
+    width: 58%;
+}
+.row-writer {
+    width: 14%;
+}
+.row-date {
+    width: 12%;
+}
+
+.text-centered {
+    text-align: center;
+}
+
+.icon {
+    position: relative;
+    top: 2px;
+}
