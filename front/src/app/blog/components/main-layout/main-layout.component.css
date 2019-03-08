@@ -1,7 +1,8 @@
+/* centering position */ 
 .wrapper {
     display: flex;
     flex-direction: column;
-    width:1050px;
+    width: 1050px;
     margin: 0 auto;
 }
 
@@ -18,11 +19,4 @@
 .content {
     flex: 84%;
     margin-top: 0;
-}
-
-:host ::ng-deep .ck-editor__editable {
-    min-height: 400px;
-}
-.test {
-    font: 100px;
 }
