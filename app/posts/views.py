@@ -3,6 +3,7 @@ from flask_classful import FlaskView, route
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from sqlalchemy import and_
 
+from app.helpers import convert_dump
 from .. import db, transaction, handle_error
 from ..boards.models import Board
 from ..posts.schemas import (
@@ -30,8 +31,8 @@ class PostView(FlaskView):
             .paginate(page=page, per_page=15, error_out=False)
 
         paged_post_schema = PagedPostSchema(context=posts)
-
-        return paged_post_schema.jsonify(posts), 200
+        response = convert_dump(posts, paged_post_schema)
+        return response, 200
 
     @route("/posts", methods=['POST'])
     @jwt_required

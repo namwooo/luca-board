@@ -1,4 +1,7 @@
+import json
 import re
+
+from flask import jsonify
 
 
 def camel_to_snake(name):
@@ -7,8 +10,7 @@ def camel_to_snake(name):
 
 
 def snake_to_camel(name):
-    under_pat = compile(r'_([a-z])')
-    return under_pat.sub(lambda x: x.group(1).upper(), name)
+    return re.sub('_([a-zA-Z0-9])', lambda m: m.group(1).upper(), name)
 
 
 def change_dict_naming_convention(d, convert_function):
@@ -31,3 +33,15 @@ def change_dict_naming_convention(d, convert_function):
                 new_v.append(change_dict_naming_convention(x, convert_function))
         new[convert_function(k)] = new_v
     return new
+
+
+def convert_dump(obj, schema):
+    result = schema.dump(obj)
+    if isinstance(result.data, list):
+        converted_obj = []
+        for item in result.data:
+            converted_obj.append(change_dict_naming_convention(item, snake_to_camel))
+        return jsonify(converted_obj)
+    if isinstance(result.data, dict):
+        result = change_dict_naming_convention(result.data, snake_to_camel)
+    return jsonify(result)

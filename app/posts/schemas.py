@@ -34,8 +34,12 @@ class PostSchema(ma.Schema):
     has_image = fields.Boolean(required=True)
     like_count = fields.Integer(dump_only=True)
     view_count = fields.Integer(dump_only=True)
+    comment_count = fields.Method('get_comment_count')
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
+
+    def get_comment_count(self, obj):
+        return obj.comment_count
 
 
 class PostWriteSchema(ma.Schema):

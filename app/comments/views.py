@@ -7,6 +7,7 @@ from marshmallow import ValidationError
 from app import db, WriterOnlyException, handle_error, transaction
 from app.comments.models import Comment
 from app.comments.schemas import CommentSchema, CommentsUpdateSchema, CommentWriteSchema
+from app.helpers import convert_dump
 from app.posts.models import Post
 
 
@@ -21,8 +22,8 @@ class CommentView(FlaskView):
             .order_by(Comment.path.asc()).all()
 
         comments_schema = CommentSchema(many=True)
-        a = comments_schema.jsonify(comments)
-        return comments_schema.jsonify(comments), 200
+        response = convert_dump(comments, comments_schema)
+        return response, 200
 
     @route('/comments', methods=['POST'])
     @jwt_required
@@ -50,7 +51,10 @@ class CommentView(FlaskView):
 
         new_comment.set_path()
 
-        return '', 201
+        comment_schema = CommentSchema()
+
+        post.commented()
+        return comment_schema.jsonify(new_comment), 201
 
     @route('/<id>', methods=['PATCH'])
     @jwt_required
@@ -76,13 +80,15 @@ class CommentView(FlaskView):
 
         return comment_schema.jsonify(updated_comment), 200
 
-    @route('/<id>', methods=['DELETE'])
+    @route('comments/<id>', methods=['DELETE'])
     @jwt_required
     def delete(self, id):
         """delete a comment"""
         comment = Comment.query.get_or_404(id)
 
-        if not comment.is_writer(current_user):
+        user_id = get_jwt_identity()
+
+        if not comment.is_writer(user_id):
             raise WriterOnlyException('Writer Only: permission denied')
 
         db.session.delete(comment)  # integrity issue here

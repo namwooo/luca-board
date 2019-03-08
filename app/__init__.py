@@ -13,7 +13,7 @@ from werkzeug.exceptions import Unauthorized
 
 from app.config import config
 from app.exceptions import NotFoundException, UnauthorizedException, WriterOnlyException
-from app.helpers import camel_to_snake, change_dict_naming_convention
+from app.helpers import camel_to_snake, change_dict_naming_convention, snake_to_camel
 from app.queries import CustomBaseQuery
 
 db = SQLAlchemy(query_class=CustomBaseQuery)

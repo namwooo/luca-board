@@ -22,7 +22,7 @@ class Post(db.Model, TimestampMixin):
 
     writer = db.relationship('User', back_populates='posts', lazy='joined')
     board = db.relationship('Board', back_populates='posts', lazy='joined')
-    comments = db.relationship('Comment', back_populates='post', lazy='select')
+    comments = db.relationship('Comment', back_populates='post', lazy='joined')
     images = db.relationship('PostImage', back_populates='post', lazy='select')  # joined
     like_users = db.relationship('User', secondary=likes,
                                  back_populates='like_posts', lazy='subquery')
@@ -43,6 +43,10 @@ class Post(db.Model, TimestampMixin):
             pass
         else:
             self.like_count -= 1
+
+    @property
+    def comment_count(self):
+        return len(self.comments)
 
     def add_comment(self, comment):
         comment.post_id = self.id

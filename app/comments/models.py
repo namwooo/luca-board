@@ -16,7 +16,7 @@ class Comment(db.Model, TimestampMixin):
     writer = db.relationship('User', back_populates='comments', lazy='joined')
     post = db.relationship('Post', back_populates='comments', lazy='select')
     replies = db.relationship('Comment', backref=db.backref('parent', remote_side=[id]),
-                              lazy='dynamic')
+                              lazy='joined')
 
     def __repr__(self):
         return '<{}(id: {}, writer_id: {}, post_id: {}, path: {})>' \
@@ -27,7 +27,7 @@ class Comment(db.Model, TimestampMixin):
         db.session.add(self)
         db.session.flush()
 
-        if self.parent.path:
+        if self.parent:
             prefix = self.parent.path + '.'
         else:
             prefix = ''
@@ -39,8 +39,8 @@ class Comment(db.Model, TimestampMixin):
     def level(self):
         return len(self.path) // self._N - 1
 
-    def is_writer(self, user):
-        return self.writer_id == user.id
+    def is_writer(self, user_id):
+        return self.writer_id == user_id
 
     def add_child_comment(self, comment):
         comment.comment_parent_id = self.id

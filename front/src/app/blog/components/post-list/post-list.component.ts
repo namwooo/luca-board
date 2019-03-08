@@ -40,6 +40,7 @@ export class PostListComponent implements OnInit {
   getPostsInBoard(boardId: number): void {
     this.postService.getPostsInBoard(boardId)
     .subscribe(posts => {
+      console.log(posts)
       this.posts = posts['items'];
     });
   }

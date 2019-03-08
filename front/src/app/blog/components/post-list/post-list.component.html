@@ -16,12 +16,12 @@
                 {{post.id}} {{post.title}}
                 <span class="icon"><mat-icon *ngIf="post.has_image" 
                 [inline]="true">image</mat-icon></span>
-                [{{post.like_count}}]</a>
+                [{{post.commentCount}}]</a>
             </td>
             <td>{{post.writer.name}}</td>
-            <td class="text-centered">{{post.created_at | date:'yyyy-MM-dd'}}</td>
-            <td class="text-centered">{{post.view_count}}</td>
-            <td class="text-centered">{{post.like_count}}</td>
+            <td class="text-centered">{{post.createdAt | date:'yyyy-MM-dd'}}</td>
+            <td class="text-centered">{{post.viewCount}}</td>
+            <td class="text-centered">{{post.likeCount}}</td>
         </tr>
     </tbody>
 </table>
