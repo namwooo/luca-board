@@ -4,6 +4,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from sqlalchemy import and_, desc
 
 from app.helpers import convert_dump
+from app.users.models import User
 from .. import db, transaction, handle_error
 from ..boards.models import Board
 from ..posts.schemas import (
@@ -56,6 +57,7 @@ class PostView(FlaskView):
         return '', 201
 
     @route('/posts/<id>', methods=['GET'])
+    @jwt_required
     def get(self, id):
         """Detail a post and plus view count"""
         post = Post.query.filter(and_(Post.id == id, Post.is_published == True)).first_or_404()
@@ -64,6 +66,11 @@ class PostView(FlaskView):
 
         post.next_post = next_post
         post.prev_post = prev_post
+
+        user_id = get_jwt_identity()
+        user = User.query.get(user_id)
+        is_user_like = post.is_user_like(user)
+        post.is_user_like = is_user_like
 
         post.read()  # view_count +1
 
@@ -112,7 +119,10 @@ class PostView(FlaskView):
         """Plus 1 like count for the post"""
         post = Post.query.get_or_404(id)
 
-        post.like()
+        user_id = get_jwt_identity()
+        user = User.query.get(user_id)
+
+        post.like(user)
 
         return '', 200
 
@@ -122,6 +132,9 @@ class PostView(FlaskView):
         """Minus 1 like count for the post"""
         post = Post.query.get_or_404(id)
 
-        post.unlike()
+        user_id = get_jwt_identity()
+        user = User.query.get(user_id)
+
+        post.unlike(user)
 
         return '', 200

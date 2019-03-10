@@ -35,14 +35,22 @@ class Post(db.Model, TimestampMixin):
     def read(self):
         self.view_count += 1
 
-    def like(self):
-        self.like_count += 1
-
-    def unlike(self):
-        if self.like_count == 0:
+    def like(self, user):
+        if user in self.like_users:
             pass
         else:
+            self.like_users.append(user)
+            self.like_count += 1
+
+    def unlike(self, user):
+        if user in self.like_users:
+            self.like_users.remove(user)
             self.like_count -= 1
+        else:
+            pass
+
+    def is_user_like(self, user):
+        return user in self.like_users
 
     @property
     def comment_count(self):

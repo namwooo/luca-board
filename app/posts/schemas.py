@@ -68,6 +68,7 @@ class PostDetailSchema(PostSchema):
 
     next_post = fields.Nested(PostSchema)
     prev_post = fields.Nested(PostSchema)
+    is_user_like = fields.Boolean(required=True)
     body = fields.String(required=True, validate=[
         validate.Length(min=1, max=20000)
     ])
