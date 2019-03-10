@@ -23,7 +23,7 @@ class PostView(FlaskView):
     @route("/boards/<board_id>/posts", methods=['GET'])
     def list(self, board_id):
         """List all published posts in board ordered by created date"""
-        page = request.args.get('p', default=1, type=int)
+        page = int(request.args.get('page', 1))
         board = Board.query.get_or_404(board_id)
 
         posts = Post.query.filter(Post.board_id == board_id) \

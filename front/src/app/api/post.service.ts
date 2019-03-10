@@ -18,8 +18,14 @@ export class PostService {
     private http: HttpClient
   ) { }
 
-  getPostsInBoard(boardId: number): Observable<Post[]> {
-    const url = this.baseUrl + `boards/${boardId}/posts`;
+  getPostsInBoard(boardId: number, page: number): Observable<Post[]> {
+    let url;
+
+    if (page) {
+      url = this.baseUrl + `boards/${boardId}/posts?page=${page}`;
+    } else {
+      url = this.baseUrl + `boards/${boardId}/posts`;
+    }
     return this.http.get<Post[]>(url)
     .pipe(
       catchError(this.handleError<Post[]>(`getPostsInBoard`, []))

@@ -16,6 +16,7 @@ import { CommentEditComponent } from './components/comment-edit/comment-edit.com
 import { PostNavComponent } from './components/post-nav/post-nav.component';
 import { LikeToggleComponent } from './shared/components/like-toggle/like-toggle.component';
 import { CommentCreateComponent } from './components/comment-create/comment-create.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 
 
@@ -41,6 +42,7 @@ import { CommentCreateComponent } from './components/comment-create/comment-crea
     QuillModule,
     ReactiveFormsModule,
     SharedModule,
+    NgxPaginationModule,
   ],
   exports: [
     MainLayoutComponent,

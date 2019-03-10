@@ -12,7 +12,11 @@ import { BoardService } from 'src/app/api/board.service';
 })
 export class PostListComponent implements OnInit {
   posts: Post[];
+  perPage: number;
+  page: number;
+  total: number;
   boardTitle: string;
+  boardId: number;
   
   constructor(
     private postService: PostService,
@@ -24,24 +28,38 @@ export class PostListComponent implements OnInit {
     this.route.params.subscribe(
       params => {
         let id = +params['id']
-        this.getPostsInBoard(id);
-        this.getBoard(id);
+        this.boardId = id;
+        this.getPostsInBoard();
+        this.getBoard();
       }
     )
   }
   
-  getBoard(boardId: number): void {
-    this.boardService.getBoard(boardId)
+  getBoard() {
+    this.boardService.getBoard(this.boardId)
     .subscribe(board => {
       this.boardTitle = board.title;
     })
   }
 
-  getPostsInBoard(boardId: number): void {
-    this.postService.getPostsInBoard(boardId)
+  getPostsInBoard() {
+    this.postService.getPostsInBoard(this.boardId, this.page)
     .subscribe(posts => {
-      console.log(posts)
       this.posts = posts['items'];
+      this.perPage = posts['perPage'];
+      this.page = posts['page'];
+      this.total = posts['total'];
     });
   }
+
+  pageChanged(page: number) {
+    this.postService.getPostsInBoard(this.boardId, page)
+    .subscribe(posts => {
+      this.posts = posts['items'];
+      this.perPage = posts['perPage'];
+      this.page = posts['page'];
+      this.total = posts['total'];
+    })
+  }
+
 }

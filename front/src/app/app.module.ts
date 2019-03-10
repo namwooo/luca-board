@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { MemberModule } from './member/member.module';
 import { BlogModule } from './blog/blog.module';
 import { SharedModule } from './shared/shared.module';
-import { RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router'; 
 
 @NgModule({
   declarations: [
