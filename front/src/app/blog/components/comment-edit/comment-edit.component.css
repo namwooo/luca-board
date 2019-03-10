@@ -1,0 +1,22 @@
+form {
+    display: flex;
+}
+textarea {
+    flex: 1;
+    height: 55px;
+    margin-right: .5em;
+    border: 1px solid #e2e2e2;
+}
+
+.btn {
+    width: 70px;
+    margin: 0;
+    font-weight: bold;
+    background-color: white;
+    border: 1px solid #e2e2e2;;
+}
+
+.sub-comment-icon {
+    color: red;
+    font-size: 1em;
+}

@@ -4,5 +4,6 @@
 <form [formGroup]="commentForm" (ngSubmit)="onSubmit()">
   <textarea type="text" formControlName="body" name="body"></textarea>
 
-  <button type="submit" class="btn">{{isEdit? '수정' : '등록'}}</button>
+  <button type="submit" class="btn" [hidden]="isEdit == true">등록</button>
+  <button type="submit" class="btn" [hidden]="isEdit == false">수정</button>
 </form>

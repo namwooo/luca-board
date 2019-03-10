@@ -38,6 +38,15 @@ export class CommentService {
     )
   }
 
+  updateComment(id: number, form: object): Observable<Comment> {
+    let url = this.baseUrl + `comments/${id}`;
+    let token = this.getToken();
+    return this.http.patch<Comment>(url, form, { headers: new HttpHeaders().set('Authorization', `Bearer ${token}`) })
+    .pipe(
+      catchError(this.handleError<Comment>(`updateComment`))
+    )
+  }
+
   deleteComment(commentId: number) {
     const url = this.baseUrl + `comments/${commentId}`;
     let token = this.getToken();

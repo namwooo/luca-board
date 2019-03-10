@@ -24,25 +24,30 @@ export class CommentFormComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.setCommentEditForm();
   }
 
-  setCommentEditForm() {
-    if(this.isEdit) {
-      this.commentForm = this.formBuilder.group({
-        body: [this.targetComment.body, Validators.required], 
-        })
+  validateFormState() {
+    const commentFormControls = this.commentForm.controls
+    if (commentFormControls.body.valid === false) {
+      alert('댓글 내용을 입력해주세요.')
+      return false;
+    } else {
+      return true;
     }
   }
 
-  onSubmit(): void {
+  onSubmit() {
+    if (!this.validateFormState()) {
+      return;
+    }
+
     this.commentService.createComment(this.commentForm.value, this.postId, this.targetComment)
     .subscribe(comment => {
       console.log(comment)
       /* 댓글 생성 시, 댓글 삽입 위치를 결정하는 로직 
-         1. 루트 댓글은 댓글 창 맨 아래 삽입
-         2. 답글은 타겟 댓글 트리 맨 아래 삽입
-         3. 답글에 대한 답글도 타겟 댓글 트리 맨 아래 삽입 */
+          1. 루트 댓글은 댓글 창 맨 아래 삽입
+          2. 답글은 타겟 댓글 트리 맨 아래 삽입
+          3. 답글에 대한 답글도 타겟 댓글 트리 맨 아래 삽입 */
       if(this.targetComment) {
         // 답글을 달려는 타겟 댓글 인덱스
         let targetCommentIndex = this.comments.map(comment => comment.id).indexOf(this.targetComment.id)
@@ -66,5 +71,7 @@ export class CommentFormComponent implements OnInit {
       }
       this.commentForm.reset();
     })
-  }
+
+    }
 }
+

@@ -1,3 +1,5 @@
-<p>
-  comment-edit works!
-</p>
+<form [formGroup]="commentForm" (ngSubmit)="onSubmit()">
+  <textarea type="text" formControlName="body" name="body"></textarea>
+
+  <button type="submit" class="btn">수정</button>
+</form>

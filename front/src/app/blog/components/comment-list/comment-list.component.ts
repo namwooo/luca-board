@@ -29,9 +29,21 @@ export class CommentListComponent implements OnInit {
   }
 
   onDeleted(deletedComment: Comment) {
+    console.log(deletedComment)
     if (deletedComment) {
       let index = this.comments.findIndex(c => c.id === deletedComment.id);
       this.comments.splice(index, 1);
+    } else {
+      void 0;
+    }
+  }
+
+  onEdited(body: string) {
+    console.log(body)
+    if (body) {
+      let comment = this.comments.find(c => c.id === this.targetCommentId);
+      comment.body = body
+      this.isCommentEditFormInserted = false;
     } else {
       void 0;
     }
