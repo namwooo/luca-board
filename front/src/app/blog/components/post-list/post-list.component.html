@@ -26,12 +26,17 @@
     </tbody>
 </table>
 
-<button type="button" class="btn btn-outline-secondary btn-write float-right">
+<div>
+<button type="button" class="btn btn-outline-secondary btn-write">
     <a [routerLink]="['/posts']">
         <mat-icon class="icon" inline="true">create</mat-icon>글쓰기
     </a>
 </button>
-<pagination-controls 
+</div>
+
+
+<pagination-controls
+class="paginate" 
 (pageChange)="pageChanged($event)"
 previousLabel="이전"
 nextLabel="다음"

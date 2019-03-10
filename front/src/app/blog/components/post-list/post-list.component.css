@@ -52,8 +52,14 @@
 
 .btn-write {
     padding: 0.5em;
+    float: right;
 }
 
-.float-right {
-    float: right;
+.paginate {
+    text-align: center;
+}
+
+.paginate /deep/ .ngx-pagination .current{
+    background: #100D7C;
+    color: white;
 }

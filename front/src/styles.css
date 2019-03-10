@@ -12,6 +12,9 @@
     box-sizing: inherit;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 0.98em;
+}
+
+body {
     color:#6F6C6C;
 }
 
@@ -42,4 +45,9 @@ a:hover {
 
 .test {
     font: 100px;
+}
+
+.ngx-pagination .current {
+    background: #100D7C;
+    color: white;
 }
