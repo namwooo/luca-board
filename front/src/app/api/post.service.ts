@@ -28,7 +28,8 @@ export class PostService {
 
   getPost(idPost: Number): Observable<Post> {
     const url = this.baseUrl + `posts/${idPost}`;
-    return this.http.get<Post>(url)
+    let token = this.getToken();
+    return this.http.get<Post>(url, { headers: new HttpHeaders().set('Authorization', `Bearer ${token}`) })
     .pipe(
       catchError(this.handleError<Post>(`getPost`))
     )
@@ -63,6 +64,24 @@ export class PostService {
     )
   }
 
+  likePost(id: number) {
+    const url = this.baseUrl + `posts/${id}/like`;
+    let token = this.getToken();
+    return this.http.patch(url, '', { headers: new HttpHeaders().set('Authorization', `Bearer ${token}`) })
+    .pipe(
+      catchError(this.handleError(`likePost`))
+    )
+  }
+
+  unlikePost(id: number) {
+    const url = this.baseUrl + `posts/${id}/unlike`;
+    let token = this.getToken();
+    return this.http.patch(url, '', { headers: new HttpHeaders().set('Authorization', `Bearer ${token}`) })
+    .pipe(
+      catchError(this.handleError(`unlikePost`))
+    )
+  }
+  
   private getToken() {
     return localStorage.getItem('access_token')
   }

@@ -15,11 +15,17 @@
   </button>
 </div>
 
-<div class="wrapper">
-  <div *ngIf="post" innerHTML="{{post.body}}"></div>
+<div class="wrapper" *ngIf="post">
+  <div innerHTML="{{post.body}}"></div>
 
-  <app-comment-list *ngIf="post" [postId]="post.id"></app-comment-list>
+  <button (click)="likeToggle()">
+    <mat-icon inline="true" style="color: red" [hidden]="isLikeToggleCliked == true">favorite_border</mat-icon>
+    <mat-icon inline="true" style="color: red" [hidden]="isLikeToggleCliked == false">favorite</mat-icon>
+  </button>
+
+  <app-comment-list [postId]="post.id"></app-comment-list>
 </div>
+
 
 <div class="bottom-control-btn">
   <button type="button" class="btn btn-outline-secondary" 

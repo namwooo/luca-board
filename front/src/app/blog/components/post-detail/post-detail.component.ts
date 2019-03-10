@@ -10,6 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class PostDetailComponent implements OnInit {
   post: Post;
+  isLikeToggleCliked: boolean;
 
   constructor(
     private postService: PostService,
@@ -31,6 +32,7 @@ export class PostDetailComponent implements OnInit {
     .subscribe(post => {
       this.post = post;
       console.log(post);
+      this.isLikeToggleCliked = post.isUserLike;
     })
   }
 
@@ -63,6 +65,17 @@ export class PostDetailComponent implements OnInit {
   onClickNext(): void {
     let nextPostId = this.post.nextPost.id
     this.router.navigate([`/posts/${nextPostId}`])
+  }
+
+  likeToggle(): void{
+    let postId = this.post.id
+    if(this.isLikeToggleCliked) {
+      this.postService.unlikePost(postId)
+      .subscribe(resp => this.isLikeToggleCliked = false)
+    } else {
+      this.postService.likePost(postId)
+      .subscribe(resp => this.isLikeToggleCliked = true)
+    }
   }
 
 }
