@@ -1,0 +1,7 @@
+<button class="btn" (click)="likeToggle(false)" [hidden]="isUserLike == false">
+  <mat-icon inline="true" class="icon">favorite</mat-icon>
+</button>
+
+<button class="btn" (click)="likeToggle(true)" [hidden]="isUserLike == true">
+  <mat-icon inline="true" class="icon">favorite_border</mat-icon>
+</button>

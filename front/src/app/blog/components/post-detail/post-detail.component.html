@@ -18,10 +18,7 @@
 <div class="wrapper" *ngIf="post">
   <div innerHTML="{{post.body}}"></div>
 
-  <button (click)="likeToggle()">
-    <mat-icon inline="true" style="color: red" [hidden]="isLikeToggleCliked == true">favorite_border</mat-icon>
-    <mat-icon inline="true" style="color: red" [hidden]="isLikeToggleCliked == false">favorite</mat-icon>
-  </button>
+  <app-like-toggle [isUserLike]="post.isUserLike" (liked)="onLiked($event)"></app-like-toggle>
 
   <app-comment-list [postId]="post.id"></app-comment-list>
 </div>

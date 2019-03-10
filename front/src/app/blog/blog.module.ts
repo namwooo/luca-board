@@ -16,6 +16,7 @@ import { BlogRoutingModule } from './blog-routing.module';
 import { CommentDeleteComponent } from './components/comment-delete/comment-delete.component';
 import { CommentEditComponent } from './components/comment-edit/comment-edit.component';
 import { PostNavComponent } from './components/post-nav/post-nav.component';
+import { LikeToggleComponent } from './shared/components/like-toggle/like-toggle.component';
 
 
 
@@ -31,6 +32,7 @@ import { PostNavComponent } from './components/post-nav/post-nav.component';
     CommentDeleteComponent,
     CommentEditComponent,
     PostNavComponent,
+    LikeToggleComponent,
   ],
   imports: [
     CommonModule,
