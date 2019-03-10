@@ -1,0 +1,7 @@
+<mat-icon inline="true" class="sub-comment-icon">subdirectory_arrow_right</mat-icon>
+
+<form [formGroup]="commentForm" (ngSubmit)="onSubmit()">
+  <textarea type="text" formControlName="body" name="body"></textarea>
+
+  <button type="submit" class="btn">등록</button>
+</form>

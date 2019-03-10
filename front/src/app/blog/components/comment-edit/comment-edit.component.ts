@@ -10,7 +10,7 @@ import { CommentService } from 'src/app/api/comment.service';
 })
 export class CommentEditComponent implements OnInit {
   @Input() targetComment: Comment;
-  @Output() edited = new EventEmitter<Comment>();
+  @Output() edited = new EventEmitter<string>();
   commentForm: FormGroup;
   
   constructor(

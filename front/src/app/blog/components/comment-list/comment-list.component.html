@@ -26,13 +26,12 @@
           <app-comment-edit *ngIf="isCommentEditFormInserted && comment.id == targetCommentId"
           [targetComment]="comment" (edited)="onEdited($event)"></app-comment-edit>
   
-          <app-comment-form [postId]="postId" [comments]="comments" [targetComment]="comment" [isEdit]="false"
-          *ngIf="isCommentFormInserted && comment.id == targetCommentId"></app-comment-form>
+          <app-comment-create [postId]="postId" [parentComment]="comment"
+          *ngIf="isCommentFormInserted && comment.id == parentCommentId" (created)="onCreated($event)"></app-comment-create>
       </div>
 
     </li>
   </ul>
-
-  <app-comment-form [postId]="postId" [comments]="comments" [isEdit]="false"></app-comment-form>
+  <app-comment-create [postId]="postId" (created)="onCreated($event)"></app-comment-create>
 
 </div>

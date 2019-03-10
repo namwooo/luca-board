@@ -1,9 +1,0 @@
-<mat-icon [inline]="true" class="sub-comment-icon" 
-*ngIf="isEdit == false">subdirectory_arrow_right</mat-icon>
-
-<form [formGroup]="commentForm" (ngSubmit)="onSubmit()">
-  <textarea type="text" formControlName="body" name="body"></textarea>
-
-  <button type="submit" class="btn" [hidden]="isEdit == true">등록</button>
-  <button type="submit" class="btn" [hidden]="isEdit == false">수정</button>
-</form>
