@@ -4,13 +4,13 @@ import { PostDetailComponent } from './components/post-detail/post-detail.compon
 import { PostListComponent } from './components/post-list/post-list.component';
 import { MainLayoutComponent } from './components/main-layout/main-layout.component';
 import { PostFormComponent } from './components/post-form/post-form.component';
+import { BoardListComponent } from './components/board-list/board-list.component';
 
 const routes: Routes = [
     { 
-        path: '', component: MainLayoutComponent,  
+        path: '', component: MainLayoutComponent,
         children: [    
-            { path: 'boards/:id', component: PostListComponent },
-            { path: 'boards', component: PostListComponent },
+            { path: 'boards/:id', component: PostListComponent},
             { path: 'posts/:id/edit', component: PostFormComponent, data: {isEdit: true} },
             { path: 'posts/:id', component: PostDetailComponent },
             { path: 'posts', component: PostFormComponent, data: {isEdit: false} },

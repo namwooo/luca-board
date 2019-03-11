@@ -28,6 +28,7 @@ export class PostListComponent implements OnInit {
     this.route.params.subscribe(
       params => {
         let id = +params['id']
+        console.log(id);
         this.boardId = id;
         this.getPostsInBoard();
         this.getBoard();

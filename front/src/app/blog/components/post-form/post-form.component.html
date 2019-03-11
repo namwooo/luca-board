@@ -2,7 +2,7 @@
   
   <label>
     게시판
-    <select formControlName="idBoard" [(ngModel)]="boardSelected">
+    <select formControlName="idBoard">
       <option value="0">게시판선택</option>
       <option *ngFor="let board of boards" 
       [ngValue]="board.id">{{board.title}}

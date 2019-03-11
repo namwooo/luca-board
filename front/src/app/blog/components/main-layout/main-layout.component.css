@@ -20,3 +20,7 @@
     flex: 84%;
     margin-top: 0;
 }
+
+.login {
+    float: right;
+}

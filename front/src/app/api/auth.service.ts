@@ -36,7 +36,7 @@ export class AuthService {
     const expiresAt = moment().add(authResult.expiresIn, 'second')
 
     localStorage.setItem('access_token', authResult.access_token);
-    localStorage.setItem('expries_at', JSON.stringify(expiresAt.valueOf()))
+    localStorage.setItem('expires_at', JSON.stringify(expiresAt.valueOf()))
   }
 
   private handleError<T> (operation = 'operation', result?: T) {
