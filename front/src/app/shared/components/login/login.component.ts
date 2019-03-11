@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
   }
   
   onClickLogin() {
-    this.router.navigate(['/user/login'])
+    this.router.navigate(['/login'])
   }
 
   onClickLogout() {

@@ -3,14 +3,16 @@ import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
 import { ContentOnlyLayoutComponent } from './components/content-only-layout/content-only-layout.component';
 import { SignupComponent } from './components/signup/signup.component';
+import { PageNotFoundComponent } from '../shared/components/page-not-found/page-not-found.component';
 
 const routes: Routes = [
-    { 
-      path: 'user', component: ContentOnlyLayoutComponent,  
-      children: [
-          { path: 'signup', component: SignupComponent },    
-          { path: 'login', component: LoginComponent },
-      ]
+  { 
+    path: 'member', component: ContentOnlyLayoutComponent,
+    children: [   
+        { path: '', component: LoginComponent },
+        { path: 'signup', component: SignupComponent },    
+        { path: 'login', component: LoginComponent },
+    ],
   },
 ];
 
