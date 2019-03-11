@@ -108,10 +108,10 @@ class PostView(FlaskView):
         """List ranked posts by its like counts"""
         posts = Post.query.filter(Post.is_published == True) \
             .order_by(Post.like_count.desc()) \
-            .limit(10).all()
+            .limit(5).all()
 
         posts_schema = PostSchema(many=True)
-        return posts_schema.jsonify(posts), 200
+        return convert_dump(posts, posts_schema), 200
 
     @route('/posts/<id>/like', methods=['PATCH'])
     @jwt_required
