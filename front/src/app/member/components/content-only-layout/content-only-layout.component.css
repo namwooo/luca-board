@@ -1,0 +1,7 @@
+/* centering position */ 
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    margin: 400px auto;
+}
