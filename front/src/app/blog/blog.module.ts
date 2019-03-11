@@ -17,6 +17,7 @@ import { PostNavComponent } from './components/post-nav/post-nav.component';
 import { LikeToggleComponent } from './shared/components/like-toggle/like-toggle.component';
 import { CommentCreateComponent } from './components/comment-create/comment-create.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { PostRankComponent } from './components/post-rank/post-rank.component';
 
 
 
@@ -33,6 +34,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
     PostNavComponent,
     LikeToggleComponent,
     CommentCreateComponent,
+    PostRankComponent,
   ],
   imports: [
     CommonModule,

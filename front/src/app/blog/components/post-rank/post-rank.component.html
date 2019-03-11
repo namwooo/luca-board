@@ -1,0 +1,8 @@
+<div class="rank">
+  <p class="title">카페 인기 게시글</p>
+  <ul>
+    <li *ngFor="let post of posts" class="text-line">
+      <a [routerLink]="['/posts', post.id]">{{post.title}}</a>
+    </li>
+  </ul>
+</div>

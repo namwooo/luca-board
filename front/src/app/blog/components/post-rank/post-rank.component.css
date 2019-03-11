@@ -1,0 +1,24 @@
+.rank {
+    background: #F5F5F5;
+    padding: 10px;
+}
+
+.title {
+    font-weight: bold;
+}
+
+ul {
+    padding: 0;
+}
+
+li::before {
+    content: "- "; 
+    color:red;
+}
+
+.text-line {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 150px;
+    white-space: nowrap;
+}

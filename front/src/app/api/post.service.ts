@@ -87,6 +87,14 @@ export class PostService {
       catchError(this.handleError(`unlikePost`))
     )
   }
+
+  getPostsRank(): Observable<Post[]> {
+    const url = this.baseUrl + `posts/rank`;
+    return this.http.get<Post[]>(url)
+    .pipe(
+      catchError(this.handleError<Post[]>('getPostsRank'))
+    )
+  }
   
   private getToken() {
     return localStorage.getItem('access_token')
