@@ -5,3 +5,4 @@ class BaseConfig(object):
     SQLALCHEMY_ECHO = True
     JWT_SECRET_KEY = 'dev'
     JWT_TOKEN_LOCATION = 'headers'
+    JWT_ACCESS_TOKEN_EXPIRES = 1800
