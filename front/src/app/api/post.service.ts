@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, Subject } from 'rxjs';
+import { Observable, of, Subject, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 
-import { Post, PagedPost } from '../blog/models/post';
+import { Post} from '../blog/models/post';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,8 @@ export class PostService {
   post$ = this.postSource.asObservable();
   
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router,
   ) { }
 
   getPostsInBoard(boardId: number, page: number): Observable<Post[]> {
@@ -34,8 +36,12 @@ export class PostService {
 
   getPost(idPost: Number): Observable<Post> {
     const url = this.baseUrl + `posts/${idPost}`;
-    let token = this.getToken();
-    return this.http.get<Post>(url, { headers: new HttpHeaders().set('Authorization', `Bearer ${token}`) })
+    // let headers: HttpHeaders = new HttpHeaders();
+    // let token = this.getToken();
+    // if (token) {
+    //   headers = headers.set('Authorization', `Bearer ${token}`)
+    // }
+    return this.http.get<Post>(url)
     .pipe(
       catchError(this.handleError<Post>(`getPost`))
     )
@@ -97,14 +103,31 @@ export class PostService {
   }
   
   private getToken() {
-    return localStorage.getItem('access_token')
+    let token = localStorage.getItem('access_token');
+    if (token) {
+      return token;
+    } else {
+      return void 0;
+    }
   }
 
   private handleError<T> (operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
+      let errorMsg = '';
+      if (error.error instanceof ErrorEvent) {
+        errorMsg = `Error: ${error.error.message}`; 
+      } else {
+        errorMsg = `Error Code: ${error.status}\nMessage: ${error.message}`
+      }
+      if(error.status === 401) {
+        this.router.navigate(['/member/login'])
+      }
 
-      // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
+      console.error(error);
+
+      window.alert(errorMsg);
+
+      return throwError(errorMsg)
 
       // Let the app keep running by returning an empty result.
       return of(result as T);
