@@ -5,11 +5,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MemberRoutingModule } from './member-routing.module';
 import { ContentOnlyLayoutComponent } from './components/content-only-layout/content-only-layout.component';
 import { CookieService } from 'ngx-cookie-service';
+import { SignupComponent } from './components/signup/signup.component';
 
 @NgModule({
   declarations: [
     ContentOnlyLayoutComponent,
     LoginComponent,
+    SignupComponent,
   ],
   imports: [
     CommonModule,

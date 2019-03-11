@@ -1,0 +1,19 @@
+<h2>회원가입</h2>
+<div>
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+      
+      <input type="text" placeholder="이메일" class="form-control"
+      formControlName="email">
+  
+      <input type="password" placeholder="비밀번호" class="form-control"
+      formControlName="password">
+
+      <input type="text" placeholder="이름" class="form-control"
+      formControlName="firstName">
+
+      <input type="text" placeholder="성" class="form-control"
+      formControlName="lastName">
+  
+      <button type="submit" class="btn btn-success block">회원가입</button>
+    </form>
+  </div>

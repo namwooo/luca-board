@@ -15,12 +15,20 @@ export class AuthService {
     private http: HttpClient
     ) { }
 
-  login(email: String, password: String) {
+  login(email: string, password: string) {
     const url = this.baseUrl + 'users/login';
     return this.http.post(url, {email, password}, httpOptions) // POST localhost:5000/users/login
     .pipe(
       tap(res => this.setSession(res)), 
       catchError(this.handleError<any>(`login`))
+    )
+  }
+
+  signup(form: object) {
+    const url = this.baseUrl + 'users/signup';
+    return this.http.post(url, form, httpOptions)
+    .pipe(
+      catchError(this.handleError(`signup`))
     )
   }
 
