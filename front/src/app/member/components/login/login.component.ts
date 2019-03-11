@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { AuthService } from 'src/app/api/auth.service';
-import * as camelCaseKeys from 'camelcase-keys';
-import { CookieService } from 'ngx-cookie-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -17,6 +16,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
+    private router: Router,
   ) { }
 
   ngOnInit() {
@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
     let password = this.loginForm.value.password
     this.authService.login(email, password)
     .subscribe(token => {
-      console.log(token);
+      token ? this.router.navigateByUrl(''): alert('로그인에 실패했습니다. 다시 시도해주세요.');
     })
   }
     // todo: remove this after dev

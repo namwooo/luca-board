@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { AuthService } from 'src/app/api/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
@@ -17,16 +18,17 @@ export class SignupComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
+    private router: Router,
   ) { }
 
   ngOnInit() {
   }
+
   onSubmit() {
     let form = this.signupForm.value
     this.authService.signup(form)
-    .subscribe(token => {
-      console.log(token);
+    .subscribe(user => {
+      this.router.navigateByUrl('user/login');
     })
   }
-
 }
