@@ -30,8 +30,7 @@ export class CommentService {
       url = this.baseUrl + `comments?postId=${postId}`;
     }
 
-    let token = this.getToken();
-    return this.http.post<Comment>(url, form, { headers: new HttpHeaders().set('Authorization', `Bearer ${token}`) })
+    return this.http.post<Comment>(url, form)
     .pipe(
       catchError(this.handleError<Comment>(`createComment`))
     )
@@ -39,8 +38,7 @@ export class CommentService {
 
   updateComment(id: number, form: object): Observable<Comment> {
     let url = this.baseUrl + `comments/${id}`;
-    let token = this.getToken();
-    return this.http.patch<Comment>(url, form, { headers: new HttpHeaders().set('Authorization', `Bearer ${token}`) })
+    return this.http.patch<Comment>(url, form)
     .pipe(
       catchError(this.handleError<Comment>(`updateComment`))
     )
@@ -48,8 +46,7 @@ export class CommentService {
 
   deleteComment(commentId: number) {
     const url = this.baseUrl + `comments/${commentId}`;
-    let token = this.getToken();
-    return this.http.delete(url, { headers: new HttpHeaders().set('Authorization', `Bearer ${token}`) })
+    return this.http.delete(url)
     .pipe(
       catchError(this.handleError(`deleteComment`))
     )
@@ -64,10 +61,6 @@ export class CommentService {
       // Let the app keep running by returning an empty result.
       return of(result as T);
     };
-  }
-
-  private getToken() {
-    return localStorage.getItem('access_token')
   }
 }
 
