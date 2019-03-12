@@ -34,34 +34,27 @@ export class PostService {
       )
   }
 
-  getPost(idPost: Number): Observable<Post> {
+  getPost(idPost: number): Observable<Post> {
     const url = this.baseUrl + `posts/${idPost}`;
-    // let headers: HttpHeaders = new HttpHeaders();
-    // let token = this.getToken();
-    // if (token) {
-    //   headers = headers.set('Authorization', `Bearer ${token}`)
-    // }
     return this.http.get<Post>(url)
     .pipe(
       catchError(this.handleError<Post>(`getPost`))
     )
   }
 
-  createPost(body: any, boardId: Number) {
+  createPost(body: any, boardId: number) {
     const url = this.baseUrl + `posts?idBoard=${boardId}`;
-    let token = this.getToken();
-    return this.http.post(url, body,  
-      { headers: new HttpHeaders().set('Authorization', `Bearer ${token}`) })
+
+    return this.http.post(url, body)
     .pipe(
       catchError(this.handleError<Post>(`createPost`))
     )
   }
 
-  updatePost(body: any, postId: Number) {
+  updatePost(body: any, postId: number) {
     const url = this.baseUrl + `posts/${postId}`;
-    let token = this.getToken();
-    return this.http.patch(url, body, 
-      { headers: new HttpHeaders().set('Authorization', `Bearer ${token}`) })
+ 
+    return this.http.patch(url, body)
     .pipe(
       catchError(this.handleError<Post>(`patchPost`))
     )
@@ -69,8 +62,8 @@ export class PostService {
 
   deletePost(id: number) {
     const url = this.baseUrl + `posts/${id}`;
-    let token = this.getToken();
-    return this.http.delete(url, { headers: new HttpHeaders().set('Authorization', `Bearer ${token}`) })
+
+    return this.http.delete(url)
     .pipe(
       catchError(this.handleError<Post>(`deletePost`))
     )
@@ -78,8 +71,8 @@ export class PostService {
 
   likePost(id: number) {
     const url = this.baseUrl + `posts/${id}/like`;
-    let token = this.getToken();
-    return this.http.patch(url, '', { headers: new HttpHeaders().set('Authorization', `Bearer ${token}`) })
+  
+    return this.http.patch(url, '')
     .pipe(
       catchError(this.handleError(`likePost`))
     )
@@ -87,8 +80,8 @@ export class PostService {
 
   unlikePost(id: number) {
     const url = this.baseUrl + `posts/${id}/unlike`;
-    let token = this.getToken();
-    return this.http.patch(url, '', { headers: new HttpHeaders().set('Authorization', `Bearer ${token}`) })
+
+    return this.http.patch(url, '')
     .pipe(
       catchError(this.handleError(`unlikePost`))
     )
@@ -100,15 +93,6 @@ export class PostService {
     .pipe(
       catchError(this.handleError<Post[]>('getPostsRank'))
     )
-  }
-  
-  private getToken() {
-    let token = localStorage.getItem('access_token');
-    if (token) {
-      return token;
-    } else {
-      return void 0;
-    }
   }
 
   private handleError<T> (operation = 'operation', result?: T) {

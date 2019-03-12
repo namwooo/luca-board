@@ -13,7 +13,7 @@ import { Post } from '../../models/post';
 })
 export class PostFormComponent implements OnInit {
   boards: Board[];
-  id: Number;
+  id: number;
   isEdit: Boolean
   post: Post;
   // set PostCreateForm
