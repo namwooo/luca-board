@@ -61,8 +61,12 @@ class PostView(FlaskView):
     def get(self, id):
         """Detail a post and plus view count"""
         post = Post.query.filter(and_(Post.id == id, Post.is_published == True)).first_or_404()
-        next_post = Post.query.filter(and_(Post.id > post.id, Post.board_id == post.board_id)).order_by(Post.id).first()
-        prev_post = Post.query.filter(and_(Post.id < post.id, Post.board_id == post.board_id)).order_by(desc(Post.id)).first()
+        next_post = Post.query.filter(
+            and_(Post.id > post.id, Post.board_id == post.board_id))\
+            .order_by(Post.id).first()
+        prev_post = Post.query.filter(
+            and_(Post.id < post.id, Post.board_id == post.board_id))\
+            .order_by(desc(Post.id)).first()
 
         post.next_post = next_post
         post.prev_post = prev_post
@@ -72,7 +76,7 @@ class PostView(FlaskView):
         is_user_like = post.is_user_like(user)
         post.is_user_like = is_user_like
 
-        post.read()  # view_count +1
+        post.read()  # view_count + 1
 
         post_detail_schema = PostDetailSchema()
         return convert_dump(post, post_detail_schema), 200

@@ -1,4 +1,3 @@
-import json
 import re
 
 from flask import jsonify
@@ -16,11 +15,6 @@ def snake_to_camel(name):
 def change_dict_naming_convention(d, convert_function):
     """
     Convert a nested dictionary from one convention to another.
-    Args:
-        d (dict): dictionary (nested or not) to be converted.
-        convert_function (func): function that takes the string in one convention and returns it in the other one.
-    Returns:
-        Dictionary with the new keys.
     """
     new = {}
     for k, v in d.items():

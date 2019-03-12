@@ -1,5 +1,3 @@
-from sqlalchemy_utils import URLType
-
 from app import db
 from app.mixins import TimestampMixin
 
@@ -23,7 +21,6 @@ class Post(db.Model, TimestampMixin):
     writer = db.relationship('User', back_populates='posts', lazy='joined')
     board = db.relationship('Board', back_populates='posts', lazy='joined')
     comments = db.relationship('Comment', back_populates='post', lazy='joined')
-    images = db.relationship('PostImage', back_populates='post', lazy='select')  # joined
     like_users = db.relationship('User', secondary=likes,
                                  back_populates='like_posts', lazy='subquery')
 
@@ -62,17 +59,3 @@ class Post(db.Model, TimestampMixin):
         db.session.flush()
 
         return comment
-
-
-class PostImage(db.Model, TimestampMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
-    image_url = db.Column(URLType, nullable=False)
-    caption = db.Column(db.String(120), nullable=True)
-
-    post = db.relationship('Post', back_populates='images', lazy=True)
-
-    def __repr__(self):
-        return '<{} id: {}, post_id: {}, image_url: {}, caption: {}>' \
-            .format(self.__class__.__name__, self.id, self.post_id, self.image_url,
-                    self.caption)

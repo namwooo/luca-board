@@ -1,7 +1,6 @@
 from flask import request, jsonify
 from flask_classful import FlaskView, route
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from flask_login import current_user
 from marshmallow import ValidationError
 
 from app import db, WriterOnlyException, handle_error, transaction

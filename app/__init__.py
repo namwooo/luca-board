@@ -1,9 +1,8 @@
-from datetime import timedelta
 from functools import wraps
 
 from flask import Flask, jsonify, request
-from flask_jwt_extended import JWTManager, jwt_required
-from flask_jwt_extended.exceptions import UserClaimsVerificationError, NoAuthorizationError
+from flask_jwt_extended import JWTManager
+from flask_jwt_extended.exceptions import UserClaimsVerificationError, NoAuthorizationError, InvalidHeaderError
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
@@ -34,7 +33,7 @@ def create_app(test_config=None):
     # import models
     from .users.models import User
     from .boards.models import Board
-    from .posts.models import Post, PostImage
+    from .posts.models import Post
     from .comments.models import Comment
 
     # initialize db, schema, login manager
@@ -100,6 +99,10 @@ def handle_error(func):
             return jsonify({'msg': e.message}), 403
         except NoAuthorizationError as e:
             raise NoAuthorizationError
+        except InvalidHeaderError as e:
+            return '', 401
+        except UserClaimsVerificationError as e:
+            return '', 401
         except Exception as e:
             raise e
 

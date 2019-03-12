@@ -1,13 +1,8 @@
-import base64
-from urllib import response
-
-from flask import request, make_response, redirect, session, jsonify
+from flask import request, jsonify
 from flask_classful import FlaskView, route
-from flask_jwt_extended import create_access_token, jwt_required, set_access_cookies
-from flask_login import login_user, login_required, logout_user, encode_cookie
+from flask_jwt_extended import create_access_token
 
-from app import db, lm, transaction, handle_error
-from .models import User
+from app import db, transaction, handle_error
 from .schemas import UserSchema, LoginSchema, SignupSchema
 
 
@@ -16,7 +11,7 @@ class UserView(FlaskView):
 
     @route("/signup", methods=["POST"])
     def signup(self):
-        data = request.get_json()
+        data = request.data
 
         signup_schema = SignupSchema()
         new_user = signup_schema.load(data).data
@@ -38,10 +33,3 @@ class UserView(FlaskView):
         resp = jsonify({'access_token': access_token})
 
         return resp, 200
-
-    @route("/logout", methods=["GET"])
-    # @login_required
-    def logout(self):
-        logout_user()
-
-        return '', 200
